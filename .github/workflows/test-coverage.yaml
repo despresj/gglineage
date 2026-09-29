@@ -1,0 +1,54 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+name: test-coverage
+
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::covr, any::xml2
+          needs: coverage
+
+      - name: Measure coverage
+        shell: Rscript {0}
+        run: |
+          cov <- covr::package_coverage(quiet = FALSE, clean = FALSE)
+          total <- covr::percent_coverage(cov)
+          by_file <- covr::tally_coverage(cov, by = "line")
+          files <- aggregate(value ~ filename, by_file, function(v) mean(v > 0) * 100)
+          files <- files[order(files$value), ]
+          md <- c(
+            sprintf("## Test coverage: %.1f%%", total),
+            "",
+            "| File | Lines covered |",
+            "|---|---:|",
+            sprintf("| `%s` | %.1f%% |", files$filename, files$value)
+          )
+          writeLines(md, Sys.getenv("GITHUB_STEP_SUMMARY"))
+          covr::to_cobertura(cov)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: cobertura.xml

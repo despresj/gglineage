@@ -1,18 +1,23 @@
 # Based on r-lib/actions examples: https://github.com/r-lib/actions/tree/v2/examples
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 name: R-CMD-check
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.name || format('{0} ({1})', matrix.config.os, matrix.config.r) }}
 
     strategy:
       fail-fast: false
@@ -23,13 +28,15 @@ jobs:
           - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
           - {os: ubuntu-latest,  r: 'oldrel-1'}
+          # Oldest supported ggplot2, which takes a different margin code path.
+          - {os: ubuntu-latest,  r: 'release', extra: 'ggplot2@3.5.2', name: 'ubuntu-latest (ggplot2 3.5.2)'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -41,7 +48,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck ${{ matrix.config.extra }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

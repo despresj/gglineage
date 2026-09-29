@@ -23,6 +23,8 @@ set.seed(2026)
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml)
+[![robustness](https://github.com/despresj/watermark/actions/workflows/robustness.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/robustness.yaml)
+[![test-coverage](https://github.com/despresj/watermark/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/test-coverage.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/despresj/watermark/blob/main/LICENSE.md)
 <!-- badges: end -->

@@ -1,0 +1,46 @@
+# Runs the full image-transform stress matrix on every OS and posts the
+# results table to the run summary. Weekly runs catch drift in ggplot2,
+# graphics devices or the JPEG library.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+name: robustness
+
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  robustness:
+    runs-on: ${{ matrix.os }}
+    name: robustness (${{ matrix.os }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: local::.
+          needs: check
+
+      - name: Run stress matrix
+        run: Rscript tools/robustness-report.R
