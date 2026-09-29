@@ -28,18 +28,19 @@ A character string.
 
 ## Details
 
-Both draw from a private random stream: they do not advance or depend on
-the session's RNG, so [`set.seed()`](https://rdrr.io/r/base/Random.html)
-in your analysis neither changes the IDs nor is changed by them. IDs are
-for provenance, not security.
+Both use the package's own generator, seeded from the clock and process
+ID, rather than R's random number generator:
+[`set.seed()`](https://rdrr.io/r/base/Random.html) in your analysis
+neither repeats the IDs nor is disturbed by them. IDs are for
+provenance, not security.
 
 ## Examples
 
 ``` r
 wm_id()
-#> [1] "67JAV6YR"
+#> [1] "11M57KCF"
 wm_id(12)
-#> [1] "4EZRR82AQMXN"
+#> [1] "7PST7ADAH0B3"
 wm_uuid()
-#> [1] "faf583a9-4d3e-42d1-afad-4d070ef8b2ec"
+#> [1] "c8046eeb-83ec-4c8a-8e8d-6ae9246d418e"
 ```

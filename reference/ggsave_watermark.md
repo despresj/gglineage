@@ -75,13 +75,13 @@ id <- ggsave_watermark(file, p, metadata = list(script = "fig1.R"),
                        width = 6, height = 4, dpi = 150)
 
 extract_watermark(file)
-#> [1] "ZAS7J5ZN"
+#> [1] "H2S29KCT"
 read_watermark_metadata(file)
 #> $id
-#> [1] "ZAS7J5ZN"
+#> [1] "H2S29KCT"
 #> 
 #> $created
-#> [1] "2026-09-29T12:06:10+0000"
+#> [1] "2026-09-29T21:13:01+0000"
 #> 
 #> $software
 #> [1] "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"

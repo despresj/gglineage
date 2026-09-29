@@ -56,6 +56,12 @@ watermark_text(
 
 A ggplot2 layer, to be added to a plot with `+`.
 
+## Details
+
+Text never enters the bottom few millimetres of the figure, which are
+reserved for the dot code, so visible and invisible watermarks can be
+combined freely.
+
 ## Examples
 
 ``` r

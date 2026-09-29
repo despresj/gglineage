@@ -50,7 +50,7 @@ extract_watermark(abused)
 #> [1] "RUN-42"
 ```
 
-^(`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from the package’s [stress-test suite](https://despresj.github.io/watermark/tests/testthat/helper-transforms.R).)
+^(`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from the package’s [stress-test suite](https://github.com/despresj/watermark/blob/main/tests/testthat/helper-transforms.R).)
 
 ## Three kinds of watermark
 
@@ -106,8 +106,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "2VZFP6E5"
-#>  $ created : chr "2026-09-28T22:32:18-0400"
+#>  $ id      : chr "8440WHWR"
+#>  $ created : chr "2026-09-29T08:14:29-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -122,9 +122,9 @@ and script, and any stray copy leads back to its source.
 ``` r
 
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "4YQXDK3T"
+#> [1] "W0YTF54Z"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "87398175-7b5f-4018-ad3d-00181a5317a4"
+#> [1] "390335bc-aba8-483c-a784-6135295a5638"
 ```
 
 IDs come from a private random stream.
@@ -159,7 +159,7 @@ row only if both syncs, the length and the checksum all agree. That is
 A 7 × 5 in plot saved at 150 dpi, pushed through 32 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
-[`test-robustness.R`](https://despresj.github.io/watermark/tests/testthat/test-robustness.R)
+[`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
 |  | Transformation | Pixels | Dot code |
@@ -190,11 +190,11 @@ on every push, on several plot types.
 | Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
 |  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
 |  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
-| Past the limits | Crop bottom 5% | 1050 × 713 | ✖️ not found |
-|  | Crop left 10% | 945 × 750 | ✖️ not found |
-|  | Rotate 90 degrees | 750 × 1050 | ✖️ not found |
-|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖️ not found |
-|  | JPEG quality 5 | 1050 × 750 | ✖️ not found |
+| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
+|  | Crop left 10% | 945 × 750 | ✖ not found |
+|  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
+|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
+|  | JPEG quality 5 | 1050 × 750 | ✖ not found |
 |  | Downscale to 25% | 262 × 188 | ✅ recovered |
 
 **27 of 32 recovered exactly, and 0 wrong IDs.** The rows under “past
