@@ -36,16 +36,13 @@ re-saved as JPEGs and forwarded until nobody knows which script, which data
 pull, or which version produced them. watermark stamps each plot with an ID
 you can read back out of the pixels, even after all of that.
 
-```{r hero, echo = FALSE, fig.width = 8, fig.height = 4.6, fig.alt = "A scatter plot of fuel economy with a large diagonal DRAFT stamp and a faint row of dots along its bottom edge."}
-ggplot(mpg, aes(displ, hwy, colour = drv)) +
-  geom_point(size = 2) +
-  labs(title = "Fuel economy by engine size",
-       subtitle = "The faint dotted rule along the bottom edge encodes \"K7Q2M9XD\"",
-       x = "Displacement (L)", y = "Highway MPG", colour = "Drive") +
-  theme_minimal(base_size = 13) +
-  watermark_text("DRAFT") +
-  watermark_dots("K7Q2M9XD")
-```
+<p align="center">
+  <img src="man/figures/ping.gif" width="720" alt="Animation: a random chart is watermarked, screenshotted, shrunk and JPEG-compressed; a sonar sweep scans it, the faint dot row lights up, and the ID is decoded with a passing checksum." />
+</p>
+
+<p align="center"><sub><b>Ping a rando chart.</b> A random chart is screenshotted, shrunk and
+JPEG-crunched, then the real decoder finds the dot row and reads its ID back.
+Made by <a href="https://github.com/despresj/watermark/blob/main/data-raw/ping.R"><code>data-raw/ping.R</code></a>; nothing is faked.</sub></p>
 
 ## Installation
 
@@ -252,7 +249,12 @@ there is either exact or nothing:
 - **Minimum size.** This 8-character ID decodes reliably down to about
   **`r min_width` px wide**, and sometimes lower. Shorter IDs go further;
   16-byte IDs need about twice the width.
-- **Compression.** JPEG holds down to about **quality `r min_q`**.
+- **Compression.** At full size, JPEG holds down to about
+  **quality `r min_q`**.
+- **Small *and* compressed.** The two limits compound. Down to about 640 px
+  wide, JPEG holds to quality 50; below that, heavy compression gets
+  unreliable, and by about 430 px anything under quality 90 can erase the
+  dots.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 

@@ -119,7 +119,11 @@ decode_frame <- function(centers, dev, threshold, pitch) {
   try_frame <- function(right, n) {
     xs <- left + (seq_len(n) - 1) * (right - left) / (n - 1)
     id <- decode_bits(sample_bits(dev, xs, threshold, pitch))
-    if (is.null(id)) NULL else list(id = id, n_bits = n, pitch = (right - left) / (n - 1))
+    if (is.null(id)) {
+      return(NULL)
+    }
+    list(id = id, n_bits = n, pitch = (right - left) / (n - 1),
+         left = left, right = right)
   }
 
   # Normal case: the last dot on the row closes the frame.

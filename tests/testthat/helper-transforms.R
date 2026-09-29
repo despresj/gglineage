@@ -179,6 +179,9 @@ stress_transforms <- function() {
          f = function(x) Reduce(function(a, i) tf_jpeg(tf_resize(a, 0.9), 70), 1:3,
                                 tf_resize(x, 0.6 / 0.729)),
          survives = TRUE, slow = TRUE),
+    list(name = "Shrink to 640 px wide + JPEG 50", group = "Degrade",
+         f = function(x) tf_jpeg(tf_resize_to_width(x, 640), 50),
+         survives = TRUE),
     # Documented limits: these must not decode, and must never decode wrongly.
     list(name = "Crop bottom 5%", group = "Past the limits",
          f = function(x) tf_crop(x, bottom = 0.05), survives = FALSE),
@@ -190,6 +193,9 @@ stress_transforms <- function() {
          f = function(x) tf_levels(x, brightness = 0.15), survives = FALSE),
     list(name = "JPEG quality 5", group = "Past the limits",
          f = function(x) suppressWarnings(tf_jpeg(x, 5)), survives = FALSE),
+    list(name = "Shrink to 430 px wide + JPEG 50", group = "Past the limits",
+         f = function(x) tf_jpeg(tf_resize_to_width(x, 430), 50),
+         survives = FALSE),
     list(name = "Downscale to 25%", group = "Past the limits",
          f = function(x) tf_resize(x, 0.25), survives = FALSE)
   )

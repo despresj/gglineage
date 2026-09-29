@@ -22,7 +22,19 @@ which data pull, or which version produced them. watermark stamps each
 plot with an ID you can read back out of the pixels, even after all of
 that.
 
-<img src="man/figures/README-hero-1.png" alt="A scatter plot of fuel economy with a large diagonal DRAFT stamp and a faint row of dots along its bottom edge."  />
+<p align="center">
+
+<img src="man/figures/ping.gif" width="720" alt="Animation: a random chart is watermarked, screenshotted, shrunk and JPEG-compressed; a sonar sweep scans it, the faint dot row lights up, and the ID is decoded with a passing checksum." />
+</p>
+
+<p align="center">
+
+<sub><b>Ping a rando chart.</b> A random chart is screenshotted, shrunk
+and JPEG-crunched, then the real decoder finds the dot row and reads its
+ID back. Made by
+<a href="https://github.com/despresj/watermark/blob/main/data-raw/ping.R"><code>data-raw/ping.R</code></a>;
+nothing is faked.</sub>
+</p>
 
 ## Installation
 
@@ -108,8 +120,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "KY9SSDHF"
-#>  $ created : chr "2026-09-29T17:14:17-0400"
+#>  $ id      : chr "8K7GQ7QM"
+#>  $ created : chr "2026-09-29T17:20:03-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -123,9 +135,9 @@ and script, and any stray copy leads back to its source.
 
 ``` r
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "W32A3T6S"
+#> [1] "8ZY75DVA"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "64686d89-2283-4e35-9ecf-7f0a5f41b306"
+#> [1] "27b0c836-513b-4db6-8928-5c3aa9edfee2"
 ```
 
 IDs come from a private random stream. `set.seed()` in your analysis
@@ -154,7 +166,7 @@ row only if both syncs, the length and the checksum all agree. That is
 
 ## How tough is it?
 
-A 7 × 5 in plot saved at 150 dpi, pushed through 32 transformations.
+A 7 × 5 in plot saved at 150 dpi, pushed through 34 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
@@ -188,14 +200,16 @@ on every push, on several plot types.
 | Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
 |  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
 |  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
+|  | Shrink to 640 px wide + JPEG 50 | 640 × 457 | ✅ recovered |
 | Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
 |  | Crop left 10% | 945 × 750 | ✖ not found |
 |  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
 |  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
 |  | JPEG quality 5 | 1050 × 750 | ✖ not found |
+|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✖ not found |
 |  | Downscale to 25% | 262 × 188 | ✅ recovered |
 
-**27 of 32 recovered exactly, and 0 wrong IDs.** The rows under “past
+**28 of 34 recovered exactly, and 0 wrong IDs.** The rows under “past
 the limits” mark where the guarantee ends. A result there is either
 exact or nothing:
 
@@ -205,7 +219,11 @@ exact or nothing:
 - **Minimum size.** This 8-character ID decodes reliably down to about
   **280 px wide**, and sometimes lower. Shorter IDs go further; 16-byte
   IDs need about twice the width.
-- **Compression.** JPEG holds down to about **quality 8**.
+- **Compression.** At full size, JPEG holds down to about **quality 8**.
+- **Small *and* compressed.** The two limits compound. Down to about 640
+  px wide, JPEG holds to quality 50; below that, heavy compression gets
+  unreliable, and by about 430 px anything under quality 90 can erase
+  the dots.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 
