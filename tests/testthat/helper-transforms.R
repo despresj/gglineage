@@ -120,7 +120,7 @@ tf_rotate90 <- function(img) {
 
 # Named transforms, each a function of an image. `survives` records what the
 # package promises; the tests hold it to that and README.Rmd reports all of
-# them.
+# them. `slow` ones are skipped on CRAN to keep check time down.
 stress_transforms <- function() {
   list(
     list(name = "Original PNG", group = "Lossless",
@@ -137,7 +137,7 @@ stress_transforms <- function() {
          f = function(x) tf_jpeg(x, 25), survives = TRUE),
     list(name = "JPEG q75, re-encoded 10 times", group = "Compression",
          f = function(x) Reduce(function(a, i) tf_jpeg(a, 75), 1:10, x),
-         survives = TRUE),
+         survives = TRUE, slow = TRUE),
     list(name = "JPEG -> PNG -> JPEG", group = "Compression",
          f = function(x) tf_jpeg(tf_png(tf_jpeg(x, 80)), 80), survives = TRUE),
     list(name = "Downscale to 75%", group = "Resize",
@@ -145,7 +145,7 @@ stress_transforms <- function() {
     list(name = "Downscale to 50%", group = "Resize",
          f = function(x) tf_resize(x, 0.5), survives = TRUE),
     list(name = "Upscale 2x (retina)", group = "Resize",
-         f = function(x) tf_resize(x, 2), survives = TRUE),
+         f = function(x) tf_resize(x, 2), survives = TRUE, slow = TRUE),
     list(name = "Odd scale 0.83x", group = "Resize",
          f = function(x) tf_resize(x, 0.83), survives = TRUE),
     list(name = "Downscale to 640 px wide", group = "Resize",
@@ -158,7 +158,7 @@ stress_transforms <- function() {
          f = function(x) tf_pad(x, 60, fill = 0.12), survives = TRUE),
     list(name = "Screenshot chain (2x, pad, 0.5x, JPEG 80)", group = "Crop & frame",
          f = function(x) tf_jpeg(tf_resize(tf_pad(tf_resize(x, 2), 80), 0.5), 80),
-         survives = TRUE),
+         survives = TRUE, slow = TRUE),
     list(name = "Brightness +5%", group = "Colour",
          f = function(x) tf_levels(x, brightness = 0.05), survives = TRUE),
     list(name = "Contrast 70%", group = "Colour",
@@ -174,11 +174,11 @@ stress_transforms <- function() {
     list(name = "Gaussian noise sd 0.01", group = "Degrade",
          f = function(x) tf_noise(x, 0.01), survives = TRUE),
     list(name = "Box blur radius 1", group = "Degrade",
-         f = function(x) tf_blur(x, 1), survives = TRUE),
+         f = function(x) tf_blur(x, 1), survives = TRUE, slow = TRUE),
     list(name = "Social re-share (0.6x, JPEG 70, x3)", group = "Degrade",
          f = function(x) Reduce(function(a, i) tf_jpeg(tf_resize(a, 0.9), 70), 1:3,
                                 tf_resize(x, 0.6 / 0.729)),
-         survives = TRUE),
+         survives = TRUE, slow = TRUE),
     # Documented limits: these must not decode, and must never decode wrongly.
     list(name = "Crop bottom 5%", group = "Past the limits",
          f = function(x) tf_crop(x, bottom = 0.05), survives = FALSE),

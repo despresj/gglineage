@@ -3,16 +3,28 @@
 # `survives` must decode exactly; everything else must fail cleanly. No
 # transform may ever produce a wrong ID.
 
+# Render each base image once and reuse it for every transform.
+base_images <- local({
+  cache <- list()
+  function(id) {
+    if (is.null(cache[[id]])) {
+      cache[[id]] <<- render_plot(base_plot() + watermark_dots(id))
+    }
+    cache[[id]]
+  }
+})
+
 for (tf in stress_transforms()) {
   local({
     tf <- tf
     test_that(sprintf("%s: %s", tf$group, tf$name), {
       skip_if_no_raster()
       skip_if_not_installed("jpeg")
+      if (isTRUE(tf$slow)) skip_on_cran()
       set.seed(1)
-      for (id in c("K7Q2M9XD", "RUN-42")) {
-        img <- render_plot(base_plot() + watermark_dots(id))
-        got <- extract_watermark(tf$f(img))
+      ids <- if (is_cran()) "K7Q2M9XD" else c("K7Q2M9XD", "RUN-42")
+      for (id in ids) {
+        got <- extract_watermark(tf$f(base_images(id)))
         if (tf$survives) {
           expect_equal(got, id)
         } else {

@@ -80,7 +80,7 @@ extract_watermark(abused)
 
 <sup>`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from
 the package's
-[stress-test suite](tests/testthat/helper-transforms.R).</sup>
+[stress-test suite](https://github.com/despresj/watermark/blob/main/tests/testthat/helper-transforms.R).</sup>
 
 ## Three kinds of watermark
 
@@ -209,7 +209,7 @@ rows <- lapply(stress_transforms(), function(tf) {
 res <- do.call(rbind, rows)
 res$shown <- ifelse(
   res$result == "exact", "✅ recovered",
-  ifelse(res$result == "none", "✖️ not found", "❌ WRONG ID")
+  ifelse(res$result == "none", "✖ not found", "❌ WRONG ID")
 )
 n_wrong <- sum(res$result == "WRONG")
 n_ok <- sum(res$result == "exact")
@@ -230,7 +230,7 @@ for (q in c(50, 40, 30, 25, 20, 15, 10, 8, 6, 5)) {
 A 7 × 5 in plot saved at 150 dpi, pushed through `r nrow(res)`
 transformations. Every row is recomputed each time this README is knit, and
 the same matrix runs in
-[`test-robustness.R`](tests/testthat/test-robustness.R) on every push, on
+[`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R) on every push, on
 several plot types.
 
 ```{r robustness-table, echo = FALSE, results = "asis"}

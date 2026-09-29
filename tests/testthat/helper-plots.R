@@ -27,3 +27,5 @@ plot_zoo <- function() {
     dates = ggplot2::ggplot(ggplot2::economics, ggplot2::aes(date, unemploy)) + ggplot2::geom_line()
   )
 }
+
+is_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")

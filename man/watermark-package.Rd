@@ -6,6 +6,8 @@
 \alias{watermark-package}
 \title{watermark: Traceable Watermarks for 'ggplot2' Graphics}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Stamp 'ggplot2' plots with watermarks you can trace back to the analysis that made them. An invisible dot code along the bottom margin carries a short ID that survives screenshots, JPEG compression and rescaling, and is protected by a checksum so a decode is either exact or rejected. Visible text stamps ("DRAFT", "CONFIDENTIAL") and provenance metadata embedded in PNG files complete the toolkit. Watermarks are ordinary plot components added with '+', and never alter scales, coordinates or facets.
 }
 \seealso{

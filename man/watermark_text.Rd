@@ -41,6 +41,11 @@ a large diagonal stamp, a repeating tile, or a small corner mark. Like
 \code{\link[=watermark_dots]{watermark_dots()}}, it is drawn relative to the figure and never affects
 scales, coordinates or facets.
 }
+\details{
+Text never enters the bottom few millimetres of the figure, which are
+reserved for the dot code, so visible and invisible watermarks can be
+combined freely.
+}
 \examples{
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()

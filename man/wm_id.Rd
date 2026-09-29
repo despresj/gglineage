@@ -23,9 +23,10 @@ or \code{U}, so it survives being read aloud or retyped). Eight characters give
 code but useful as a metadata field in \code{\link[=ggsave_watermark]{ggsave_watermark()}}.
 }
 \details{
-Both draw from a private random stream: they do not advance or depend on
-the session's RNG, so \code{set.seed()} in your analysis neither changes the IDs
-nor is changed by them. IDs are for provenance, not security.
+Both use the package's own generator, seeded from the clock and process ID,
+rather than R's random number generator: \code{set.seed()} in your analysis
+neither repeats the IDs nor is disturbed by them. IDs are for provenance,
+not security.
 }
 \examples{
 wm_id()
