@@ -1,0 +1,22 @@
+Package: watermark
+Type: Package
+Title: Embed Traceable Watermarks in ggplot2 Visualizations
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Jane", "Doe",
+      email = "jane@example.com",
+      role = c("aut", "cre")
+    )
+  )
+Description: Embeds invisible watermarks into ggplot2 plots using LSB steganography.
+    The watermark is hidden in the least significant bits of pixel data, making
+    the watermarked image visually identical to the original (max 1 RGB value difference).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    ggplot2 (>= 3.0.0)
+Suggests:
+    png
+RoxygenNote: 7.3.3
