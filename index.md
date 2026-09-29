@@ -106,8 +106,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "8440WHWR"
-#>  $ created : chr "2026-09-29T08:14:29-0400"
+#>  $ id      : chr "KY9SSDHF"
+#>  $ created : chr "2026-09-29T17:14:17-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -122,9 +122,9 @@ and script, and any stray copy leads back to its source.
 ``` r
 
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "W0YTF54Z"
+#> [1] "W32A3T6S"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "390335bc-aba8-483c-a784-6135295a5638"
+#> [1] "64686d89-2283-4e35-9ecf-7f0a5f41b306"
 ```
 
 IDs come from a private random stream.
