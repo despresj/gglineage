@@ -1,4 +1,17 @@
 ^renv$
 ^renv\.lock$
+^\.Rprofile$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^LICENSE\.md$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^data-raw$
+^cran-comments\.md$
+^plot\.png$
+^\.DS_Store$
+^CONTRIBUTING\.md$
+^\.claude$

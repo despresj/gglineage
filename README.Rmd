@@ -1,0 +1,273 @@
+---
+output:
+  github_document:
+    html_preview: false
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  dpi = 150
+)
+library(ggplot2)
+pkgload::load_all(quiet = TRUE)
+source("tests/testthat/helper-transforms.R")
+set.seed(2026)
+```
+
+# watermark <img src="man/figures/logo.png" align="right" height="139" alt="watermark hex logo" />
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/despresj/watermark/blob/main/LICENSE.md)
+<!-- badges: end -->
+
+**Trace every ggplot back to the code that made it.**
+
+Charts escape. They get screenshotted into slide decks, pasted into Slack,
+re-saved as JPEGs and forwarded until nobody knows which script, which data
+pull, or which version produced them. watermark stamps each plot with an ID
+you can read back out of the pixels, even after all of that.
+
+```{r hero, echo = FALSE, fig.width = 8, fig.height = 4.6, fig.alt = "A scatter plot of fuel economy with a large diagonal DRAFT stamp and a faint row of dots along its bottom edge."}
+ggplot(mpg, aes(displ, hwy, colour = drv)) +
+  geom_point(size = 2) +
+  labs(title = "Fuel economy by engine size",
+       subtitle = "The faint dotted rule along the bottom edge encodes \"K7Q2M9XD\"",
+       x = "Displacement (L)", y = "Highway MPG", colour = "Drive") +
+  theme_minimal(base_size = 13) +
+  watermark_text("DRAFT") +
+  watermark_dots("K7Q2M9XD")
+```
+
+## Installation
+
+```r
+# install.packages("pak")
+pak::pak("despresj/watermark")
+```
+
+## Thirty-second tour
+
+```{r tour}
+library(ggplot2)
+library(watermark)
+
+p <- ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  watermark_dots("RUN-42")          # just another + component
+
+file <- tempfile(fileext = ".png")
+ggsave(file, p, width = 7, height = 5, dpi = 150)
+
+extract_watermark(file)
+```
+
+Now abuse it. Shrink it by half, pad it with window chrome like a
+screenshot, and push it through JPEG at quality 50:
+
+```{r abuse}
+img <- png::readPNG(file)
+abused <- tf_jpeg(tf_pad(tf_resize(img, 0.5), 40), quality = 50)
+
+extract_watermark(abused)
+```
+
+<sup>`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from
+the package's
+[stress-test suite](tests/testthat/helper-transforms.R).</sup>
+
+## Three kinds of watermark
+
+| | What it is | Survives screenshots | Carries | Use it for |
+|---|---|:---:|---|---|
+| `watermark_dots()` | A faint row of dots in the bottom margin | ✅ | A short ID (up to 16 bytes) | Tracing any copy back to its source |
+| `watermark_text()` | A visible stamp: diagonal, tiled, or corner | ✅ | Whatever you write | Deterring reuse: `"DRAFT"`, `"CONFIDENTIAL"` |
+| `ggsave_watermark()` | Dots **plus** PNG metadata | Dots only | ID, timestamp, title, versions, any fields you add | The full provenance record for the original file |
+
+All three are drawn relative to the whole figure, never the data. They don't
+touch your scales, axes, coordinate system or facets, and they work the same
+on `coord_flip()`, `coord_polar()`, `facet_wrap()` and discrete axes.
+
+### Visible stamps
+
+```{r stamps}
+base <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_minimal()
+
+stamps <- list(
+  base + watermark_text("DRAFT"),
+  base + watermark_text("INTERNAL", position = "tile"),
+  base + watermark_text("fig 2 · v3", position = "bottomright")
+)
+```
+
+```{r stamps-show, echo = FALSE, fig.width = 10, fig.height = 3.2, fig.alt = "Three copies of the same scatter plot: one with a large diagonal DRAFT stamp, one tiled with INTERNAL, one with a small corner label."}
+grobs <- lapply(stamps, ggplotGrob)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(1, 3)))
+for (i in seq_along(grobs)) {
+  grid::pushViewport(grid::viewport(layout.pos.col = i))
+  grid::grid.draw(grobs[[i]])
+  grid::popViewport()
+}
+```
+
+Visible text stays out of the strip reserved for the dot code, so you can
+stack a stamp and the dots in any order.
+
+### Provenance on save
+
+`ggsave_watermark()` is a drop-in for `ggsave()`. It adds the dots and writes
+a provenance record into the PNG itself:
+
+```{r save}
+id <- ggsave_watermark(
+  file,
+  ggplot(mtcars, aes(wt, mpg)) + geom_point() + labs(title = "Weight vs MPG"),
+  metadata = list(script = "analysis/fig2.R", commit = "9f3c2e1"),
+  width = 7, height = 5, dpi = 150
+)
+
+str(read_watermark_metadata(file))
+```
+
+Metadata is rich but fragile: a screenshot throws it away. The dots are
+terse but tough. Together you get the full record when the original file
+travels and the ID when only the pixels do. Keep a log of `id`, commit and
+script, and any stray copy leads back to its source.
+
+```{r ids}
+wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
+wm_uuid()   # for metadata; too long for the dots
+```
+
+IDs come from a private random stream. `set.seed()` in your analysis won't
+repeat them, and generating them won't disturb your seed.
+
+## How the dot code works
+
+```{r anatomy, echo = FALSE, fig.width = 10, fig.height = 1.1, fig.alt = "Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit length, 64-bit payload, 8-bit CRC and 16-bit end sync. Filled circles are 1 bits."}
+bits <- watermark:::encode_bits("K7Q2M9XD")
+seg <- rep(
+  c("start sync", "length", "payload: K7Q2M9XD", "CRC-8", "end sync"),
+  c(16, 8, 64, 8, 16)
+)
+seg <- factor(seg, unique(seg))
+d <- data.frame(i = seq_along(bits), bit = bits, seg = seg)
+labs_df <- aggregate(i ~ seg, d, mean)
+pal <- c("#0f766e", "#b45309", "#1d4ed8", "#be123c", "#0f766e")
+
+ggplot(d, aes(i, 0)) +
+  geom_point(aes(colour = seg, fill = ifelse(bit == 1, as.character(seg), NA)),
+             shape = 21, size = 2.6, stroke = 0.6) +
+  geom_text(aes(i, 0.55, label = seg, colour = seg), labs_df, size = 3.6,
+            fontface = "bold") +
+  scale_colour_manual(values = pal, guide = "none") +
+  scale_fill_manual(values = setNames(pal, levels(seg)), na.value = "white",
+                    guide = "none") +
+  scale_y_continuous(limits = c(-0.25, 0.8)) +
+  theme_void()
+```
+
+Each dot position is one bit; a dot means 1, a gap means 0. The frame is:
+
+- **Start sync**, `1010…`: eight evenly spaced dots. The decoder uses them
+  to lock on and measure the pitch, so it doesn't care about image size.
+- **Length** byte, then the **payload** (the ID's UTF-8 bytes).
+- **CRC-8** over length and payload.
+- **End sync**, `…0101`. The frame's first and last bits are both 1, so the
+  outermost dots mark the frame edges.
+
+Decoding scans every row of the image. For each one it compares pixels with
+their local neighbourhood (so borders and UI chrome don't confuse it), finds
+the start sync, samples each bit position, and accepts the row only if both
+syncs, the length and the checksum all agree. That is 40 check bits, so a
+decode is exact or `NULL`: it doesn't guess.
+
+## How tough is it?
+
+```{r robustness, include = FALSE}
+img <- render_plot(
+  ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_dots("K7Q2M9XD"),
+  width = 7, height = 5, dpi = 150
+)
+rows <- lapply(stress_transforms(), function(tf) {
+  out <- suppressWarnings(tf$f(img))
+  got <- extract_watermark(out)
+  data.frame(
+    group = tf$group, name = tf$name,
+    size = sprintf("%d × %d", dim(out)[2], dim(out)[1]),
+    result = if (is.null(got)) "none" else if (got == "K7Q2M9XD") "exact" else "WRONG",
+    promised = tf$survives
+  )
+})
+res <- do.call(rbind, rows)
+res$shown <- ifelse(
+  res$result == "exact", "✅ recovered",
+  ifelse(res$result == "none", "✖️ not found", "❌ WRONG ID")
+)
+n_wrong <- sum(res$result == "WRONG")
+n_ok <- sum(res$result == "exact")
+
+min_width <- NA
+for (w in seq(400, 150, by = -10)) {
+  if (!identical(extract_watermark(tf_resize_to_width(img, w)), "K7Q2M9XD")) break
+  min_width <- w
+}
+min_q <- NA
+for (q in c(50, 40, 30, 25, 20, 15, 10, 8, 6, 5)) {
+  got <- extract_watermark(suppressWarnings(tf_jpeg(img, q)))
+  if (!identical(got, "K7Q2M9XD")) break
+  min_q <- q
+}
+```
+
+A 7 × 5 in plot saved at 150 dpi, pushed through `r nrow(res)`
+transformations. Every row is recomputed each time this README is knit, and
+the same matrix runs in
+[`test-robustness.R`](tests/testthat/test-robustness.R) on every push, on
+several plot types.
+
+```{r robustness-table, echo = FALSE, results = "asis"}
+tab <- res[, c("group", "name", "size", "shown")]
+tab$group[duplicated(tab$group)] <- ""
+names(tab) <- c("", "Transformation", "Pixels", "Dot code")
+knitr::kable(tab, row.names = FALSE, align = c("l", "l", "r", "l"))
+```
+
+**`r n_ok` of `r nrow(res)` recovered exactly, and `r n_wrong` wrong IDs.**
+The rows under "past the limits" mark where the guarantee ends. A result
+there is either exact or nothing:
+
+- **The dot strip must survive.** Cropping the bottom edge or either side
+  removes part of the frame; there is no partial recovery.
+- **No rotation.** Rows are scanned horizontally.
+- **Minimum size.** This 8-character ID decodes reliably down to about
+  **`r min_width` px wide**, and sometimes lower. Shorter IDs go further;
+  16-byte IDs need about twice the width.
+- **Compression.** JPEG holds down to about **quality `r min_q`**.
+- **Brightening past about +8%** clips the faint dots to white. Raise
+  `alpha` if your plots will be edited heavily.
+
+Watermarks here are for provenance, not security. Anyone who knows the dots
+are there can crop or paint over them. The point is that ordinary sharing
+doesn't destroy them.
+
+## Related work
+
+- [ggplot2](https://ggplot2.tidyverse.org), which this extends.
+- Steganography packages hide data in the least significant bits of pixels,
+  which a single JPEG pass or screenshot destroys. watermark trades capacity
+  for survival.
+
+## Contributing
+
+Bug reports and ideas are welcome in the
+[issue tracker](https://github.com/despresj/watermark/issues). Run the test
+suite with `devtools::test()`; the robustness matrix lives in
+`tests/testthat/test-robustness.R`.

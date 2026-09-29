@@ -2,3 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
+docs/
+README.html
+*.Rcheck/
+watermark_*.tar.gz
+/plot.png
+Rplots.pdf

@@ -1,0 +1,20 @@
+url: https://despresj.github.io/watermark/
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0f766e"
+reference:
+  - title: Watermark a plot
+    contents:
+      - watermark_dots
+      - add_watermark
+      - watermark_text
+  - title: Save and trace
+    contents:
+      - ggsave_watermark
+      - extract_watermark
+      - read_watermark_metadata
+  - title: IDs
+    contents:
+      - wm_id
+      - wm_uuid
