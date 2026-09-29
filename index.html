@@ -56,7 +56,10 @@
 
 <p><strong>Trace every ggplot back to the code that made it.</strong></p>
 <p>Charts escape. They get screenshotted into slide decks, pasted into Slack, re-saved as JPEGs and forwarded until nobody knows which script, which data pull, or which version produced them. watermark stamps each plot with an ID you can read back out of the pixels, even after all of that.</p>
-<p><img src="reference/figures/README-hero-1.png" alt="A scatter plot of fuel economy with a large diagonal DRAFT stamp and a faint row of dots along its bottom edge."></p>
+<p align="center">
+<img src="reference/figures/ping.gif" width="720" alt="Animation: a random chart is watermarked, screenshotted, shrunk and JPEG-compressed; a sonar sweep scans it, the faint dot row lights up, and the ID is decoded with a passing checksum."></p>
+<p align="center">
+<sub><b>Ping a rando chart.</b> A random chart is screenshotted, shrunk and JPEG-crunched, then the real decoder finds the dot row and reads its ID back. Made by <a href="https://github.com/despresj/watermark/blob/main/data-raw/ping.R" class="external-link"><code>data-raw/ping.R</code></a>; nothing is faked.</sub></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -161,8 +164,8 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="reference/read_watermark_metadata.html">read_watermark_metadata</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 6</span></span>
-<span><span class="co">#&gt;  $ id      : chr "KY9SSDHF"</span></span>
-<span><span class="co">#&gt;  $ created : chr "2026-09-29T17:14:17-0400"</span></span>
+<span><span class="co">#&gt;  $ id      : chr "8K7GQ7QM"</span></span>
+<span><span class="co">#&gt;  $ created : chr "2026-09-29T17:20:03-0400"</span></span>
 <span><span class="co">#&gt;  $ title   : chr "Weight vs MPG"</span></span>
 <span><span class="co">#&gt;  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"</span></span>
 <span><span class="co">#&gt;  $ script  : chr "analysis/fig2.R"</span></span>
@@ -170,9 +173,9 @@
 <p>Metadata is rich but fragile: a screenshot throws it away. The dots are terse but tough. Together you get the full record when the original file travels and the ID when only the pixels do. Keep a log of <code>id</code>, commit and script, and any stray copy leads back to its source.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/wm_id.html">wm_id</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># 8 chars of Crockford base32 (40 bits); never I, L, O or U</span></span>
-<span><span class="co">#&gt; [1] "W32A3T6S"</span></span>
+<span><span class="co">#&gt; [1] "8ZY75DVA"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># for metadata; too long for the dots</span></span>
-<span><span class="co">#&gt; [1] "64686d89-2283-4e35-9ecf-7f0a5f41b306"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "27b0c836-513b-4db6-8928-5c3aa9edfee2"</span></span></code></pre></div>
 <p>IDs come from a private random stream. <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> in your analysis won’t repeat them, and generating them won’t disturb your seed.</p>
 </div>
 </div>
@@ -196,7 +199,7 @@
 <div class="section level2">
 <h2 id="how-tough-is-it">How tough is it?<a class="anchor" aria-label="anchor" href="#how-tough-is-it"></a>
 </h2>
-<p>A 7 × 5 in plot saved at 150 dpi, pushed through 32 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types.</p>
+<p>A 7 × 5 in plot saved at 150 dpi, pushed through 34 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types.</p>
 <table class="table">
 <colgroup>
 <col width="25%">
@@ -368,6 +371,12 @@
 <td align="left">✅ recovered</td>
 </tr>
 <tr>
+<td align="left"></td>
+<td align="left">Shrink to 640 px wide + JPEG 50</td>
+<td align="right">640 × 457</td>
+<td align="left">✅ recovered</td>
+</tr>
+<tr>
 <td align="left">Past the limits</td>
 <td align="left">Crop bottom 5%</td>
 <td align="right">1050 × 713</td>
@@ -399,13 +408,19 @@
 </tr>
 <tr>
 <td align="left"></td>
+<td align="left">Shrink to 430 px wide + JPEG 50</td>
+<td align="right">430 × 307</td>
+<td align="left">✖ not found</td>
+</tr>
+<tr>
+<td align="left"></td>
 <td align="left">Downscale to 25%</td>
 <td align="right">262 × 188</td>
 <td align="left">✅ recovered</td>
 </tr>
 </tbody>
 </table>
-<p><strong>27 of 32 recovered exactly, and 0 wrong IDs.</strong> The rows under “past the limits” mark where the guarantee ends. A result there is either exact or nothing:</p>
+<p><strong>28 of 34 recovered exactly, and 0 wrong IDs.</strong> The rows under “past the limits” mark where the guarantee ends. A result there is either exact or nothing:</p>
 <ul>
 <li>
 <strong>The dot strip must survive.</strong> Cropping the bottom edge or either side removes part of the frame; there is no partial recovery.</li>
@@ -414,7 +429,9 @@
 <li>
 <strong>Minimum size.</strong> This 8-character ID decodes reliably down to about <strong>280 px wide</strong>, and sometimes lower. Shorter IDs go further; 16-byte IDs need about twice the width.</li>
 <li>
-<strong>Compression.</strong> JPEG holds down to about <strong>quality 8</strong>.</li>
+<strong>Compression.</strong> At full size, JPEG holds down to about <strong>quality 8</strong>.</li>
+<li>
+<strong>Small <em>and</em> compressed.</strong> The two limits compound. Down to about 640 px wide, JPEG holds to quality 50; below that, heavy compression gets unreliable, and by about 430 px anything under quality 90 can erase the dots.</li>
 <li>
 <strong>Brightening past about +8%</strong> clips the faint dots to white. Raise <code>alpha</code> if your plots will be edited heavily.</li>
 </ul>

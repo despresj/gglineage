@@ -29,10 +29,10 @@ ggsave_watermark(file, ggplot(mtcars, aes(wt, mpg)) + geom_point(),
                  width = 4, height = 3, dpi = 100)
 read_watermark_metadata(file)
 #> $id
-#> [1] "TPKM39NP"
+#> [1] "SPH314MN"
 #> 
 #> $created
-#> [1] "2026-09-29T21:16:12+0000"
+#> [1] "2026-09-29T21:23:25+0000"
 #> 
 #> $software
 #> [1] "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
