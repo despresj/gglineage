@@ -206,7 +206,7 @@ draw_ping <- function(t, rings = TRUE) {
 }
 
 # Magnified, contrast-stretched strip around the dot row, with the frame
-# segments (sync / length / payload / CRC / sync) underneath.
+# segments (sync / header / payload / check / sync) underneath.
 strip_raster <- local({
   pad <- 2 * found$pitch
   cols <- max(1, floor(found$left - pad)):min(ncol(gray), ceiling(found$right + pad))
@@ -239,10 +239,10 @@ draw_strip <- function(t) {
   cols <- strip_raster$cols
   to_x <- function(col) sx + (col - cols[1]) / (length(cols) - 1) * sw
   n <- found$n_bits
-  bounds <- cumsum(c(0, 16, 8, n - 48, 8, 16))
+  bounds <- cumsum(c(0, 16, 8, n - 72, 32, 16))
   bit_x <- function(b) to_x(found$left + (b - 0.5) * found$pitch)
-  labels <- c("sync", "len", sprintf("payload · %d bytes", (n - 48) / 8),
-              "crc", "sync")
+  labels <- c("sync", "hdr", sprintf("payload · %d bits", n - 72),
+              "check", "sync")
   for (i in 1:5) {
     x0 <- bit_x(bounds[i])
     x1 <- bit_x(bounds[i + 1])
@@ -333,7 +333,7 @@ for (t in seq01(6)) {
     draw_image(final, 0.45)
     draw_ping(1, rings = FALSE)
     draw_strip(ease(t))
-    draw_footer(status = "checking syncs + CRC-8")
+    draw_footer(status = "checking syncs + 32-bit check")
   })
 }
 chars <- strsplit(id, "")[[1]]
@@ -344,7 +344,7 @@ for (i in seq_along(chars)) {
     draw_ping(1, rings = FALSE)
     draw_strip(1)
     draw_footer(paste(chars[seq_len(i)], collapse = ""),
-                "checking syncs + CRC-8", cursor = TRUE)
+                "checking syncs + 32-bit check", cursor = TRUE)
   })
 }
 for (i in 1:22) {

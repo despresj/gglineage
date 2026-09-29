@@ -40,8 +40,10 @@ bottom margin is widened to 14pt to make room; a complete theme added \emph{afte
 the watermark (e.g. \code{+ theme_minimal()}) resets that margin, so add themes
 first.
 
-The code is framed with sync patterns, a length byte and a CRC-8 checksum,
-so a decode either returns the exact ID or nothing.
+The code is framed with sync patterns, a header and a 32-bit checksum, so a
+decode either returns the exact ID or nothing. IDs made only of the
+characters \code{\link[=wm_id]{wm_id()}} uses are packed at 5 bits per character, so they fit
+in fewer, larger dots than other strings of the same length.
 }
 \examples{
 library(ggplot2)

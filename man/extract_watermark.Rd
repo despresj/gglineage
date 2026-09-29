@@ -25,7 +25,7 @@ is not rotated.
 }
 \details{
 Every row of the image is a candidate; a row is accepted only if its start
-and end sync patterns, length byte and CRC-8 checksum all agree, so false
+and end sync patterns, header and 32-bit checksum all agree, so false
 positives are vanishingly rare.
 }
 \examples{

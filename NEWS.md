@@ -5,10 +5,12 @@ First release.
 * `watermark_dots()` adds an invisible, machine-readable ID along the plot's
   bottom margin as an ordinary `+` component. It is drawn relative to the
   figure, so scales, coordinates and facets are untouched, and it is framed
-  with sync patterns and a CRC-8 so decodes are exact or rejected.
+  with sync patterns and a 32-bit check so decodes are exact or rejected.
+  IDs from `wm_id()` are packed at 5 bits per character.
 * `extract_watermark()` reads the ID back from PNG or JPEG files, or pixel
   arrays. It survives JPEG compression, rescaling, padding, colour changes
-  and screenshot chains; see the robustness matrix in the README.
+  and screenshot chains, including small images: quality 50 at 360 px wide.
+  See the robustness matrix in the README.
 * `watermark_text()` adds visible stamps: a diagonal "DRAFT", a repeating
   tile, or a corner label. Text stays clear of the dot strip.
 * `ggsave_watermark()` saves with dots and writes provenance fields into PNG

@@ -150,11 +150,11 @@ repeat them, and generating them won't disturb your seed.
 
 ## How the dot code works
 
-```{r anatomy, echo = FALSE, fig.width = 10, fig.height = 1.1, fig.alt = "Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit length, 64-bit payload, 8-bit CRC and 16-bit end sync. Filled circles are 1 bits."}
+```{r anatomy, echo = FALSE, fig.width = 10, fig.height = 1.1, fig.alt = "Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit header, 40-bit payload, 32-bit check and 16-bit end sync. Filled circles are 1 bits."}
 bits <- watermark:::encode_bits("K7Q2M9XD")
 seg <- rep(
-  c("start sync", "length", "payload: K7Q2M9XD", "CRC-8", "end sync"),
-  c(16, 8, 64, 8, 16)
+  c("start sync", "header", "payload: K7Q2M9XD", "check: 2 × CRC-16", "end sync"),
+  c(16, 8, 40, 32, 16)
 )
 seg <- factor(seg, unique(seg))
 d <- data.frame(i = seq_along(bits), bit = bits, seg = seg)
@@ -177,16 +177,25 @@ Each dot position is one bit; a dot means 1, a gap means 0. The frame is:
 
 - **Start sync**, `1010…`: eight evenly spaced dots. The decoder uses them
   to lock on and measure the pitch, so it doesn't care about image size.
-- **Length** byte, then the **payload** (the ID's UTF-8 bytes).
-- **CRC-8** over length and payload.
+- **Header**: the ID's length, and whether it's packed. IDs made only of
+  `wm_id()`'s 32 characters take 5 bits each; any other string is stored as
+  UTF-8 bytes.
+- **Payload**, then a **32-bit check**: two CRC-16s over the header and ID.
 - **End sync**, `…0101`. The frame's first and last bits are both 1, so the
   outermost dots mark the frame edges.
 
-Decoding scans every row of the image. For each one it compares pixels with
-their local neighbourhood (so borders and UI chrome don't confuse it), finds
-the start sync, samples each bit position, and accepts the row only if both
-syncs, the length and the checksum all agree. That is 40 check bits, so a
-decode is exact or `NULL`: it doesn't guess.
+Decoding scans the image row by row. It compares pixels with their local
+neighbourhood (so borders and UI chrome don't confuse it), locks onto the
+start sync, and reads each bit by interpolating between pixels, with the
+threshold set by how the sync dots actually read. Rows too faint to read
+alone are averaged with their neighbours. As a last resort it reads the frame
+where `watermark_dots()` always draws it, a fixed fraction of the way across
+the figure, which rescues images too small or compressed to find the dots
+one by one.
+
+A row is accepted only if both syncs, the header and the 32-bit check all
+agree. A damaged frame slips past that about once in four billion readings,
+so a decode is exact or `NULL`: it doesn't guess.
 
 ## How tough is it?
 
@@ -251,10 +260,9 @@ there is either exact or nothing:
   16-byte IDs need about twice the width.
 - **Compression.** At full size, JPEG holds down to about
   **quality `r min_q`**.
-- **Small *and* compressed.** The two limits compound. Down to about 640 px
-  wide, JPEG holds to quality 50; below that, heavy compression gets
-  unreliable, and by about 430 px anything under quality 90 can erase the
-  dots.
+- **Small *and* compressed.** The two limits compound. JPEG holds to quality
+  35 down to about 520 px wide and to quality 50 down to about 360 px; around
+  300 px, the dots themselves start losing bits to compression.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 

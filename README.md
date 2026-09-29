@@ -120,8 +120,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "8K7GQ7QM"
-#>  $ created : chr "2026-09-29T17:20:03-0400"
+#>  $ id      : chr "CG7J7CK5"
+#>  $ created : chr "2026-09-29T17:47:45-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -135,9 +135,9 @@ and script, and any stray copy leads back to its source.
 
 ``` r
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "8ZY75DVA"
+#> [1] "9KP0AF7Q"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "27b0c836-513b-4db6-8928-5c3aa9edfee2"
+#> [1] "fb1a7374-b6bd-4115-8c10-031147d00d16"
 ```
 
 IDs come from a private random stream. `set.seed()` in your analysis
@@ -145,7 +145,7 @@ won’t repeat them, and generating them won’t disturb your seed.
 
 ## How the dot code works
 
-<img src="man/figures/README-anatomy-1.png" alt="Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit length, 64-bit payload, 8-bit CRC and 16-bit end sync. Filled circles are 1 bits."  />
+<img src="man/figures/README-anatomy-1.png" alt="Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit header, 40-bit payload, 32-bit check and 16-bit end sync. Filled circles are 1 bits."  />
 
 Each dot position is one bit; a dot means 1, a gap means 0. The frame
 is:
@@ -153,20 +153,30 @@ is:
 - **Start sync**, `1010…`: eight evenly spaced dots. The decoder uses
   them to lock on and measure the pitch, so it doesn’t care about image
   size.
-- **Length** byte, then the **payload** (the ID’s UTF-8 bytes).
-- **CRC-8** over length and payload.
+- **Header**: the ID’s length, and whether it’s packed. IDs made only of
+  `wm_id()`’s 32 characters take 5 bits each; any other string is stored
+  as UTF-8 bytes.
+- **Payload**, then a **32-bit check**: two CRC-16s over the header and
+  ID.
 - **End sync**, `…0101`. The frame’s first and last bits are both 1, so
   the outermost dots mark the frame edges.
 
-Decoding scans every row of the image. For each one it compares pixels
-with their local neighbourhood (so borders and UI chrome don’t confuse
-it), finds the start sync, samples each bit position, and accepts the
-row only if both syncs, the length and the checksum all agree. That is
-40 check bits, so a decode is exact or `NULL`: it doesn’t guess.
+Decoding scans the image row by row. It compares pixels with their local
+neighbourhood (so borders and UI chrome don’t confuse it), locks onto
+the start sync, and reads each bit by interpolating between pixels, with
+the threshold set by how the sync dots actually read. Rows too faint to
+read alone are averaged with their neighbours. As a last resort it reads
+the frame where `watermark_dots()` always draws it, a fixed fraction of
+the way across the figure, which rescues images too small or compressed
+to find the dots one by one.
+
+A row is accepted only if both syncs, the header and the 32-bit check
+all agree. A damaged frame slips past that about once in four billion
+readings, so a decode is exact or `NULL`: it doesn’t guess.
 
 ## How tough is it?
 
-A 7 × 5 in plot saved at 150 dpi, pushed through 34 transformations.
+A 7 × 5 in plot saved at 150 dpi, pushed through 36 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
@@ -200,16 +210,18 @@ on every push, on several plot types.
 | Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
 |  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
 |  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
-|  | Shrink to 640 px wide + JPEG 50 | 640 × 457 | ✅ recovered |
+| Small + compressed | Shrink to 520 px wide + JPEG 35 | 520 × 371 | ✅ recovered |
+|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✅ recovered |
+|  | Shrink to 360 px wide + JPEG 50 | 360 × 257 | ✅ recovered |
 | Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
 |  | Crop left 10% | 945 × 750 | ✖ not found |
 |  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
 |  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
 |  | JPEG quality 5 | 1050 × 750 | ✖ not found |
-|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✖ not found |
+|  | Shrink to 300 px wide + JPEG 50 | 300 × 214 | ✖ not found |
 |  | Downscale to 25% | 262 × 188 | ✅ recovered |
 
-**28 of 34 recovered exactly, and 0 wrong IDs.** The rows under “past
+**30 of 36 recovered exactly, and 0 wrong IDs.** The rows under “past
 the limits” mark where the guarantee ends. A result there is either
 exact or nothing:
 
@@ -217,13 +229,14 @@ exact or nothing:
   side removes part of the frame; there is no partial recovery.
 - **No rotation.** Rows are scanned horizontally.
 - **Minimum size.** This 8-character ID decodes reliably down to about
-  **280 px wide**, and sometimes lower. Shorter IDs go further; 16-byte
+  **250 px wide**, and sometimes lower. Shorter IDs go further; 16-byte
   IDs need about twice the width.
-- **Compression.** At full size, JPEG holds down to about **quality 8**.
-- **Small *and* compressed.** The two limits compound. Down to about 640
-  px wide, JPEG holds to quality 50; below that, heavy compression gets
-  unreliable, and by about 430 px anything under quality 90 can erase
-  the dots.
+- **Compression.** At full size, JPEG holds down to about **quality
+  15**.
+- **Small *and* compressed.** The two limits compound. JPEG holds to
+  quality 35 down to about 520 px wide and to quality 50 down to about
+  360 px; around 300 px, the dots themselves start losing bits to
+  compression.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 

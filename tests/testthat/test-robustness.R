@@ -61,3 +61,26 @@ test_that("real JPEG files on disk decode", {
          width = 7, height = 5, dpi = 150, quality = 70)
   expect_equal(extract_watermark(file), "K7Q2M9XD")
 })
+
+test_that("random IDs near and past the limits decode exactly or not at all", {
+  skip_if_no_raster()
+  skip_if_not_installed("jpeg")
+  skip_on_cran()
+  set.seed(11)
+  ids <- c(vapply(c(1, 4, 8, 12, 16), wm_id, character(1)),
+           "RUN-42", "fig 2 (v3)", "café", "a1b2c3d4e5f6a7b8")
+  chains <- list(
+    function(x) tf_jpeg(tf_resize_to_width(x, 360), 50),
+    function(x) tf_jpeg(tf_resize_to_width(x, 300), 50),
+    function(x) tf_jpeg(tf_resize_to_width(x, 260), 35),
+    function(x) tf_jpeg(tf_resize(x, 0.5), 15)
+  )
+  for (id in ids) {
+    img <- render_plot(base_plot() + watermark_dots(id))
+    for (chain in chains) {
+      got <- extract_watermark(suppressWarnings(chain(img)))
+      expect_true(is.null(got) || identical(got, id),
+                  label = sprintf("decoded %s as %s", id, format(got)))
+    }
+  }
+})
