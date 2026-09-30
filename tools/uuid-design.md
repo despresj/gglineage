@@ -349,8 +349,11 @@ For comparison, before the estimator change the 8-character limits were
 JPEG 50 at 480 px and JPEG 35 at ~520 px, and the README quoted 360/520.
 The two-row UUID costs about 20% of width at JPEG 50 and nothing in the
 padded-screenshot case, where the row scanner's run detection, not the
-pitch, is the limit for both. The resize floor of 220 px (pitch 1.5-1.8 px)
-is the decoder's `pitch < 1.5` guard, not a measured failure.
+pitch, is the limit for both. 220 px was the smallest width in this sweep,
+not a floor: the README's knit-time scan (one ID each, 400 px down to 100
+in steps of 10, plain resize) puts the lossless floor at **120 px** for the
+8-character ID and **150 px** for a UUID (**observed**), about one pixel
+per bit; the figure-geometry pass has no minimum pitch.
 
 Not measured: figures rendered natively at small pixel sizes (different
 antialiasing from a downscale), other renderers than ragg, `alpha` other

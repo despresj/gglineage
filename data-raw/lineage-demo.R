@@ -3,7 +3,7 @@
 # Left, the usual thread: a client wants to act on a chart, all anyone has is
 # a screenshot from their deck, and the six things Sam would need to check
 # the recommendation are unknown. Right, the same screenshot traced with
-# watermark. Sam's questions are also the six rows of the lineage ledger on
+# gglineage. Sam's questions are also the six rows of the lineage ledger on
 # the right: each thing Sam asks for turns a row into "unknown", and the
 # decode fills them back in. On desktop Sam then closes the thread: the
 # source run is found, and the recommendation can now be checked (the trace
@@ -72,7 +72,10 @@ chart <- ggplot(curves, aes(month, active, colour = cohort)) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top",
         legend.justification = "left", panel.grid.minor = element_blank())
 
-id <- "7K3M9QXD"
+# A full UUID (version 7, so it sorts by creation time), made once with
+# wm_uuid(version = 7) and fixed here so the build is reproducible. All 128
+# bits go into the dots, as two rows.
+id <- "01a0f026-9e3e-729b-9cfa-87c8dd7bfb55"
 output <- "output/retention-by-cohort.png"
 ggsave_watermark(file.path(project, output), chart, id = id,
                  width = 7, height = 4.3, dpi = 110, bg = "white")
@@ -123,10 +126,12 @@ grid.raster(figure, x = unit(48, "points"), y = unit(40, "points"),
 invisible(dev.off())
 slide <- png::readPNG(slide_file)[, , 1:3]
 
-# A screenshot of part of the slide, halved by a Retina display, saved as a
-# JPEG by a chat app.
+# A screenshot of part of the slide, shrunk by a Retina display, saved as a
+# JPEG by a chat app. The figure ends up about 570 px wide inside it, which
+# is 1.4x the width a two-row UUID needs at this JPEG quality (see the
+# README's limits), so the decode is not a lucky one.
 screenshot <- tf_crop(slide, top = 0.02, bottom = 0.03, left = 0.01, right = 0.1)
-screenshot <- tf_resize(screenshot, 0.62)
+screenshot <- tf_resize(screenshot, 0.7)
 screenshot_file <- "data-raw/lineage-demo/screenshot.jpg"
 jpeg::writeJPEG(screenshot, screenshot_file, quality = 0.6)
 screenshot <- jpeg::readJPEG(screenshot_file)
@@ -139,7 +144,9 @@ plots <- utils::read.csv(manifest_path, fileEncoding = "UTF-8")
 record <- plots[plots$id == decoded, ]
 stopifnot(nrow(record) == 1L)
 where <- find_watermark(as_gray(screenshot))
-stopifnot(identical(where$id, decoded))
+stopifnot(identical(where$id, decoded), identical(where$kind, "uuid"))
+# A UUID is two rows of dots; the lower holds bytes 1-8, the upper 9-16.
+dot_rows <- sort(c(where$row, where$partner_row))
 
 # "No file metadata": list the JPEG's marker segments. A file with EXIF, XMP,
 # ICC or a comment would carry APP1..APP15 or COM segments; this one must have
@@ -162,9 +169,10 @@ jpeg_segments <- function(file) {
 segments <- jpeg_segments(screenshot_file)
 metadata_segments <- segments[segments %in% c(sprintf("%02X", 0xe1:0xef), "FE")]
 stopifnot(length(metadata_segments) == 0L)
-message(sprintf("Decoded %s from %s (%d x %d px, JPEG); row %d, %d bits; segments %s",
+message(sprintf("Decoded %s from %s (%d x %d px, JPEG); rows %d and %d, 2 x %d bits at %.2f px/bit; segments %s",
                 decoded, basename(screenshot_file), ncol(screenshot),
-                nrow(screenshot), where$row, where$n_bits, paste(segments, collapse = " ")))
+                nrow(screenshot), dot_rows[1], dot_rows[2], where$n_bits, where$pitch,
+                paste(segments, collapse = " ")))
 
 # Drawing ---------------------------------------------------------------------
 #
@@ -258,12 +266,13 @@ question_chip <- function(x, y) {
   txt("?", x + 9, y, size = 12, col = pal$warn, face = "bold", just = "centre")
 }
 
-# The loupe: the JPEG's own pixels around the dot row, drawn with no
+# The loupe: the JPEG's own pixels around the two dot rows, drawn with no
 # smoothing at an integer number of device pixels per image pixel, with the
 # darkness of every pixel multiplied by `gain`. `cursor` in [0, 1] draws the
-# reading bar that sweeps the strip.
-LOUPE_COLS <- 200:357
-LOUPE_ROWS <- (where$row - 5):(where$row + 5)
+# reading bar that sweeps the strip. The strip starts just left of the
+# frame's first dot, so the alternating start sync is in view.
+LOUPE_COLS <- round(where$left) - 4 + 0:157
+LOUPE_ROWS <- (dot_rows[1] - 4):(dot_rows[2] + 4)
 LOUPE_ZOOM <- 3   # device pixels per image pixel
 LOUPE_GAIN <- 2.5
 loupe <- function(x, y, cursor = NA) {
@@ -287,7 +296,7 @@ loupe_label <- sprintf(
 )
 
 PANEL_W <- 420
-CARD_H <- 620
+CARD_H <- 676
 PAD <- 20
 INNER_W <- PANEL_W - 2 * PAD
 
@@ -366,11 +375,15 @@ draw_left <- function(x, y, n_msgs, typing_who = NULL, rise = 1) {
 
 lineage_rows <- c("client", "project", "run", "data", "script", "output")
 console_lines <- c(
-  sprintf('> extract_watermark("%s")', basename(screenshot_file)),
+  sprintf('> id <- extract_watermark("%s")', basename(screenshot_file)),
+  "> id",
   sprintf('[1] "%s"', decoded),
-  sprintf('> plots[plots$id == "%s", ]', decoded)
+  "> plots[plots$id == id, ]"
 )
+N_CONSOLE <- length(console_lines)
 LH <- 20  # console line height
+# The UUID, broken after its third group, for the ledger's two-line ID box.
+id_lines <- c(sub("^(.{19}).*", "\\1", decoded), sub("^.{19}", "", decoded))
 
 draw_console <- function(x, y, w, n, cursor = FALSE, prompt = FALSE) {
   if (n == 0 && !prompt) return(invisible())
@@ -400,7 +413,7 @@ draw_console <- function(x, y, w, n, cursor = FALSE, prompt = FALSE) {
 draw_right <- function(x, y, asked = character(), console = 0, prompt = TRUE, cursor = FALSE,
                        scan = NA, loupe_on = FALSE, id_shown = FALSE, filled = 0,
                        fill_alpha = 1, note = FALSE) {
-  panel_label("The same screenshot, traced with watermark", x, y)
+  panel_label("The same screenshot, traced with gglineage", x, y)
   cy <- y + 42
   card(x, cy, PANEL_W, CARD_H, "Trace it", "R console")
   ix <- x + PAD
@@ -417,16 +430,19 @@ draw_right <- function(x, y, asked = character(), console = 0, prompt = TRUE, cu
 
   show_row <- loupe_on || !is.na(scan) || id_shown
   if (show_row) {
-    # Outline the row the decoder read, on the thumbnail.
+    # Outline the two rows the decoder read, on the thumbnail.
     s <- iw / ncol(screenshot)
     x0 <- ix + (where$left - 2 * where$pitch) * s
     x1 <- ix + (where$right + 2 * where$pitch) * s
-    ry <- iy + (where$row - 0.5) * s
-    box(x0, ry - 4, x1 - x0, 8, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
+    ry0 <- iy + (dot_rows[1] - 0.5) * s
+    ry1 <- iy + (dot_rows[2] + 0.5) * s
+    box(x0, ry0 - 4, x1 - x0, ry1 - ry0 + 8, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
   }
   if (id_shown) {
-    box(info_x, iy + ih - 20, 22, 8, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
-    txt("ID read from this row", info_x + 30, iy + ih - 16, size = 13,
+    box(info_x, iy + ih - 38, 22, 10, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
+    txt("ID read from", info_x + 30, iy + ih - 33, size = 13,
+        col = pal$accent, face = "bold", max_w = info_w - 30)
+    txt("these two rows", info_x + 30, iy + ih - 15, size = 13,
         col = pal$accent, face = "bold", max_w = info_w - 30)
   }
 
@@ -437,7 +453,7 @@ draw_right <- function(x, y, asked = character(), console = 0, prompt = TRUE, cu
     loupe(ix, ly, cursor = scan)
     txt(loupe_label, ix, ly + lh + 11, size = 11, col = pal$muted, max_w = INNER_W)
   }
-  # Console slot, three lines reserved.
+  # Console slot, all its lines reserved.
   csy <- ly + lh + 24
   draw_console(ix, csy, INNER_W, console, cursor = cursor, prompt = prompt)
 
@@ -449,19 +465,25 @@ draw_right <- function(x, y, asked = character(), console = 0, prompt = TRUE, cu
   row_h <- 21
   note_h <- 3 * 18
   rows_h <- 4 + row_h * length(lineage_rows) + 8
-  id_h <- 48 + 14
+  id_box_h <- 66
+  id_h <- id_box_h + 14
   block_top <- bottom - note_h - 12 - rows_h - id_h
-  stopifnot(block_top >= csy + 10 + LH * 3 + 10)
+  stopifnot(block_top >= csy + 10 + LH * N_CONSOLE + 10)
   yy <- block_top
   if (id_shown) {
-    box(ix, yy, INNER_W, 48, fill = pal$accent_bg, r = 6)
+    box(ix, yy, INNER_W, id_box_h, fill = pal$accent_bg, r = 6)
     txt("FROM THE PIXELS", key_x, yy + 14, size = 11.5, col = pal$accent, face = "bold")
-    txt("plot ID", key_x, yy + 33, size = 13, col = pal$muted)
-    txt(decoded, val_x, yy + 32, size = 20, family = mono, face = "bold", col = pal$accent)
+    txt("plot ID", key_x, yy + 34, size = 13, col = pal$muted)
+    # The UUID on two lines, broken after a hyphen, so it stays legible on a
+    # phone.
+    for (i in seq_along(id_lines)) {
+      txt(id_lines[i], val_x, yy + 34 + 18 * (i - 1), size = 16, family = mono,
+          face = "bold", col = pal$accent, max_w = val_w)
+    }
   }
   yy <- yy + id_h
   hw <- txt("WHAT SAM NEEDS TO KNOW", key_x, yy + 4, size = 11.5, col = pal$muted, face = "bold")
-  if (console >= 3) {
+  if (console >= N_CONSOLE) {
     # The lookup has been typed: the rows are about to come from the manifest.
     txt("from plots.csv", key_x + hw + 10, yy + 4.5, size = 11.5, col = pal$accent,
         face = "bold", max_w = INNER_W - hw - 22)
@@ -613,19 +635,20 @@ trace_beats <- function(tl, frame, final, closing = NULL) {
     add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE,
                                 scan = ease(k / 9))), 1 / FPS)
   }
-  add_frame(tl, frame(L, list(asked = all_asked, console = 2, id_shown = TRUE)), 1.5)
-  add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE)), 0.7)
+  # `> id` and its printed UUID arrive together; the lookup line follows.
+  add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE)), 1.7)
+  add_frame(tl, frame(L, list(asked = all_asked, console = 4, id_shown = TRUE)), 0.7)
   for (i in seq_along(lineage_rows)) {
-    add_frame(tl, frame(LT, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i,
+    add_frame(tl, frame(LT, list(asked = all_asked, console = 4, id_shown = TRUE, filled = i,
                                  fill_alpha = 0.45)), 1 / FPS)
-    add_frame(tl, frame(LT, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i)),
+    add_frame(tl, frame(LT, list(asked = all_asked, console = 4, id_shown = TRUE, filled = i)),
               if (i < length(lineage_rows)) 0.16 else 0.5)
   }
   if (!is.null(closing)) for (r in c(0.35, 0.7)) add_frame(tl, closing(r), 1 / FPS)
   add_frame(tl, final, 2.0)
 }
 
-FINAL_RIGHT <- list(asked = lineage_rows, console = 3, id_shown = TRUE, filled = 6, note = TRUE)
+FINAL_RIGHT <- list(asked = lineage_rows, console = 4, id_shown = TRUE, filled = 6, note = TRUE)
 
 # Desktop GIF ------------------------------------------------------------------
 #
