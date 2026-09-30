@@ -108,8 +108,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "KY9SSDHF"
-#>  $ created : chr "2026-09-29T17:14:17-0400"
+#>  $ id      : chr "PWCMW236"
+#>  $ created : chr "2026-09-29T19:09:26-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -123,9 +123,9 @@ and script, and any stray copy leads back to its source.
 
 ``` r
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "W32A3T6S"
+#> [1] "90QTWGZQ"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "64686d89-2283-4e35-9ecf-7f0a5f41b306"
+#> [1] "bd639c50-9500-4557-8251-3efd84bb24f0"
 ```
 
 IDs come from a private random stream. `set.seed()` in your analysis
@@ -160,44 +160,44 @@ matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
-|  | Transformation | Pixels | Dot code |
-|:---|:---|---:|:---|
-| Lossless | Original PNG | 1050 × 750 | ✅ recovered |
-|  | PNG re-save | 1050 × 750 | ✅ recovered |
-| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 75 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 50 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 25 | 1050 × 750 | ✅ recovered |
-|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered |
-|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered |
-| Resize | Downscale to 75% | 788 × 562 | ✅ recovered |
-|  | Downscale to 50% | 525 × 375 | ✅ recovered |
-|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered |
-|  | Odd scale 0.83x | 872 × 622 | ✅ recovered |
-|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered |
-| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered |
-|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered |
-|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered |
-|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered |
-| Colour | Brightness +5% | 1050 × 750 | ✅ recovered |
-|  | Contrast 70% | 1050 × 750 | ✅ recovered |
-|  | Gamma 1.8 | 1050 × 750 | ✅ recovered |
-|  | Grayscale | 1050 × 750 | ✅ recovered |
-|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered |
-|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered |
-| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
-|  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
-|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
-| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
-|  | Crop left 10% | 945 × 750 | ✖ not found |
-|  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
-|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
-|  | JPEG quality 5 | 1050 × 750 | ✖ not found |
-|  | Downscale to 25% | 262 × 188 | ✅ recovered |
+|  | Transformation | Pixels | Dot code | Tiles |
+|:---|:---|---:|:---|:---|
+| Lossless | Original PNG | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | PNG re-save | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 75 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 50 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 25 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Resize | Downscale to 75% | 788 × 562 | ✅ recovered | ✅ recovered |
+|  | Downscale to 50% | 525 × 375 | ✅ recovered | ✅ recovered |
+|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered | ✅ recovered |
+|  | Odd scale 0.83x | 872 × 622 | ✅ recovered | ✅ recovered |
+|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered | ✅ recovered |
+| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered | ✅ recovered |
+|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered | ✅ recovered |
+| Colour | Brightness +5% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Contrast 70% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Gamma 1.8 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Grayscale | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Box blur radius 1 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered | ✅ recovered |
+| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found | ✅ recovered |
+|  | Crop left 10% | 945 × 750 | ✖ not found | ✅ recovered |
+|  | Rotate 90 degrees | 750 × 1050 | ✖ not found | ✖ not found |
+|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found | ✖ not found |
+|  | JPEG quality 5 | 1050 × 750 | ✖ not found | ✖ not found |
+|  | Downscale to 25% | 262 × 188 | ✅ recovered | ✅ recovered |
 
-**27 of 32 recovered exactly, and 0 wrong IDs.** The rows under “past
-the limits” mark where the guarantee ends. A result there is either
-exact or nothing:
+**Dot code: 27 of 32 recovered exactly. Tiles: 29 of 32. Wrong IDs
+across both: 0.** The rows under “past the limits” mark where the
+guarantee ends. A result there is either exact or nothing:
 
 - **The dot strip must survive.** Cropping the bottom edge or either
   side removes part of the frame; there is no partial recovery.
@@ -208,6 +208,27 @@ exact or nothing:
 - **Compression.** JPEG holds down to about **quality 8**.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
+
+### When images get cropped: tiles
+
+The strip lives in the bottom margin, so a crop that removes it removes
+the ID. `watermark_tiles()` repeats the whole ID, with its own CRC-16,
+in a faint 12 × 12 grid of dots behind the data in every panel. A tile
+is 36 mm square, and a crop that keeps about two tiles across in each
+direction (roughly 70 mm square of open panel) still decodes.
+`extract_watermark()` tries the tiles whenever no strip is found.
+
+``` r
+ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
+```
+
+Tiles need open panel between the data: a plot whose data fills the
+whole panel leaves nothing to read. On a dark panel, use
+`colour = "white"`. Figures smaller than about 5 × 4 in hold too few
+tiles at the default pitch; use
+`watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at 150 dpi
+or more. Use both watermarks when you can; the strip wins if both are
+present.
 
 Watermarks here are for provenance, not security. Anyone who knows the
 dots are there can crop or paint over them. The point is that ordinary

@@ -12,21 +12,25 @@ intensities in \verb{[0, 1]} (height x width, optionally x channels), as
 returned by \code{\link[png:readPNG]{png::readPNG()}} or \code{\link[jpeg:readJPEG]{jpeg::readJPEG()}}.}
 
 \item{debug}{If \code{TRUE}, report which row decoded and the estimated bit
-pitch.}
+pitch, or each stage of the tile decoder.}
 }
 \value{
 The embedded ID, or \code{NULL} if no valid code was found.
 }
 \description{
 Scans an image for the dot code written by \code{\link[=watermark_dots]{watermark_dots()}} and decodes
-it. Works on the original file, screenshots, and recompressed or rescaled
-copies, as long as the bottom strip of the figure is intact and the image
-is not rotated.
+it; if no strip is found, looks for the tiles written by
+\code{\link[=watermark_tiles]{watermark_tiles()}}. Works on the original file, screenshots, and
+recompressed or rescaled copies. The strip needs the bottom of the figure
+intact; tiles survive crops that keep about two tiles across in each
+direction of open panel. Rotated images are not supported. When a plot
+carries both, the strip's ID is returned.
 }
 \details{
 Every row of the image is a candidate; a row is accepted only if its start
 and end sync patterns, length byte and CRC-8 checksum all agree, so false
-positives are vanishingly rare.
+positives are vanishingly rare. Tiles are voted on across every visible
+copy and accepted only if the CRC-16 passes for exactly one ID.
 }
 \examples{
 library(ggplot2)

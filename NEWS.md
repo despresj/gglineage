@@ -1,3 +1,10 @@
+# watermark (development version)
+
+* `watermark_tiles()` adds a crop-resistant watermark: a faint, tiled 12 x 12
+  dot grid behind the data in every panel, each tile carrying the full ID and
+  a CRC-16. `extract_watermark()` reads tiles when no dot strip is found,
+  including inverted (dark mode) images.
+
 # watermark 0.1.0
 
 First release.

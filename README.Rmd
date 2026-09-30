@@ -198,13 +198,19 @@ img <- render_plot(
   ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_dots("K7Q2M9XD"),
   width = 7, height = 5, dpi = 150
 )
+img_tiles <- render_plot(
+  ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD"),
+  width = 7, height = 5, dpi = 150
+)
 rows <- lapply(stress_transforms(), function(tf) {
   out <- suppressWarnings(tf$f(img))
   got <- extract_watermark(out)
+  got_tiles <- extract_watermark(suppressWarnings(tf$f(img_tiles)))
   data.frame(
     group = tf$group, name = tf$name,
     size = sprintf("%d × %d", dim(out)[2], dim(out)[1]),
     result = if (is.null(got)) "none" else if (got == "K7Q2M9XD") "exact" else "WRONG",
+    tiles = if (is.null(got_tiles)) "none" else if (got_tiles == "K7Q2M9XD") "exact" else "WRONG",
     promised = tf$survives
   )
 })
@@ -215,6 +221,12 @@ res$shown <- ifelse(
 )
 n_wrong <- sum(res$result == "WRONG")
 n_ok <- sum(res$result == "exact")
+res$tiles_shown <- ifelse(
+  res$tiles == "exact", "✅ recovered",
+  ifelse(res$tiles == "none", "✖ not found", "❌ WRONG ID")
+)
+n_wrong <- n_wrong + sum(res$tiles == "WRONG")
+n_ok_tiles <- sum(res$tiles == "exact")
 
 min_width <- NA
 for (w in seq(400, 150, by = -10)) {
@@ -236,13 +248,14 @@ the same matrix runs in
 several plot types.
 
 ```{r robustness-table, echo = FALSE, results = "asis"}
-tab <- res[, c("group", "name", "size", "shown")]
+tab <- res[, c("group", "name", "size", "shown", "tiles_shown")]
 tab$group[duplicated(tab$group)] <- ""
-names(tab) <- c("", "Transformation", "Pixels", "Dot code")
-knitr::kable(tab, row.names = FALSE, align = c("l", "l", "r", "l"))
+names(tab) <- c("", "Transformation", "Pixels", "Dot code", "Tiles")
+knitr::kable(tab, row.names = FALSE, align = c("l", "l", "r", "l", "l"))
 ```
 
-**`r n_ok` of `r nrow(res)` recovered exactly, and `r n_wrong` wrong IDs.**
+**Dot code: `r n_ok` of `r nrow(res)` recovered exactly. Tiles: `r n_ok_tiles` of
+`r nrow(res)`. Wrong IDs across both: `r n_wrong`.**
 The rows under "past the limits" mark where the guarantee ends. A result
 there is either exact or nothing:
 
@@ -255,6 +268,26 @@ there is either exact or nothing:
 - **Compression.** JPEG holds down to about **quality `r min_q`**.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
+
+### When images get cropped: tiles
+
+The strip lives in the bottom margin, so a crop that removes it removes the
+ID. `watermark_tiles()` repeats the whole ID, with its own CRC-16, in a faint
+12 × 12 grid of dots behind the data in every panel. A tile is 36 mm square,
+and a crop that keeps about two tiles across in each direction (roughly
+70 mm square of open panel) still decodes. `extract_watermark()` tries the
+tiles whenever no strip is found.
+
+```r
+ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
+```
+
+Tiles need open panel between the data: a plot whose data fills the whole
+panel leaves nothing to read. On a dark panel, use `colour = "white"`.
+Figures smaller than about 5 × 4 in hold too few tiles at the default pitch;
+use `watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at
+150 dpi or more. Use both
+watermarks when you can; the strip wins if both are present.
 
 Watermarks here are for provenance, not security. Anyone who knows the dots
 are there can crop or paint over them. The point is that ordinary sharing

@@ -1,19 +1,23 @@
 #' Recover a dot watermark from an image
 #'
 #' Scans an image for the dot code written by [watermark_dots()] and decodes
-#' it. Works on the original file, screenshots, and recompressed or rescaled
-#' copies, as long as the bottom strip of the figure is intact and the image
-#' is not rotated.
+#' it; if no strip is found, looks for the tiles written by
+#' [watermark_tiles()]. Works on the original file, screenshots, and
+#' recompressed or rescaled copies. The strip needs the bottom of the figure
+#' intact; tiles survive crops that keep about two tiles across in each
+#' direction of open panel. Rotated images are not supported. When a plot
+#' carries both, the strip's ID is returned.
 #'
 #' Every row of the image is a candidate; a row is accepted only if its start
 #' and end sync patterns, length byte and CRC-8 checksum all agree, so false
-#' positives are vanishingly rare.
+#' positives are vanishingly rare. Tiles are voted on across every visible
+#' copy and accepted only if the CRC-16 passes for exactly one ID.
 #'
 #' @param image Path to a PNG or JPEG file, or a numeric array of pixel
 #'   intensities in `[0, 1]` (height x width, optionally x channels), as
 #'   returned by [png::readPNG()] or [jpeg::readJPEG()].
 #' @param debug If `TRUE`, report which row decoded and the estimated bit
-#'   pitch.
+#'   pitch, or each stage of the tile decoder.
 #'
 #' @return The embedded ID, or `NULL` if no valid code was found.
 #' @export
@@ -38,8 +42,8 @@ extract_watermark <- function(image, debug = FALSE) {
       return(found$id)
     }
   }
-  if (debug) message("No valid watermark found in ", nrow(gray), " rows")
-  NULL
+  if (debug) message("No dot strip found in ", nrow(gray), " rows; trying tiles")
+  decode_tiles(gray, debug)
 }
 
 read_image <- function(image) {
