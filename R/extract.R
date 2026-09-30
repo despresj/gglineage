@@ -7,15 +7,22 @@
 #'
 #' Every row of the image is a candidate; a row is accepted only if its start
 #' and end sync patterns, header and 32-bit checksum all agree, so false
-#' positives are vanishingly rare.
+#' positives are vanishingly rare. A UUID is spread over two such rows, each
+#' checked on its own, and is returned only when both are read.
 #'
 #' @param image Path to a PNG or JPEG file, or a numeric array of pixel
 #'   intensities in `[0, 1]` (height x width, optionally x channels), as
 #'   returned by [png::readPNG()] or [jpeg::readJPEG()].
-#' @param debug If `TRUE`, report which row decoded and the estimated bit
+#' @param debug If `TRUE`, report which rows decoded and the estimated bit
 #'   pitch.
 #'
-#' @return The embedded ID, or `NULL` if no valid code was found.
+#' @return The embedded ID as a plain string, or `NULL` if no valid code was
+#'   found. Text IDs come back exactly as given. UUIDs come back in canonical
+#'   lowercase form (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`), and only a UUID
+#'   has that form: text IDs are at most 16 bytes, so the two cannot be
+#'   confused. Nothing else is returned: the dots carry the ID and nothing
+#'   more, so what the ID *means* (the script, data and run behind the plot)
+#'   is whatever you recorded against it when you saved the plot.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -30,11 +37,17 @@ extract_watermark <- function(image, debug = FALSE) {
   if (debug) {
     if (is.null(found)) {
       message("No valid watermark found in ", nrow(gray), " rows")
+    } else if (found$kind == "uuid") {
+      message(sprintf(
+        "Decoded UUID from rows %d and %d of %d (%s); 2 x %d bits at %.2f px/bit",
+        found$row, found$partner_row, nrow(gray),
+        row_mode(c(found$rows_averaged, found$partner_rows_averaged)),
+        found$n_bits, found$pitch
+      ))
     } else {
       message(sprintf(
         "Decoded row %d of %d (%s); %d bits at %.2f px/bit",
-        found$row, nrow(gray),
-        if (found$rows_averaged > 1) "3-row average" else "single row",
+        found$row, nrow(gray), row_mode(found$rows_averaged),
         found$n_bits, found$pitch
       ))
     }
@@ -42,11 +55,32 @@ extract_watermark <- function(image, debug = FALSE) {
   found$id
 }
 
+row_mode <- function(rows_averaged) {
+  paste(ifelse(rows_averaged > 1, "3-row average", "single row"), collapse = " + ")
+}
+
 # Scan rows from the bottom up. A dot spans several rows, so the second pass
 # averages each row with its neighbours, keeping the dots while cancelling
 # compression noise. The last pass handles images too small or compressed for
-# the dots to be picked out individually.
+# the dots to be picked out individually. A text frame is the answer; half a
+# UUID sends us looking for the other half nearby.
 find_watermark <- function(gray) {
+  found <- find_first_frame(gray)
+  if (is.null(found)) return(NULL)
+  if (found$frame$kind == "text") {
+    return(c(found, kind = "text", id = found$frame$id))
+  }
+  partner <- find_partner(gray, found)
+  if (is.null(partner)) return(NULL)
+  halves <- list(found, partner)[order(c(found$frame$half, partner$frame$half))]
+  c(found,
+    kind = "uuid",
+    id = assemble_uuid(halves[[1]]$frame, halves[[2]]$frame),
+    partner_row = partner$row,
+    partner_rows_averaged = partner$rows_averaged)
+}
+
+find_first_frame <- function(gray) {
   n <- nrow(gray)
   for (r in rev(seq_len(n))) {
     found <- decode_row(gray[r, ])
@@ -59,6 +93,35 @@ find_watermark <- function(gray) {
   find_at_figure_geometry(gray)
 }
 
+# The other row of a UUID sits directly above or below the one found, at the
+# same horizontal geometry, within a few bit pitches (the rows are a fixed
+# distance apart in mm, and a bit pitch is at most a few mm). Read it at that
+# geometry, nearest rows first, without locating its dots afresh.
+find_partner <- function(gray, found) {
+  n <- nrow(gray)
+  w <- ncol(gray)
+  k <- background_window(w)
+  want <- 3L - found$frame$half
+  reach <- ceiling(7 * found$pitch) + 3
+  offsets <- seq_len(reach)
+  rows <- as.vector(rbind(found$row - offsets, found$row + offsets))
+  rows <- rows[rows >= 2L & rows <= n - 1L]
+  for (r in rows) {
+    for (span in list(r, (r - 1L):(r + 1L))) {
+      signal <- colMeans(gray[span, , drop = FALSE])
+      # Cheap gate on the median background before the exact one.
+      fast <- found$polarity * (signal - local_background(signal, k))
+      if (!syncs_agree(fast, found$left, found$right, found$n_bits)) next
+      oriented <- oriented_signal(signal, k, found$polarity)
+      hit <- decode_geometry(oriented, found$left, found$right, found$n_bits)
+      if (!is.null(hit) && hit$frame$kind == "uuid" && hit$frame$half == want) {
+        return(c(hit, row = r, rows_averaged = length(span)))
+      }
+    }
+  }
+  NULL
+}
+
 # watermark_dots() puts the first and last dots at fixed fractions of the
 # figure width, in a row just above its bottom edge. Any rescaled or
 # recompressed copy of the saved file keeps those proportions, so read the
@@ -68,7 +131,7 @@ find_watermark <- function(gray) {
 find_at_figure_geometry <- function(gray) {
   n <- nrow(gray)
   w <- ncol(gray)
-  k <- 2L * (w %/% 16L) + 1L
+  k <- background_window(w)
   if (n < 3L || k < 3L) return(NULL)
   left <- dots_inset * w + 0.5
   right <- (1 - dots_inset) * w + 0.5
@@ -81,19 +144,24 @@ find_at_figure_geometry <- function(gray) {
     for (rows in list(r, (r - 1L):(r + 1L))) {
       signal <- colMeans(gray[rows, , drop = FALSE])
       # Blank rows (most of any margin) can't hold a frame.
-      fast <- signal - local_background(signal, k)
-      if (stats::quantile(abs(fast), 0.85, names = FALSE) < 0.005) next
-      diff <- signal - local_background(signal, k, exact = TRUE)
+      diff <- signal - local_background(signal, k)
+      if (stats::quantile(abs(diff), 0.85, names = FALSE) < 0.005) next
       sync_dots <- matrix(
         stats::approx(seq_len(w), diff, xout = sync_x, rule = 2)$y,
         nrow = 8L
       )
       polarity <- ifelse(colMeans(sync_dots) < 0, -1, 1)
+      oriented <- list()
       # Rank lengths by how strongly their start sync reads, best first.
       for (i in order(abs(colMeans(sync_dots)), decreasing = TRUE)) {
-        found <- decode_geometry(polarity[i] * diff, left, right, frame_lengths[i])
+        key <- as.character(polarity[i])
+        if (is.null(oriented[[key]])) {
+          oriented[[key]] <- oriented_signal(signal, k, polarity[i])
+        }
+        found <- decode_geometry(oriented[[key]], left, right, frame_lengths[i])
         if (!is.null(found)) {
-          return(c(found, row = r, rows_averaged = length(rows)))
+          return(c(found, polarity = polarity[i], row = r,
+                   rows_averaged = length(rows)))
         }
       }
     }
@@ -142,9 +210,10 @@ decode_row <- function(signal) {
   # Compare each pixel with its neighbourhood rather than the whole row, so
   # flat regions of another shade (screenshot borders, UI chrome) are not
   # mistaken for dots.
-  k <- 2L * (length(signal) %/% 16L) + 1L
+  k <- background_window(length(signal))
   if (k < 3L) return(NULL)
-  dev <- abs(signal - local_background(signal, k))
+  diff <- signal - local_background(signal, k)
+  dev <- abs(diff)
   # Dots cover roughly a third of the row, so a high quantile sits inside
   # them while ignoring a few extreme pixels (borders, stray text).
   peak <- stats::quantile(dev, 0.85, names = FALSE)
@@ -161,12 +230,10 @@ decode_row <- function(signal) {
 
   # The start sync puts a dot on every other bit: 8 evenly spaced dots. Lock
   # onto the first such run, skipping stray marks such as a plot border.
-  exact <- NULL
   for (i in seq_len(min(6L, length(centers) - 8L))) {
     gaps <- diff(centers[i:(i + 7L)])
     if (all(abs(gaps - stats::median(gaps)) <= 0.25 * stats::median(gaps) + 1)) {
-      if (is.null(exact)) exact <- signal - local_background(signal, k, exact = TRUE)
-      found <- decode_frame(centers[i:length(centers)], exact,
+      found <- decode_frame(centers[i:length(centers)], signal, diff, k,
                             stats::median(gaps) / 2)
       if (!is.null(found)) return(found)
     }
@@ -174,16 +241,20 @@ decode_row <- function(signal) {
   NULL
 }
 
-decode_frame <- function(centers, diff, pitch) {
+decode_frame <- function(centers, signal, diff, k, pitch) {
   if (!is.finite(pitch) || pitch < 1.5) return(NULL)
   left <- centers[1]
 
   # Dots can be darker or lighter than the background (dark themes). Orient
   # the signal so dots are positive, judging by the start sync's dots.
   sync_dots <- sample_signal(diff, left + 2 * pitch * (0:7), pitch)
-  signal <- if (mean(sync_dots) < 0) -diff else diff
+  polarity <- if (mean(sync_dots) < 0) -1 else 1
+  oriented <- oriented_signal(signal, k, polarity)
 
-  try_frame <- function(right, n) decode_geometry(signal, left, right, n)
+  try_frame <- function(right, n) {
+    found <- decode_geometry(oriented, left, right, n)
+    if (!is.null(found)) c(found, polarity = polarity)
+  }
 
   # Normal case: the last dot on the row closes the frame.
   right <- centers[length(centers)]
@@ -213,24 +284,19 @@ decode_frame <- function(centers, diff, pitch) {
 # `signal` is oriented so dots are positive.
 decode_geometry <- function(signal, left, right, n) {
   pitch <- (right - left) / (n - 1)
-  at <- function(l, r) l + (seq_len(n) - 1) * (r - l) / (n - 1)
   # Cheap gate: the 32 known sync bits must mostly read correctly before
   # spending time on the rest of the frame.
-  sync <- sample_signal(signal, at(left, right)[sync_index(n)], pitch)
-  on <- mean(sync[sync_bits == 1L])
-  off <- mean(sync[sync_bits == 0L])
-  if (!(on > off) || sum((sync > (on + off) / 2) == sync_bits) < 26L) {
-    return(NULL)
-  }
+  if (!syncs_agree(signal, left, right, n)) return(NULL)
   # Frame edges are only known to about half a pixel, which is a whole bit's
   # worth of drift on small images. Nudge both edges in quarter-pixel steps
   # until the checksum agrees.
   for (dl in edge_nudges) {
     for (dr in edge_nudges) {
-      bits <- slice_bits(sample_signal(signal, at(left + dl, right + dr), pitch))
-      id <- if (is.null(bits)) NULL else decode_bits(bits)
-      if (!is.null(id)) {
-        return(list(id = id, n_bits = n,
+      bits <- slice_bits(sample_signal(signal, bit_positions(left + dl, right + dr, n),
+                                       pitch))
+      frame <- if (is.null(bits)) NULL else parse_frame(bits)
+      if (!is.null(frame)) {
+        return(list(frame = frame, n_bits = n,
                     pitch = (right + dr - left - dl) / (n - 1),
                     left = left + dl, right = right + dr))
       }
@@ -239,13 +305,45 @@ decode_geometry <- function(signal, left, right, n) {
   NULL
 }
 
-# Running median of the row, used as its local background. The exact version
-# shrinks the window towards the row's ends, reading the background from the
-# plain margin beside the frame, which keeps the syncs accurate; it is slow,
-# so the scan uses the fast version and switches only for rows that look
-# like they hold a frame.
-local_background <- function(signal, k, exact = FALSE) {
-  stats::runmed(signal, k, endrule = if (exact) "median" else "constant")
+bit_positions <- function(left, right, n) left + (seq_len(n) - 1) * (right - left) / (n - 1)
+
+# Do at least 26 of the 32 sync bits read correctly at this geometry?
+syncs_agree <- function(signal, left, right, n) {
+  pitch <- (right - left) / (n - 1)
+  sync <- sample_signal(signal, bit_positions(left, right, n)[sync_index(n)], pitch)
+  on <- mean(sync[sync_bits == 1L])
+  off <- mean(sync[sync_bits == 0L])
+  on > off && sum((sync > (on + off) / 2) == sync_bits) >= 26L
+}
+
+# The neighbourhood a pixel is compared against: about an eighth of the row,
+# a dozen or so bits, always odd.
+background_window <- function(width) 2L * (width %/% 16L) + 1L
+
+# Running median of the row: the local background used to find dots. It is
+# only a locator. Inside a dense run of 1 bits the median drifts to the dot
+# level, so bits are not read against it (see oriented_signal).
+local_background <- function(signal, k) {
+  stats::runmed(signal, k, endrule = "constant")
+}
+
+# The row oriented so dots read positive, measured against the background on
+# the dots' far side: the running maximum of the row for dots darker than
+# the paper (polarity -1), the running minimum for lighter ones. Unlike a
+# median this cannot drift into a dense run of dots, since any window a
+# dozen bits wide still holds a gap. Windows shrink towards the row's ends.
+oriented_signal <- function(signal, k, polarity) {
+  polarity * (signal - running_extreme(signal, k, if (polarity < 0) pmax else pmin))
+}
+
+running_extreme <- function(x, k, extreme) {
+  n <- length(x)
+  out <- x
+  for (d in seq_len(min(k %/% 2L, n - 1L))) {
+    out[(d + 1L):n] <- extreme(out[(d + 1L):n], x[1L:(n - d)])
+    out[1L:(n - d)] <- extreme(out[1L:(n - d)], x[(d + 1L):n])
+  }
+  out
 }
 
 edge_nudges <- c(0, -0.25, 0.25, -0.5, 0.5, -0.75, 0.75, -1, 1)

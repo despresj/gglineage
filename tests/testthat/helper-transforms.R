@@ -199,10 +199,10 @@ stress_transforms <- function() {
          f = function(x) tf_levels(x, brightness = 0.15), survives = FALSE),
     list(name = "JPEG quality 5", group = "Past the limits",
          f = function(x) suppressWarnings(tf_jpeg(x, 5)), survives = FALSE),
-    list(name = "Shrink to 300 px wide + JPEG 50", group = "Past the limits",
-         f = function(x) tf_jpeg(tf_resize_to_width(x, 300), 50),
+    list(name = "Shrink to 240 px wide + JPEG 50", group = "Past the limits",
+         f = function(x) tf_jpeg(tf_resize_to_width(x, 240), 50),
          survives = FALSE),
-    list(name = "Downscale to 25%", group = "Past the limits",
-         f = function(x) tf_resize(x, 0.25), survives = FALSE)
+    list(name = "Downscale to 15%", group = "Past the limits",
+         f = function(x) tf_resize(x, 0.15), survives = FALSE)
   )
 }

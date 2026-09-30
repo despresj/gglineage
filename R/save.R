@@ -10,13 +10,15 @@
 #'
 #' @param filename File to create, as in [ggplot2::ggsave()].
 #' @param plot Plot to save; defaults to the last plot displayed.
-#' @param id ID to embed. Defaults to a fresh [wm_id()].
+#' @param id ID to embed: text of at most 16 bytes or a UUID (see
+#'   [watermark_dots()]). Defaults to a fresh [wm_id()].
 #' @param metadata A named list of extra fields to store in the PNG metadata,
 #'   e.g. `list(commit = "a1b2c3d", script = "analysis/fig2.R")`.
 #' @param dots If `FALSE`, skip the dot code and only write metadata.
 #' @param ... Passed to [ggplot2::ggsave()] (`width`, `height`, `dpi`, ...).
 #'
-#' @return The ID, invisibly.
+#' @return The ID, invisibly: as given for text, or in canonical lowercase
+#'   form for a UUID.
 #' @seealso [read_watermark_metadata()], [extract_watermark()].
 #' @export
 #' @examples
@@ -35,7 +37,9 @@ ggsave_watermark <- function(filename,
                              metadata = list(),
                              dots = TRUE,
                              ...) {
-  check_id(id)
+  # A UUID is stored, and returned, in its canonical lowercase form, so the
+  # metadata field matches what extract_watermark() reads from the dots.
+  id <- check_id(id)
   if (length(metadata) > 0L &&
       (is.null(names(metadata)) || any(!nzchar(names(metadata))))) {
     stop("`metadata` must be a named list.", call. = FALSE)

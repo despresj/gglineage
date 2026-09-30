@@ -7,13 +7,25 @@ First release.
   figure, so scales, coordinates and facets are untouched, and it is framed
   with sync patterns and a 32-bit check so decodes are exact or rejected.
   IDs from `wm_id()` are packed at 5 bits per character.
+* UUIDs are carried in full. Pass a canonical UUID
+  (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, either case; braces or a
+  `urn:uuid:` prefix are allowed) as the `id` and all 128 bits are drawn as
+  two rows of dots; `extract_watermark()` returns the canonical lowercase
+  form. Text IDs of up to 16 bytes are unchanged. A UUID needs about 20%
+  more pixel width than an 8-character `wm_id()` to survive the same
+  treatment; see the README for the measured limits. Malformed UUIDs (no
+  hyphens, wrong length, bad characters) are rejected with a message saying
+  what is wrong.
 * `extract_watermark()` reads the ID back from PNG or JPEG files, or pixel
   arrays. It survives JPEG compression, rescaling, padding, colour changes
-  and screenshot chains, including small images: quality 50 at 360 px wide.
-  See the robustness matrix in the README.
+  and screenshot chains, including small images. See the robustness matrix
+  in the README.
 * `watermark_text()` adds visible stamps: a diagonal "DRAFT", a repeating
   tile, or a corner label. Text stays clear of the dot strip.
 * `ggsave_watermark()` saves with dots and writes provenance fields into PNG
   metadata; `read_watermark_metadata()` reads them back.
-* `wm_id()` and `wm_uuid()` generate IDs from a private random stream that
-  neither affects nor is affected by `set.seed()`.
+* `wm_id()` and `wm_uuid()` draw their randomness from the operating system
+  (`/dev/urandom`), the uuid package if that is missing, or failing both a
+  random stream private to the package, so `set.seed()` neither repeats
+  them nor is disturbed by them. `wm_uuid(version = 7)` makes time-ordered
+  UUIDs.

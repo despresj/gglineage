@@ -237,8 +237,9 @@ more. A version field on top would cost 8 bits per row for no present use.
   text frame is the answer. A UUID half triggers `find_partner()`: read rows
   at offsets 1..(7 * pitch + 3) px above and below, nearest first, at the
   found row's exact `left`/`right`/polarity, single row and 3-row average,
-  with the fast-background sync gate before the exact background. The
-  reach comes from the row gap being fixed in mm while the pitch in mm
+  with a sync gate on the cheap median background before the
+  running-extreme one is computed (§3B). The reach comes from the row gap
+  being fixed in mm while the pitch in mm
   depends on figure width: gap/pitch = 2.2 mm / (0.92 W_mm / 135) is 0.65
   for a 15-in figure and 6.5 for a 3-in one.
 - Both halves must pass their own 32-bit check; a lone half is NULL. The
@@ -302,13 +303,80 @@ Sweep: `tools/uuid-measure.R 3` (3 random UUIDs from `wm_uuid()`, 3 random
 pad = 40 px of light grey; screenshot chain = 2x upscale, 80 px chrome,
 shrink to width, JPEG 80). Pass counts are exact decodes out of 6.
 
-**Observed** (fill in from `/tmp/gglineage-measure/uuid.log`):
+**Observed**, with the running-extreme estimator (§3B); exact decodes of 6:
 
-TABLE-UUID
+`wm_id(8)`, one 112-bit row:
 
-Row gap (`tools/uuid-row-gap.R 4`, 4 UUIDs, scatter plot):
+| transform | 1050 | 800 | 640 | 552 | 480 | 430 | 400 | 360 | 320 | 300 | 280 | 260 | 240 | 220 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| resize | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| jpeg75 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 4 |
+| jpeg50 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 4 | 0 | 0 | 0 |
+| jpeg35 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
+| pad+jpeg50 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| screenshot chain | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 0 | 6 | 6 |
 
-TABLE-ROWGAP
+UUID, two 136-bit rows:
+
+| transform | 1050 | 800 | 640 | 552 | 480 | 430 | 400 | 360 | 320 | 300 | 280 | 260 | 240 | 220 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| resize | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| jpeg75 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 4 | 0 | 0 | 0 |
+| jpeg50 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 | 0 |
+| jpeg35 | 6 | 6 | 6 | 6 | 6 | 0 | 6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| pad+jpeg50 | 6 | 6 | 6 | 6 | 6 | 4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 | 0 |
+| screenshot chain | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 0 | 2 | 0 |
+
+(0 wrong IDs in 1008 decodes; 241 s.) The isolated zeros at 430 px (UUID
+jpeg35) and 260 px (screenshot chain, both kinds) sit between passing
+widths: at those exact resampling ratios the dot centres land badly on the
+pixel grid. They are real, so the limits below are quoted from the last
+width that passed *and* had no failure above it.
+
+Limits, 7 x 5 in figure at 150 dpi resized down (the pixel width is what
+matters, so read these as pitch: width x 0.92 / 111 or / 135):
+
+| treatment | `wm_id(8)` | UUID | UUID / 8-char |
+|---|---:|---:|---:|
+| plain resize | <= 220 px (pitch 1.8) | <= 220 px (pitch 1.5) | - |
+| JPEG 75 | 240 px | 300 px | 1.25 |
+| JPEG 50 | 300 px | 360 px | 1.20 |
+| JPEG 35 | 320 px | 480 px (400 also passes) | 1.5 |
+| 40 px chrome + JPEG 50 | 400 px | 400 px | 1.0 |
+| retina screenshot chain, JPEG 80 | 280 px | 280 px | 1.0 |
+
+For comparison, before the estimator change the 8-character limits were
+JPEG 50 at 480 px and JPEG 35 at ~520 px, and the README quoted 360/520.
+The two-row UUID costs about 20% of width at JPEG 50 and nothing in the
+padded-screenshot case, where the row scanner's run detection, not the
+pitch, is the limit for both. The resize floor of 220 px (pitch 1.5-1.8 px)
+is the decoder's `pitch < 1.5` guard, not a measured failure.
+
+Not measured: figures rendered natively at small pixel sizes (different
+antialiasing from a downscale), other renderers than ragg, `alpha` other
+than 0.15, dark themes at small sizes.
+
+Row gap (`tools/uuid-row-gap.R 4`, 4 UUIDs, scatter plot, with the
+running-extreme estimator; exact decodes of 4):
+
+| transform / gap | 480 | 400 | 360 | 320 | 300 | 280 | 260 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| jpeg50, 1.6 mm | 4 | 4 | 4 | 0 | 0 | 0 | 0 |
+| jpeg50, 2.2 mm | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
+| jpeg50, 2.8 mm | 4 | 4 | 1 | 0 | 0 | 0 | 0 |
+| jpeg35, 1.6 mm | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
+| jpeg35, 2.2 mm | 4 | 3 | 0 | 0 | 0 | 0 | 0 |
+| jpeg35, 2.8 mm | 4 | 1 | 1 | 0 | 0 | 0 | 0 |
+| pad+jpeg50, 1.6 mm | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
+| pad+jpeg50, 2.2 mm | 4 | 4 | 2 | 0 | 0 | 0 | 0 |
+| pad+jpeg50, 2.8 mm | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
+
+(0 wrong in 252.) An earlier run with the median estimator, at 640-360 px,
+had ordered the gaps 2.8 >= 2.2 > 1.6 within noise. With the adopted
+estimator 2.2 mm is best or tied in two transforms of three, and the
+differences are within what 4 IDs can resolve. 2.2 mm is kept: it is the
+smallest gap that keeps the two rows more than a dot diameter apart at
+every plot width (dots are at most 1.2 mm), and it costs 2.2 mm of band.
 
 Footprint at the standard 7 x 5 in, 150 dpi render: 2 rows x 136 positions,
 pitch 7.16 px (1.21 mm), dots 5.7 px (0.97 mm) in diameter, rows 2.4 and

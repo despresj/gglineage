@@ -95,7 +95,7 @@ the package's
 
 | | What it is | Survives screenshots | Carries | Use it for |
 |---|---|:---:|---|---|
-| `watermark_dots()` | A faint row of dots in the bottom margin | ✅ | A short ID (up to 16 bytes) | Tracing any copy back to its source |
+| `watermark_dots()` | A faint row of dots in the bottom margin | ✅ | A short ID (up to 16 bytes), or a full UUID on two rows | Tracing any copy back to its source |
 | `watermark_text()` | A visible stamp: diagonal, tiled, or corner | ✅ | Whatever you write | Deterring reuse: `"DRAFT"`, `"CONFIDENTIAL"` |
 | `ggsave_watermark()` | Dots **plus** PNG metadata | Dots only | ID, timestamp, title, versions, any fields you add | The full provenance record for the original file |
 
@@ -172,11 +172,17 @@ plots[plots$id == extract_watermark(screenshot), ]
 
 ```{r ids}
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-wm_uuid()   # for metadata; too long for the dots
+wm_uuid()   # a UUID: all 128 bits fit, on two rows of dots
 ```
 
-IDs come from a private random stream. `set.seed()` in your analysis won't
-repeat them, and generating them won't disturb your seed.
+IDs come from operating-system randomness (or a private random stream
+without it). `set.seed()` in your analysis won't repeat them, and generating
+them won't disturb your seed.
+
+A UUID passed as the `id` is recognised by its shape
+(`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, either case) and comes back from
+`extract_watermark()` in canonical lowercase. The dots carry only the ID;
+what it points to is the row you logged when you saved the plot.
 
 ## How the dot code works
 
@@ -286,13 +292,18 @@ there is either exact or nothing:
   removes part of the frame; there is no partial recovery.
 - **No rotation.** Rows are scanned horizontally.
 - **Minimum size.** This 8-character ID decodes reliably down to about
-  **`r min_width` px wide**, and sometimes lower. Shorter IDs go further;
-  16-byte IDs need about twice the width.
+  **`r min_width` px wide**, and sometimes lower. Shorter IDs go further. A
+  UUID (two rows of 136 dot positions) needs about 20% more width than an
+  8-character ID under JPEG; with lossless copies both go down to about
+  220 px.
 - **Compression.** At full size, JPEG holds down to about
   **quality `r min_q`**.
-- **Small *and* compressed.** The two limits compound. JPEG holds to quality
-  35 down to about 520 px wide and to quality 50 down to about 360 px; around
-  300 px, the dots themselves start losing bits to compression.
+- **Small *and* compressed.** The two limits compound. Measured on this
+  7 × 5 in figure shrunk to width: an 8-character ID holds JPEG quality 50
+  down to about 300 px and quality 35 to about 320 px; a UUID holds quality
+  50 to about 360 px and quality 35 to about 480 px. A screenshot with
+  window chrome around the figure, at quality 50, holds to about 400 px for
+  either. Below those, the dots themselves lose bits to compression.
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 

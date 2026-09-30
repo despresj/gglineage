@@ -18,7 +18,8 @@ ggsave_watermark(
 
 \item{plot}{Plot to save; defaults to the last plot displayed.}
 
-\item{id}{ID to embed. Defaults to a fresh \code{\link[=wm_id]{wm_id()}}.}
+\item{id}{ID to embed: text of at most 16 bytes or a UUID (see
+\code{\link[=watermark_dots]{watermark_dots()}}). Defaults to a fresh \code{\link[=wm_id]{wm_id()}}.}
 
 \item{metadata}{A named list of extra fields to store in the PNG metadata,
 e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}.}
@@ -28,7 +29,8 @@ e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}.}
 \item{...}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} (\code{width}, \code{height}, \code{dpi}, ...).}
 }
 \value{
-The ID, invisibly.
+The ID, invisibly: as given for text, or in canonical lowercase
+form for a UUID.
 }
 \description{
 A drop-in replacement for \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that stamps the plot with

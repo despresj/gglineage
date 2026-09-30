@@ -10,8 +10,9 @@ watermark_dots(id, colour = "grey30", alpha = 0.15, size = 1.2)
 add_watermark(plot, id, ...)
 }
 \arguments{
-\item{id}{The ID to embed: a string of at most 16 bytes. Shorter IDs are
-more robust; \code{\link[=wm_id]{wm_id()}} makes 8-character ones.}
+\item{id}{The ID to embed: text of at most 16 bytes, or a UUID. Shorter
+text is more robust; \code{\link[=wm_id]{wm_id()}} makes 8-character IDs and \code{\link[=wm_uuid]{wm_uuid()}}
+UUIDs.}
 
 \item{colour}{Dot colour. Use a light colour on dark plot backgrounds.}
 
@@ -36,15 +37,37 @@ rescaling, and is read back with \code{\link[=extract_watermark]{extract_waterma
 \details{
 The dots are drawn relative to the whole figure, not the data, so the
 watermark never touches your scales, coordinate system or facets. The plot's
-bottom margin is widened to 14pt to make room; a complete theme added \emph{after}
-the watermark (e.g. \code{+ theme_minimal()}) resets that margin, so add themes
-first.
+bottom margin is widened to make room (14pt for a text ID, 20pt for a UUID);
+a complete theme added \emph{after} the watermark (e.g. \code{+ theme_minimal()})
+resets that margin, so add themes first.
 
-The code is framed with sync patterns, a header and a 32-bit checksum, so a
+Each row is framed with sync patterns, a header and a 32-bit check, so a
 decode either returns the exact ID or nothing. IDs made only of the
 characters \code{\link[=wm_id]{wm_id()}} uses are packed at 5 bits per character, so they fit
 in fewer, larger dots than other strings of the same length.
 }
+\section{UUIDs}{
+
+A UUID in canonical form (\code{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}, either
+case, optionally in braces or with a \verb{urn:uuid:} prefix) is recognised and
+carried in full: all 128 bits, as two rows of dots, one above the other.
+\code{\link[=extract_watermark]{extract_watermark()}} returns it lowercase, which is the canonical form
+(RFC 9562); a UUID's letter case is not part of its identity, so an
+uppercase input is not an error, just not preserved. Nothing else is
+interpreted: the version and variant fields are carried as given.
+
+Thirty-two hexadecimal digits without hyphens are \emph{not} treated as a UUID
+(that could equally be an MD5 hash), and at 32 bytes are too long for a
+text ID, so they are rejected with a message. Any text of 16 bytes or fewer
+is carried literally, so no text ID can ever be mistaken for a UUID.
+
+Each UUID row has 136 dot positions to a text row's 77-200 (112 for an
+8-character \code{wm_id()}), so a UUID needs about 20\% more pixel width than an
+8-character ID to survive the same JPEG compression: measured on a 7 x 5
+in figure, quality 50 holds down to about 360 px wide for a UUID and 300
+px for an 8-character ID. The full table is in the README.
+}
+
 \examples{
 library(ggplot2)
 p <- ggplot(mtcars, aes(wt, mpg)) +
@@ -53,6 +76,13 @@ p <- ggplot(mtcars, aes(wt, mpg)) +
 
 file <- tempfile(fileext = ".png")
 ggsave(file, p, width = 6, height = 4, dpi = 150)
+extract_watermark(file)
+
+# A UUID is carried in full, on two rows of dots.
+p2 <- ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  watermark_dots("6BA7B810-9DAD-11D1-80B4-00C04FD430C8")
+ggsave(file, p2, width = 6, height = 4, dpi = 150)
 extract_watermark(file)
 }
 \seealso{

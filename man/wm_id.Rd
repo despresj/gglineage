@@ -7,10 +7,12 @@
 \usage{
 wm_id(n = 8)
 
-wm_uuid()
+wm_uuid(version = 4)
 }
 \arguments{
 \item{n}{Number of characters, 1 to 16.}
+
+\item{version}{UUID version: \code{4} (random) or \code{7} (time-ordered).}
 }
 \value{
 A character string.
@@ -18,18 +20,28 @@ A character string.
 \description{
 \code{wm_id()} returns a short random ID in Crockford base32 (no \code{I}, \code{L}, \code{O}
 or \code{U}, so it survives being read aloud or retyped). Eight characters give
-40 bits, which fits comfortably in a \code{\link[=watermark_dots]{watermark_dots()}} code.
-\code{wm_uuid()} returns a random (version 4) UUID, which is too long for the dot
-code but useful as a metadata field in \code{\link[=ggsave_watermark]{ggsave_watermark()}}.
+40 bits and fit in a single row of \code{\link[=watermark_dots]{watermark_dots()}}.
 }
 \details{
-Both use the package's own generator, seeded from the clock and process ID,
-rather than R's random number generator: \code{set.seed()} in your analysis
-neither repeats the IDs nor is disturbed by them. IDs are for provenance,
-not security.
+\code{wm_uuid()} returns a UUID (RFC 9562) as its canonical lowercase string.
+Version 4 (the default) is 122 random bits; version 7 starts with a
+48-bit millisecond timestamp, so IDs sort by creation time, followed by 74
+random bits. Either takes two rows of dots; see \code{\link[=watermark_dots]{watermark_dots()}} for the
+width that needs.
 }
+\section{Randomness}{
+
+Random bytes come from the operating system (\verb{/dev/urandom}) where it
+exists. Otherwise the uuid package is used if it is installed, and failing
+that a Mersenne-Twister stream private to this package, seeded once per
+session from the clock and process ID. None of these touch R's own random
+number generator: \code{set.seed()} in your analysis neither repeats the IDs nor
+is disturbed by them. IDs are for provenance, not security.
+}
+
 \examples{
 wm_id()
 wm_id(12)
 wm_uuid()
+wm_uuid(version = 7)
 }

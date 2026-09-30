@@ -11,11 +11,17 @@ extract_watermark(image, debug = FALSE)
 intensities in \verb{[0, 1]} (height x width, optionally x channels), as
 returned by \code{\link[png:readPNG]{png::readPNG()}} or \code{\link[jpeg:readJPEG]{jpeg::readJPEG()}}.}
 
-\item{debug}{If \code{TRUE}, report which row decoded and the estimated bit
+\item{debug}{If \code{TRUE}, report which rows decoded and the estimated bit
 pitch.}
 }
 \value{
-The embedded ID, or \code{NULL} if no valid code was found.
+The embedded ID as a plain string, or \code{NULL} if no valid code was
+found. Text IDs come back exactly as given. UUIDs come back in canonical
+lowercase form (\code{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}), and only a UUID
+has that form: text IDs are at most 16 bytes, so the two cannot be
+confused. Nothing else is returned: the dots carry the ID and nothing
+more, so what the ID \emph{means} (the script, data and run behind the plot)
+is whatever you recorded against it when you saved the plot.
 }
 \description{
 Scans an image for the dot code written by \code{\link[=watermark_dots]{watermark_dots()}} and decodes
@@ -26,7 +32,8 @@ is not rotated.
 \details{
 Every row of the image is a candidate; a row is accepted only if its start
 and end sync patterns, header and 32-bit checksum all agree, so false
-positives are vanishingly rare.
+positives are vanishingly rare. A UUID is spread over two such rows, each
+checked on its own, and is returned only when both are read.
 }
 \examples{
 library(ggplot2)
