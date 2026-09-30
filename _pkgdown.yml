@@ -8,6 +8,7 @@ reference:
     contents:
       - watermark_dots
       - add_watermark
+      - watermark_tiles
       - watermark_text
   - title: Save and trace
     contents:
