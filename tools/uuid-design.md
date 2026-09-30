@@ -478,7 +478,7 @@ width at and above which all 12 decoded (partial passes just below):
 
 | transform | `wm_id(8)` | UUID |
 |---|---:|---:|
-| lossless resize | 220 | 220 |
+| lossless resize | 220 or less (smallest width tested) | 220 or less (smallest width tested) |
 | JPEG 75 | 240 | 320 (11/12 at 300) |
 | JPEG 50 | 300 (10/12 at 280) | 400 (10/12 at 360) |
 | JPEG 35 | 320 | 480 (8/12 at 400, 1/12 at 430) |
