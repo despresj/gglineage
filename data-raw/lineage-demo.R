@@ -127,10 +127,9 @@ invisible(dev.off())
 slide <- png::readPNG(slide_file)[, , 1:3]
 
 # A screenshot of part of the slide, shrunk by a Retina display, saved as a
-# JPEG by a chat app. The figure ends up about 570 px wide inside it,
-# comfortably more than the width a two-row UUID needs inside a padded JPEG
-# at this quality (see the README's measured limits), so the decode is not a
-# lucky one.
+# JPEG by a chat app. The figure ends up about 570 px wide inside it, wider
+# than a two-row UUID needs inside a padded JPEG at this quality (see the
+# README's measured limits), so the decode is not a lucky one.
 screenshot <- tf_crop(slide, top = 0.02, bottom = 0.03, left = 0.01, right = 0.1)
 screenshot <- tf_resize(screenshot, 0.7)
 screenshot_file <- "data-raw/lineage-demo/screenshot.jpg"
