@@ -72,7 +72,7 @@ chart <- ggplot(curves, aes(month, active, colour = cohort)) +
   theme(plot.title = element_text(face = "bold"), legend.position = "top",
         legend.justification = "left", panel.grid.minor = element_blank())
 
-# A full UUID (version 7, so it sorts by creation time), made once with
+# A full UUID (version 7, so it starts with a timestamp), made once with
 # wm_uuid(version = 7) and fixed here so the build is reproducible. All 128
 # bits go into the dots, as two rows.
 id <- "01a0f026-9e3e-729b-9cfa-87c8dd7bfb55"
@@ -127,9 +127,10 @@ invisible(dev.off())
 slide <- png::readPNG(slide_file)[, , 1:3]
 
 # A screenshot of part of the slide, shrunk by a Retina display, saved as a
-# JPEG by a chat app. The figure ends up about 570 px wide inside it, which
-# is 1.4x the width a two-row UUID needs at this JPEG quality (see the
-# README's limits), so the decode is not a lucky one.
+# JPEG by a chat app. The figure ends up about 570 px wide inside it,
+# comfortably more than the width a two-row UUID needs inside a padded JPEG
+# at this quality (see the README's measured limits), so the decode is not a
+# lucky one.
 screenshot <- tf_crop(slide, top = 0.02, bottom = 0.03, left = 0.01, right = 0.1)
 screenshot <- tf_resize(screenshot, 0.7)
 screenshot_file <- "data-raw/lineage-demo/screenshot.jpg"
