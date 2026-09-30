@@ -46,8 +46,8 @@ its run, code and data. The ID can be a short code or a full UUID.
   </picture>
 </p>
 
-<p align="center"><sub>A screenshot arrives with no context. <b>Left:</b> six questions,
-no answers. <b>Right:</b> <code>extract_watermark()</code> reads a full UUID out of
+<p align="center"><sub>A screenshot arrives with no context. <b>The thread:</b> six questions,
+no answers. <b>The trace:</b> <code>extract_watermark()</code> reads a full UUID out of
 the same JPEG (the strip is its own pixels around the two dot rows, magnified),
 and the UUID finds the row logged in <code>plots.csv</code> when the plot was
 saved. Only the ID is in the pixels; everything else comes from that log, with
@@ -271,7 +271,7 @@ Each dot position is one bit; a dot means 1, a gap means 0. A row is:
   outermost dots mark its edges.
 
 A UUID is two such rows, one above the other, each checked on its own and
-returned only together.
+against the other, and returned only together.
 
 Decoding scans the image row by row. It compares pixels with their local
 neighbourhood (so borders and UI chrome don't confuse it), locks onto the
@@ -365,25 +365,26 @@ there is either exact or nothing.
 ### Measured limits
 
 Pixel width is what matters (the dots scale with the figure), so the limits
-below are for this 7 × 5 in figure shrunk to a given width. Measured on a
-sweep of random IDs and two plot types; the full tables are in
+below are for this 7 × 5 in figure shrunk to a given width. Each JPEG entry
+is the narrowest width at which every one of 12 trials (6 random IDs × 2
+plot types) decoded; just below it some decodes return `NULL`, never a
+wrong ID. The full tables are in
 [`tools/uuid-design.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-design.md).
 
 | Treatment | 8-character `wm_id()` | UUID |
 |---|---:|---:|
 | Lossless copy, shrunk | `r min_width` px | `r min_width_uuid` px |
-| JPEG quality 75 | 240 px | 300 px |
-| JPEG quality 50 | 300 px | 360 px |
+| JPEG quality 75 | 240 px | 320 px |
+| JPEG quality 50 | 300 px | 400 px |
 | JPEG quality 35 | 320 px | 480 px |
-| Window chrome around the figure, JPEG quality 50 | 400 px | 400 px |
+| Window chrome around the figure, JPEG quality 50 | 400 px | 480 px |
 | Retina screenshot, shrunk, JPEG quality 80 | 280 px | 280 px |
 
 At full size (1050 px), JPEG holds down to about **quality `r min_q`** for
 this 8-character ID and **quality `r min_q_uuid`** for this UUID; the exact
-floor varies from ID to ID. A UUID's two
-rows have more, smaller dots than a short ID's one, so it needs about 20%
-more width under JPEG; a padded screenshot is limited by finding the dots
-at all, which costs both the same.
+floor varies from ID to ID. A UUID's two rows have more, smaller dots than
+a short ID's one, so it needs about a third more width under JPEG, and more
+again inside a padded screenshot.
 
 ### What fails
 
@@ -396,7 +397,8 @@ at all, which costs both the same.
   `r min_width_uuid` px (UUID), where the dots are under two pixels apart.
   Ask for the original.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
-  chrome around it, saved at a low JPEG quality, fails below about 400 px.
+  chrome around it, saved at a low JPEG quality, fails below about 400 px
+  (480 px for a UUID).
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 

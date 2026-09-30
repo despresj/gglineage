@@ -35,13 +35,14 @@ a full UUID.
 
 <p align="center">
 
-<sub>A screenshot arrives with no context. <b>Left:</b> six questions,
-no answers. <b>Right:</b> <code>extract_watermark()</code> reads a full
-UUID out of the same JPEG (the strip is its own pixels around the two
-dot rows, magnified), and the UUID finds the row logged in
-<code>plots.csv</code> when the plot was saved. Only the ID is in the
-pixels; everything else comes from that log, with the client, project
-and run as demo values. The decode is real: made and checked by
+<sub>A screenshot arrives with no context. <b>The thread:</b> six
+questions, no answers. <b>The trace:</b>
+<code>extract_watermark()</code> reads a full UUID out of the same JPEG
+(the strip is its own pixels around the two dot rows, magnified), and
+the UUID finds the row logged in <code>plots.csv</code> when the plot
+was saved. Only the ID is in the pixels; everything else comes from that
+log, with the client, project and run as demo values. The decode is
+real: made and checked by
 <a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>,
 and you can repeat it on
 <a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo/screenshot.jpg"><code>screenshot.jpg</code></a>.
@@ -106,7 +107,7 @@ know later:
 ``` r
 manifest <- file.path(tempdir(), "plots.csv")
 
-id <- wm_uuid(version = 7)          # time-ordered, so the manifest sorts itself
+id <- wm_uuid(version = 7)          # starts with a timestamp, so rows sort by time
 file <- file.path(tempdir(), "retention-by-cohort.png")
 ggsave_watermark(
   file,
@@ -141,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f02d-a70e-75de-9cea-b40233529aef"
+#> [1] "01a0f238-e98a-74bd-a810-de0f0a310521"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f02d-a70e-75de-9cea-b40233529aef analysis/fig2.R 9f3c2e1
+#> 1 01a0f238-e98a-74bd-a810-de0f0a310521 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-09-29T22:38:38
+#> 1 snapshot-2026-09-12.csv 2026-09-30T08:10:11
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -175,7 +176,7 @@ ID as a string and work out how to carry it:
 |----|----|:--:|:--:|----|
 | `wm_id()`: Crockford base32, 1–16 characters | `K7Q2M9XD` | 1 | 77–152 (112 for 8 characters) | Packed at 5 bits per character. No `I`, `L`, `O` or `U`, so it survives being read aloud. |
 | Free text, up to 16 UTF-8 bytes | `RUN-42`, `fig 2 (v3)`, `café` | 1 | 80–200 | Stored as bytes; returned exactly as given. |
-| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in `{}` or prefixed `urn:uuid:`; output is the lowercase canonical form. `wm_uuid()` makes version 4 or 7. |
+| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in `{}` or prefixed `urn:uuid:`; output is always lowercase. `wm_uuid()` makes version 4 or 7. |
 
 Thirty-two hex digits without hyphens are rejected rather than guessed
 at (they could as well be an MD5), with a message saying to write the
@@ -184,16 +185,20 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "QAANQ9AY"
+#> [1] "CGH9ZC5Q"
 wm_uuid()              # random (version 4)
-#> [1] "8a0da279-9830-4033-9b4e-0187dae97d60"
-wm_uuid(version = 7)   # time-ordered (version 7)
-#> [1] "01a0f02d-a889-7e25-9b23-06bbdfb92079"
+#> [1] "55dc1a88-41d4-446e-a29d-ad8fcc7eb785"
+wm_uuid(version = 7)   # starts with the time in ms (version 7)
+#> [1] "01a0f238-eb09-7dbd-95aa-330d29ad6d32"
 ```
 
-IDs come from operating-system randomness (or the uuid package, or a
-private random stream, whichever is available). `set.seed()` in your
+IDs come from the operating system’s secure random generator
+(`/dev/urandom`; on Windows, `openssl::rand_bytes()`, which needs the
+openssl package). With neither, `wm_id()` and `wm_uuid()` stop with an
+error instead of quietly using something weaker. `set.seed()` in your
 analysis won’t repeat them, and generating them won’t disturb your seed.
+An 8-character `wm_id()` is 40 random bits, fine for one team’s plots;
+when IDs from many people or machines share one record, use UUIDs.
 
 ## Three kinds of watermark
 
@@ -244,7 +249,7 @@ Each dot position is one bit; a dot means 1, a gap means 0. A row is:
   the outermost dots mark its edges.
 
 A UUID is two such rows, one above the other, each checked on its own
-and returned only together.
+and against the other, and returned only together.
 
 Decoding scans the image row by row. It compares pixels with their local
 neighbourhood (so borders and UI chrome don’t confuse it), locks onto
@@ -258,7 +263,13 @@ dots one by one.
 
 A row is accepted only if both syncs, the header and the 32-bit check
 all agree. A damaged row slips past that about once in four billion
-readings, so a decode is exact or `NULL`: it doesn’t guess.
+readings, so a decode is exact or `NULL`: it doesn’t guess. A UUID’s two
+rows split their check bits: 16 check a row on its own, and 16 check it
+against the whole UUID, with a different CRC on each row. A UUID comes
+back only when all 64 check bits agree, so the halves of two different
+UUIDs (charts stacked in a report, or a copy pasted over another) are
+never joined; the decoder moves on and returns an intact code or
+nothing.
 
 ## How tough is it?
 
@@ -314,24 +325,26 @@ exact or nothing.
 ### Measured limits
 
 Pixel width is what matters (the dots scale with the figure), so the
-limits below are for this 7 × 5 in figure shrunk to a given width.
-Measured on a sweep of random IDs and two plot types; the full tables
-are in
+limits below are for this 7 × 5 in figure shrunk to a given width. Each
+JPEG entry is the narrowest width at which every one of 12 trials (6
+random IDs × 2 plot types) decoded; just below it some decodes return
+`NULL`, never a wrong ID. The full tables are in
 [`tools/uuid-design.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-design.md).
 
 | Treatment | 8-character `wm_id()` | UUID |
 |----|---:|---:|
 | Lossless copy, shrunk | 120 px | 150 px |
-| JPEG quality 75 | 240 px | 300 px |
-| JPEG quality 50 | 300 px | 360 px |
+| JPEG quality 75 | 240 px | 320 px |
+| JPEG quality 50 | 300 px | 400 px |
 | JPEG quality 35 | 320 px | 480 px |
-| Window chrome around the figure, JPEG quality 50 | 400 px | 400 px |
+| Window chrome around the figure, JPEG quality 50 | 400 px | 480 px |
 | Retina screenshot, shrunk, JPEG quality 80 | 280 px | 280 px |
 
-At full size, JPEG holds down to about **quality 8**. A UUID’s two rows
-have more, smaller dots than a short ID’s one, so it needs about 20%
-more width under JPEG; a padded screenshot is limited by finding the
-dots at all, which costs both the same.
+At full size (1050 px), JPEG holds down to about **quality 8** for this
+8-character ID and **quality 10** for this UUID; the exact floor varies
+from ID to ID. A UUID’s two rows have more, smaller dots than a short
+ID’s one, so it needs about a third more width under JPEG, and more
+again inside a padded screenshot.
 
 ### What fails
 
@@ -345,7 +358,7 @@ dots at all, which costs both the same.
   where the dots are under two pixels apart. Ask for the original.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
   chrome around it, saved at a low JPEG quality, fails below about 400
-  px.
+  px (480 px for a UUID).
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 
