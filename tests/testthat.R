@@ -1,4 +1,4 @@
 library(testthat)
-library(watermark)
+library(gglineage)
 
-test_check("watermark")
+test_check("gglineage")

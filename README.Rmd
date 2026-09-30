@@ -65,7 +65,7 @@ pak::pak("despresj/watermark")
 
 ```{r tour}
 library(ggplot2)
-library(watermark)
+library(gglineage)
 
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
@@ -181,7 +181,7 @@ repeat them, and generating them won't disturb your seed.
 ## How the dot code works
 
 ```{r anatomy, echo = FALSE, fig.width = 10, fig.height = 1.1, fig.alt = "Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit header, 40-bit payload, 32-bit check and 16-bit end sync. Filled circles are 1 bits."}
-bits <- watermark:::encode_bits("K7Q2M9XD")
+bits <- gglineage:::encode_bits("K7Q2M9XD")
 seg <- rep(
   c("start sync", "header", "payload: K7Q2M9XD", "check: 2 × CRC-16", "end sync"),
   c(16, 8, 40, 32, 16)

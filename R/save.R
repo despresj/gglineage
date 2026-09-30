@@ -51,9 +51,9 @@ ggsave_watermark <- function(filename,
         created = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
         title = plot_title(plot),
         software = sprintf(
-          "R %s; ggplot2 %s; watermark %s",
+          "R %s; ggplot2 %s; gglineage %s",
           getRversion(), utils::packageVersion("ggplot2"),
-          utils::packageVersion("watermark")
+          utils::packageVersion("gglineage")
         )
       ),
       metadata
@@ -82,15 +82,22 @@ read_watermark_metadata <- function(file) {
   if (!file.exists(file)) stop("File not found: ", file, call. = FALSE)
   if (!is_png(file)) return(list())
   text <- attr(png::readPNG(file, info = TRUE), "info")$text
-  ours <- startsWith(names(text) %||% character(), metadata_prefix)
-  if (!any(ours)) return(list())
-  as.list(stats::setNames(
-    unname(text[ours]),
-    substring(names(text)[ours], nchar(metadata_prefix) + 1L)
-  ))
+  keys <- names(text) %||% character()
+  # Files written before the package was renamed use the old prefix.
+  for (prefix in c(metadata_prefix, legacy_metadata_prefix)) {
+    ours <- startsWith(keys, prefix)
+    if (any(ours)) {
+      return(as.list(stats::setNames(
+        unname(text[ours]),
+        substring(keys[ours], nchar(prefix) + 1L)
+      )))
+    }
+  }
+  list()
 }
 
-metadata_prefix <- "watermark:"
+metadata_prefix <- "gglineage:"
+legacy_metadata_prefix <- "watermark:"
 
 is_png <- function(file) {
   identical(readBin(file, "raw", 4L), as.raw(c(0x89, 0x50, 0x4e, 0x47)))
@@ -106,7 +113,8 @@ write_png_metadata <- function(file, fields) {
   info <- attr(img, "info")
   existing <- info$text
   if (!is.null(existing)) {
-    existing <- existing[!startsWith(names(existing), metadata_prefix)]
+    existing <- existing[!startsWith(names(existing), metadata_prefix) &
+                           !startsWith(names(existing), legacy_metadata_prefix)]
   }
   png::writePNG(img, file, dpi = info$dpi, text = c(existing, text))
 }

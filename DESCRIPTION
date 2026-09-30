@@ -1,4 +1,4 @@
-Package: watermark
+Package: gglineage
 Title: Traceable Watermarks for 'ggplot2' Graphics
 Version: 0.1.0
 Authors@R: 

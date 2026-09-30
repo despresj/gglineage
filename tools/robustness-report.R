@@ -7,7 +7,7 @@
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(watermark)
+  library(gglineage)
 })
 source("tests/testthat/helper-transforms.R")
 set.seed(1)

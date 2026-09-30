@@ -6,6 +6,6 @@
 docs/
 README.html
 *.Rcheck/
-watermark_*.tar.gz
+gglineage_*.tar.gz
 /plot.png
 Rplots.pdf

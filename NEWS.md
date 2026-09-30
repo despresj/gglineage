@@ -1,4 +1,4 @@
-# watermark 0.1.0
+# gglineage 0.1.0
 
 First release.
 
