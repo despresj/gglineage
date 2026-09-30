@@ -9,3 +9,6 @@ README.html
 gglineage_*.tar.gz
 /plot.png
 Rplots.pdf
+
+# Local Claude worktrees and session files
+.claude/
