@@ -12,3 +12,6 @@ Rplots.pdf
 
 # Local Claude worktrees and session files
 .claude/
+
+# Real-world hammer scratch images (tools/realworld-hammer.R)
+tools/realworld-out/
