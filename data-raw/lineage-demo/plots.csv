@@ -1,2 +1,2 @@
 "id","client","project","run","script","data","output"
-"7K3M9QXD","Demo Retail Co. (fictional)","RET-104 retention study","2026-09-14-r03","data-raw/lineage-demo.R @ 24e5985","snapshot-2026-09-12.csv · md5 f79c8d6","output/retention-by-cohort.png"
+"7K3M9QXD","Demo Retail Co. (fictional)","RET-104 retention study","2026-09-14-r03","data-raw/lineage-demo.R @ 7a4a9bf","snapshot-2026-09-12.csv · md5 f79c8d6","output/retention-by-cohort.png"

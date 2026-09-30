@@ -2,7 +2,9 @@
 #
 # Left, the usual support thread: a screenshot with no context and six
 # questions nobody can answer. Right, the same screenshot traced with
-# watermark.
+# watermark. The six questions are also the six rows of the lineage ledger
+# on the right: each one Sam asks turns a row into "unknown", and the decode
+# fills them back in.
 #
 # Everything shown on the right is computed here, not typed in:
 #
@@ -14,15 +16,18 @@
 #    JPEG, like the attachment in the thread.
 # 3. extract_watermark() reads the ID from that JPEG, and the ID is looked up
 #    in plots.csv. Only the ID comes from the pixels; the rest of the lineage
-#    card is the manifest row, and the animation says so.
+#    card is the manifest row, and the animation says so. The loupe strip is
+#    the JPEG's own pixels around the dot row, magnified with no smoothing and
+#    with its contrast stretched, and it is labelled as such.
 #
 # Run from the package root (needs ffmpeg on the PATH):
 #   Rscript data-raw/lineage-demo.R
 #
-# Writes man/figures/lineage.gif (README hero), man/figures/lineage-still.png
-# (its final frame) and man/figures/lineage-mobile.png (the two panels
-# stacked, for narrow screens), and refreshes the demo manifest and
-# screenshot in data-raw/lineage-demo/, so anyone can check the decode:
+# Writes man/figures/lineage.gif (README hero, two panels), man/figures/
+# lineage-mobile.gif (the same story as one column, two acts, for narrow
+# screens) and man/figures/lineage-still.png (the finished desktop frame), and
+# refreshes the demo manifest and screenshot in data-raw/lineage-demo/, so
+# anyone can check the decode:
 #   extract_watermark("data-raw/lineage-demo/screenshot.jpg")
 
 suppressPackageStartupMessages({
@@ -127,15 +132,36 @@ screenshot <- jpeg::readJPEG(screenshot_file)
 
 decoded <- extract_watermark(screenshot_file)
 stopifnot(identical(decoded, id))
-stopifnot(length(read_watermark_metadata(screenshot_file)) == 0L)
 plots <- utils::read.csv(manifest_path, fileEncoding = "UTF-8")
 record <- plots[plots$id == decoded, ]
 stopifnot(nrow(record) == 1L)
 where <- find_watermark(as_gray(screenshot))
 stopifnot(identical(where$id, decoded))
-message(sprintf("Decoded %s from %s (%d x %d px, JPEG); row %d, %d bits",
+
+# "No file metadata": list the JPEG's marker segments. A file with EXIF, XMP,
+# ICC or a comment would carry APP1..APP15 or COM segments; this one must have
+# none (APP0 is the bare JFIF header libjpeg always writes).
+jpeg_segments <- function(file) {
+  b <- readBin(file, "raw", file.size(file))
+  stopifnot(identical(b[1:2], as.raw(c(0xff, 0xd8))))
+  i <- 3L
+  markers <- character()
+  while (i < length(b)) {
+    stopifnot(b[i] == as.raw(0xff))
+    m <- as.integer(b[i + 1L])
+    markers <- c(markers, sprintf("%02X", m))
+    if (m == 0xda) break  # start of scan: entropy-coded data until EOI
+    len <- as.integer(b[i + 2L]) * 256L + as.integer(b[i + 3L])
+    i <- i + 2L + len
+  }
+  markers
+}
+segments <- jpeg_segments(screenshot_file)
+metadata_segments <- segments[segments %in% c(sprintf("%02X", 0xe1:0xef), "FE")]
+stopifnot(length(metadata_segments) == 0L)
+message(sprintf("Decoded %s from %s (%d x %d px, JPEG); row %d, %d bits; segments %s",
                 decoded, basename(screenshot_file), ncol(screenshot),
-                nrow(screenshot), where$row, where$n_bits))
+                nrow(screenshot), where$row, where$n_bits, paste(segments, collapse = " ")))
 
 # Drawing ---------------------------------------------------------------------
 #
@@ -146,9 +172,10 @@ message(sprintf("Decoded %s from %s (%d x %d px, JPEG); row %d, %d bits",
 pal <- list(
   bg = "#f3f4f6", card = "#ffffff", line = "#e5e7eb", ink = "#1f2328",
   muted = "#6b7280", faint = "#9ca3af", accent = "#0f766e",
-  accent_bg = "#ecf6f4", code_bg = "#f6f8fa",
-  morgan = "#a16207", sam = "#3b5b92"
+  accent_bg = "#ecf6f4", code_bg = "#f6f8fa", warn = "#b45309", warn_bg = "#fff7ed",
+  morgan = "#a16207", sam = "#3b5b92", chip = "#f3f4f6"
 )
+S <- 1.25
 
 canvas_h <- NULL
 Y <- function(y) unit(canvas_h - y, "native")
@@ -172,14 +199,18 @@ txt <- function(label, x, y, size = 14, col = pal$ink, face = "plain",
   invisible(w)
 }
 
-box <- function(x, y, w, h, fill, col = NA, r = 0, lwd = 1) {
+box <- function(x, y, w, h, fill, col = NA, r = 0, lwd = 1, alpha = 1) {
+  gp <- gpar(fill = fill, col = col, lwd = lwd, alpha = alpha)
   if (r > 0) {
     grid.roundrect(X(x), Y(y), X(w), unit(h, "native"), just = c("left", "top"),
-                   r = unit(r, "bigpts"), gp = gpar(fill = fill, col = col, lwd = lwd))
+                   r = unit(r, "bigpts"), gp = gp)
   } else {
-    grid.rect(X(x), Y(y), X(w), unit(h, "native"), just = c("left", "top"),
-              gp = gpar(fill = fill, col = col, lwd = lwd))
+    grid.rect(X(x), Y(y), X(w), unit(h, "native"), just = c("left", "top"), gp = gp)
   }
+}
+
+hline <- function(x0, x1, y, col = pal$line) {
+  grid.lines(X(c(x0, x1)), Y(c(y, y)), gp = gpar(col = col))
 }
 
 image_at <- function(img, x, y, w) {
@@ -190,20 +221,72 @@ image_at <- function(img, x, y, w) {
   h
 }
 
-card <- function(x, y, w, h, title, sub = NULL) {
+card <- function(x, y, w, h, title = NULL, sub = NULL) {
   box(x, y, w, h, fill = pal$card, col = pal$line, r = 10)
-  grid.lines(X(c(x, x + w)), Y(c(y + 42, y + 42)), gp = gpar(col = pal$line))
-  tw <- txt(title, x + 18, y + 21, size = 15, face = "bold")
-  if (!is.null(sub)) txt(sub, x + 18 + tw + 10, y + 21, size = 12.5, col = pal$muted)
+  hline(x, x + w, y + 42)
+  if (is.null(title)) return(invisible())
+  tw <- txt(title, x + 20, y + 21, size = 15, face = "bold")
+  if (!is.null(sub)) txt(sub, x + 20 + tw + 10, y + 21, size = 12.5, col = pal$muted)
 }
 
 panel_label <- function(label, x, y) {
-  txt(label, x + 2, y, size = 13, col = pal$muted, face = "bold")
+  txt(label, x + 2, y + 24, size = 13.5, col = pal$muted, face = "bold")
 }
 
-PANEL_W <- 440
-LEFT_H <- 600
-RIGHT_H <- 600
+avatar <- function(x, y, who, alpha = 1) {
+  col <- if (startsWith(who, "Sam")) pal$sam else pal$morgan
+  box(x, y, 30, 30, fill = col, r = 6, alpha = alpha)
+  txt(substr(who, 1, 1), x + 15, y + 15, size = 14, col = "#ffffff", face = "bold",
+      just = "centre", alpha = alpha)
+}
+
+# Slack's "is typing" row: three dots in a pill and a muted label.
+typing <- function(x, y, who) {
+  box(x, y, 44, 22, fill = pal$chip, r = 11)
+  for (i in 0:2) {
+    grid.circle(X(x + 12 + i * 10), Y(y + 11), r = unit(2.6, "native"),
+                gp = gpar(fill = pal$faint, col = NA))
+  }
+  txt(sprintf("%s is typing", who), x + 54, y + 11, size = 12, col = pal$faint)
+}
+
+question_chip <- function(x, y) {
+  box(x, y - 8, 18, 16, fill = pal$warn_bg, col = NA, r = 4)
+  txt("?", x + 9, y, size = 12, col = pal$warn, face = "bold", just = "centre")
+}
+
+# The loupe: the JPEG's own pixels around the dot row, drawn with no
+# smoothing at an integer number of device pixels per image pixel, with the
+# darkness of every pixel multiplied by `gain`. `cursor` in [0, 1] draws the
+# reading bar that sweeps the strip.
+LOUPE_COLS <- 200:357
+LOUPE_ROWS <- (where$row - 5):(where$row + 5)
+LOUPE_ZOOM <- 3   # device pixels per image pixel
+LOUPE_GAIN <- 2.5
+loupe <- function(x, y, cursor = NA) {
+  crop <- screenshot[LOUPE_ROWS, LOUPE_COLS, , drop = FALSE]
+  crop <- clamp01(1 - (1 - crop) * LOUPE_GAIN)
+  w <- length(LOUPE_COLS) * LOUPE_ZOOM / S
+  h <- length(LOUPE_ROWS) * LOUPE_ZOOM / S
+  grid.raster(crop, X(x), Y(y), X(w), unit(h, "native"), just = c("left", "top"),
+              interpolate = FALSE)
+  box(x, y, w, h, fill = NA, col = pal$line)
+  if (!is.na(cursor)) {
+    cx <- x + cursor * w
+    box(x, y, cx - x, h, fill = pal$accent, col = NA, alpha = 0.10)
+    grid.lines(X(c(cx, cx)), Y(c(y - 3, y + h + 3)), gp = gpar(col = pal$accent, lwd = 2))
+  }
+  h
+}
+loupe_label <- sprintf(
+  "pixel rows %d–%d, columns %d–%d · each pixel ×%d · contrast ×%g",
+  min(LOUPE_ROWS), max(LOUPE_ROWS), min(LOUPE_COLS), max(LOUPE_COLS), LOUPE_ZOOM, LOUPE_GAIN
+)
+
+PANEL_W <- 420
+CARD_H <- 620
+PAD <- 20
+INNER_W <- PANEL_W - 2 * PAD
 
 # Left: the thread ------------------------------------------------------------
 
@@ -214,147 +297,197 @@ thread <- list(
        attach = TRUE),
   list(who = "Sam (Analytics)", at = "9:52 AM",
        lines = c("Sure! Which client is this for?",
-                 "And which project or study ID?")),
+                 "And which project or study ID?"),
+       asks = c("client", "project")),
   list(who = "Morgan (Sales)", at = "9:58 AM",
        lines = "A retail one? It was in last quarter's deck."),
   list(who = "Sam (Analytics)", at = "10:06 AM",
        lines = c("Do you know the run ID?",
-                 "Or which data snapshot it used?")),
+                 "Or which data snapshot it used?"),
+       asks = c("run", "data")),
   list(who = "Morgan (Sales)", at = "10:31 AM",
        lines = "No idea, someone forwarded it to me."),
   list(who = "Sam (Analytics)", at = "10:34 AM",
        lines = c("Which version of the script made it?",
-                 "Is the original report saved anywhere?")),
+                 "Is the original report saved anywhere?"),
+       asks = c("script", "output")),
   list(who = "Morgan (Sales)", at = "11:02 AM",
        lines = "Let me ask around…")
 )
+first_name <- function(who) sub(" .*", "", who)
+# The rows Sam has asked about once the first n messages are up.
+asked_after <- function(n) unlist(lapply(thread[seq_len(n)], `[[`, "asks"))
 
-draw_message <- function(m, x, y, w) {
-  who_col <- if (startsWith(m$who, "Sam")) pal$sam else pal$morgan
-  box(x, y, 30, 30, fill = who_col, r = 6)
-  txt(substr(m$who, 1, 1), x + 15, y + 15, size = 14, col = "#ffffff", face = "bold",
-      just = "centre")
+draw_message <- function(m, x, y, w, alpha = 1, dy = 0) {
+  y <- y + dy
+  avatar(x, y, m$who, alpha)
   tx <- x + 42
-  nw <- txt(m$who, tx, y + 8, size = 14, face = "bold")
-  txt(m$at, tx + nw + 8, y + 8.5, size = 11.5, col = pal$faint)
+  nw <- txt(m$who, tx, y + 8, size = 14, face = "bold", alpha = alpha)
+  txt(m$at, tx + nw + 8, y + 8.5, size = 11.5, col = pal$faint, alpha = alpha)
   yy <- y + 8
   for (line in m$lines) {
     yy <- yy + 20
-    txt(line, tx, yy, size = 14.5, max_w = w - 42)
+    txt(line, tx, yy, size = 14.5, max_w = w - 42, alpha = alpha)
   }
   yy <- yy + 12
   if (isTRUE(m$attach)) {
     th <- image_at(screenshot, tx, yy, 132)
-    txt("screenshot.jpg", tx + 144, yy + th - 8, size = 12, col = pal$muted)
+    txt("screenshot.jpg", tx + 144, yy + th - 8, size = 12, col = pal$muted, alpha = alpha)
     yy <- yy + th + 4
   }
-  yy + 12
+  yy + 12 - dy
 }
 
-draw_left <- function(x, y, n_msgs) {
+# `rise` in (0, 1] fades and lifts the newest message into place.
+draw_left <- function(x, y, n_msgs, typing_who = NULL, rise = 1) {
   panel_label("The usual thread", x, y)
-  cy <- y + 18
-  card(x, cy, PANEL_W, LEFT_H, "# analytics-help")
+  cy <- y + 42
+  card(x, cy, PANEL_W, CARD_H, "# analytics-help", "thread")
   yy <- cy + 60
-  for (m in thread[seq_len(n_msgs)]) {
-    yy <- draw_message(m, x + 18, yy, PANEL_W - 36)
+  for (i in seq_len(n_msgs)) {
+    last <- i == n_msgs
+    yy <- draw_message(thread[[i]], x + PAD, yy, INNER_W,
+                       alpha = if (last) rise else 1, dy = if (last) 8 * (1 - rise) else 0)
   }
-  if (yy > cy + LEFT_H) stop("Thread overflows its card by ", round(yy - cy - LEFT_H))
+  if (!is.null(typing_who)) typing(x + PAD + 42, yy - 2, typing_who)
+  if (yy > cy + CARD_H) stop("Thread overflows its card by ", round(yy - cy - CARD_H))
 }
 
 # Right: the same screenshot, traced -----------------------------------------
 
-lineage_rows <- c("client", "project", "run", "script", "data", "output")
+lineage_rows <- c("client", "project", "run", "data", "script", "output")
+console_lines <- c(
+  sprintf('> extract_watermark("%s")', basename(screenshot_file)),
+  sprintf('[1] "%s"', decoded),
+  sprintf('> plots[plots$id == "%s", ]', decoded)
+)
+LH <- 20  # console line height
 
-draw_right <- function(x, y, step) {
-  panel_label("The same screenshot, with watermark", x, y)
-  cy <- y + 18
-  card(x, cy, PANEL_W, RIGHT_H, "Trace it in R")
-  ix <- x + 18
-  iy <- cy + 60
-  iw <- 220
+draw_console <- function(x, y, w, n, cursor = FALSE, prompt = FALSE) {
+  if (n == 0 && !prompt) return(invisible())
+  if (n == 0) {
+    # An idle R prompt: the session is there before anything is typed.
+    box(x, y, w, 10 + LH, fill = pal$code_bg, r = 6)
+    txt(">", x + 12, y + 5 + LH / 2, size = 13, family = mono, col = pal$muted)
+    return(invisible())
+  }
+  box(x, y, w, 10 + LH * n, fill = pal$code_bg, r = 6)
+  for (i in seq_len(n)) {
+    is_out <- startsWith(console_lines[i], "[1]")
+    txt(console_lines[i], x + 12, y + 5 + LH * i - LH / 2, size = 13, family = mono,
+        col = if (is_out) pal$accent else pal$ink, face = if (is_out) "bold" else "plain",
+        max_w = w - 24)
+  }
+  if (cursor) {
+    cw <- text_width(console_lines[n], 13, "plain", mono)
+    box(x + 12 + cw + 3, y + 5 + LH * n - LH / 2 - 7, 7, 14, fill = pal$ink, col = NA)
+  }
+}
+
+# Every element has a fixed slot, so nothing moves while the story plays:
+# image and facts at the top, loupe and console in the middle, the ledger
+# anchored to the bottom. `asked` rows show "? unknown"; the first `filled`
+# rows show the manifest values (the newest at `fill_alpha`).
+draw_right <- function(x, y, asked = character(), console = 0, prompt = TRUE, cursor = FALSE,
+                       scan = NA, loupe_on = FALSE, id_shown = FALSE, filled = 0,
+                       fill_alpha = 1, note = FALSE) {
+  panel_label("The same screenshot, traced with watermark", x, y)
+  cy <- y + 42
+  card(x, cy, PANEL_W, CARD_H, "Trace it", "R console")
+  ix <- x + PAD
+  iy <- cy + 58
+  iw <- 196
   ih <- image_at(screenshot, ix, iy, iw)
-
   info_x <- ix + iw + 16
-  info_w <- PANEL_W - 36 - iw - 16
+  info_w <- INNER_W - iw - 16
   txt("screenshot.jpg", info_x, iy + 10, size = 14, face = "bold", max_w = info_w)
   txt(sprintf("%d × %d px, JPEG", ncol(screenshot), nrow(screenshot)),
       info_x, iy + 31, size = 13, col = pal$muted, max_w = info_w)
-  txt("No file metadata left", info_x, iy + 50, size = 13, col = pal$muted,
-      max_w = info_w)
+  txt("No file metadata", info_x, iy + 50, size = 13, col = pal$muted, max_w = info_w)
+  txt("Forwarded from a slide deck", info_x, iy + 69, size = 13, col = pal$muted, max_w = info_w)
 
-  if (step >= 2) {
-    # Outline the row the decoder actually read.
+  show_row <- loupe_on || !is.na(scan) || id_shown
+  if (show_row) {
+    # Outline the row the decoder read, on the thumbnail.
     s <- iw / ncol(screenshot)
     x0 <- ix + (where$left - 2 * where$pitch) * s
     x1 <- ix + (where$right + 2 * where$pitch) * s
     ry <- iy + (where$row - 0.5) * s
     box(x0, ry - 4, x1 - x0, 8, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
+  }
+  if (id_shown) {
     box(info_x, iy + ih - 20, 22, 8, fill = NA, col = pal$accent, r = 2, lwd = 1.4)
-    txt("ID read here", info_x + 30, iy + ih - 16, size = 13,
+    txt("ID read from this row", info_x + 30, iy + ih - 16, size = 13,
         col = pal$accent, face = "bold", max_w = info_w - 30)
   }
 
-  # Console.
-  lh <- 20
-  cy2 <- iy + ih + 14
-  n_lines <- c(0, 1, 2, 4)[step + 1]
-  if (n_lines > 0) {
-    box(ix, cy2, PANEL_W - 36, 10 + lh * n_lines, fill = pal$code_bg, r = 6)
-    code <- c(sprintf('> extract_watermark("%s")', basename(screenshot_file)),
-              sprintf('[1] "%s"', decoded),
-              sprintf('> plots <- read.csv("%s")', basename(manifest_path)),
-              sprintf('> plots[plots$id == "%s", ]', decoded))
-    for (i in seq_len(n_lines)) {
-      is_out <- startsWith(code[i], "[1]")
-      txt(code[i], ix + 12, cy2 + 5 + lh * i - lh / 2, size = 13, family = mono,
-          col = if (is_out) pal$accent else pal$ink,
-          face = if (is_out) "bold" else "plain", max_w = PANEL_W - 60)
+  # Loupe slot, on a whole device pixel so the magnified pixels stay square.
+  ly <- ceiling((iy + ih + 10) * S) / S
+  lh <- length(LOUPE_ROWS) * LOUPE_ZOOM / S
+  if (show_row) {
+    loupe(ix, ly, cursor = scan)
+    txt(loupe_label, ix, ly + lh + 11, size = 11, col = pal$muted, max_w = INNER_W)
+  }
+  # Console slot, three lines reserved.
+  csy <- ly + lh + 24
+  draw_console(ix, csy, INNER_W, console, cursor = cursor, prompt = prompt)
+
+  # The ledger, anchored to the bottom of the card.
+  bottom <- cy + CARD_H - PAD
+  key_x <- ix + 12
+  val_x <- ix + 86
+  val_w <- INNER_W - 86 - 8
+  row_h <- 21
+  note_h <- 3 * 18
+  rows_h <- 4 + row_h * length(lineage_rows) + 8
+  id_h <- 48 + 14
+  block_top <- bottom - note_h - 12 - rows_h - id_h
+  stopifnot(block_top >= csy + 10 + LH * 3 + 10)
+  yy <- block_top
+  if (id_shown) {
+    box(ix, yy, INNER_W, 48, fill = pal$accent_bg, r = 6)
+    txt("FROM THE PIXELS", key_x, yy + 14, size = 11.5, col = pal$accent, face = "bold")
+    txt("plot ID", key_x, yy + 33, size = 13, col = pal$muted)
+    txt(decoded, val_x, yy + 32, size = 20, family = mono, face = "bold", col = pal$accent)
+  }
+  yy <- yy + id_h
+  hw <- txt("WHAT SAM NEEDS TO KNOW", key_x, yy + 4, size = 11.5, col = pal$muted, face = "bold")
+  if (console >= 3) {
+    # The lookup has been typed: the rows are about to come from the manifest.
+    txt("from plots.csv", key_x + hw + 10, yy + 4.5, size = 11.5, col = pal$accent,
+        face = "bold", max_w = INNER_W - hw - 22)
+  }
+  for (i in seq_along(lineage_rows)) {
+    key <- lineage_rows[i]
+    ry <- yy + 4 + row_h * i
+    txt(key, key_x, ry, size = 13, col = pal$muted)
+    if (i <= filled) {
+      txt(record[[key]], val_x, ry, size = 13.5, max_w = val_w,
+          alpha = if (i == filled) fill_alpha else 1)
+    } else if (key %in% asked) {
+      question_chip(val_x, ry)
+      txt("unknown", val_x + 26, ry, size = 13, col = pal$faint)
+    } else {
+      txt("—", val_x, ry, size = 13, col = pal$line)
     }
   }
-  if (step < 3) return(invisible())
-
-  # Lineage: what came from the pixels, and what came from the manifest.
-  ly <- cy2 + 10 + lh * 4 + 14
-  lx <- ix
-  lw <- PANEL_W - 36
-  key_x <- lx + 12
-  val_x <- lx + 86
-  val_w <- lw - 86 - 8
-
-  box(lx, ly, lw, 40, fill = pal$accent_bg, r = 6)
-  txt("FROM THE PIXELS", key_x, ly + 12, size = 11.5, col = pal$accent, face = "bold")
-  txt("plot ID", key_x, ly + 29, size = 13, col = pal$muted)
-  txt(decoded, val_x, ly + 29, size = 14, family = mono, face = "bold",
-      col = pal$accent)
-
-  my <- ly + 52
-  txt("FROM YOUR MANIFEST: plots.csv, demo data", key_x, my + 4, size = 11.5,
-      col = pal$muted, face = "bold", max_w = lw - 20)
-  row_h <- 21
-  for (i in seq_along(lineage_rows)) {
-    ry <- my + 4 + row_h * i
-    txt(lineage_rows[i], key_x, ry, size = 13, col = pal$muted)
-    txt(record[[lineage_rows[i]]], val_x, ry, size = 13.5, max_w = val_w)
-  }
-
-  ny <- my + 4 + row_h * length(lineage_rows) + 28
-  txt("Only the ID is in the pixels. The rest is the row you",
-      lx, ny, size = 13, col = pal$ink, max_w = lw)
-  txt("logged when you saved the plot.", lx, ny + 18, size = 13,
-      col = pal$ink, max_w = lw)
-  if (ny + 18 + 14 > cy + RIGHT_H) {
-    stop("Lineage overflows its card by ", round(ny + 32 - cy - RIGHT_H))
+  yy <- yy + rows_h + 12
+  if (note) {
+    lines <- c("Only the ID is in the pixels. The rest is the row you logged",
+               "in plots.csv when you saved the plot. Client, project and",
+               "run are demo values; script, data and output are real.")
+    for (i in seq_along(lines)) {
+      txt(lines[i], ix, yy + 4 + 18 * (i - 1), size = 13, max_w = INNER_W)
+    }
   }
 }
 
 # Scenes ----------------------------------------------------------------------
 
-S <- 1.25
-render <- function(file, w, h, draw, scale = S) {
+render <- function(w, h, draw, file = tempfile(fileext = ".png")) {
   canvas_h <<- h
-  ragg::agg_png(file, width = round(w * scale), height = round(h * scale),
-                res = 72 * scale, background = pal$bg)
+  ragg::agg_png(file, width = round(w * S), height = round(h * S),
+                res = 72 * S, background = pal$bg)
   pushViewport(viewport(xscale = c(0, w), yscale = c(0, h)))
   draw()
   popViewport()
@@ -362,80 +495,169 @@ render <- function(file, w, h, draw, scale = S) {
   png::readPNG(file)[, , 1:3]
 }
 
-GIF_W <- 2 * PANEL_W + 3 * 24
-GIF_H <- 24 + 18 + LEFT_H + 24
+GUTTER <- 20
+GIF_W <- 2 * PANEL_W + 3 * GUTTER
+GIF_H <- 42 + CARD_H + 22
+MOBILE_W <- PANEL_W + 2 * GUTTER
 
-scene <- function(n_msgs, step) {
-  render(tempfile(fileext = ".png"), GIF_W, GIF_H, function() {
-    draw_left(24, 24, n_msgs)
-    draw_right(48 + PANEL_W, 24, step)
+# Desktop: both panels side by side.
+scene <- function(left, right) {
+  render(GIF_W, GIF_H, function() {
+    do.call(draw_left, c(list(x = GUTTER, y = 0), left))
+    do.call(draw_right, c(list(x = 2 * GUTTER + PANEL_W, y = 0), right))
+  })
+}
+# Mobile: one column, one panel at a time; `blank` is the empty card shell
+# the two acts fade through.
+mobile_scene <- function(left = NULL, right = NULL, blank = FALSE) {
+  render(MOBILE_W, GIF_H, function() {
+    if (blank) card(GUTTER, 42, PANEL_W, CARD_H)
+    if (!is.null(left)) do.call(draw_left, c(list(x = GUTTER, y = 0), left))
+    if (!is.null(right)) do.call(draw_right, c(list(x = GUTTER, y = 0), right))
   })
 }
 
-# Each state is held, then cross-faded into the next. The GIF opens on the
-# finished story so the first frame (all that shows when animation is off)
-# makes the point, and so the loop is seamless.
-states <- list(
-  list(msgs = 7, step = 3, hold = 1.8),
-  list(msgs = 1, step = 0, hold = 1.6),
-  list(msgs = 2, step = 0, hold = 1.2),
-  list(msgs = 3, step = 0, hold = 0.9),
-  list(msgs = 4, step = 0, hold = 1.2),
-  list(msgs = 5, step = 0, hold = 0.9),
-  list(msgs = 6, step = 0, hold = 1.2),
-  list(msgs = 7, step = 0, hold = 1.0),
-  list(msgs = 7, step = 1, hold = 0.8),
-  list(msgs = 7, step = 2, hold = 1.3),
-  list(msgs = 7, step = 3, hold = 2.8)
-)
-fade <- c(1, 2) / 3
-fade_step <- 0.07
-
-frames_dir <- tempfile("lineage-frames")
-dir.create(frames_dir)
-imgs <- lapply(states, function(s) scene(s$msgs, s$step))
-
-concat <- "ffconcat version 1.0"
-n_frames <- 0L
-add_frame <- function(img, duration) {
-  n_frames <<- n_frames + 1L
-  f <- file.path(frames_dir, sprintf("f%03d.png", n_frames))
-  png::writePNG(img, f)
-  concat <<- c(concat, sprintf("file '%s'", f), sprintf("duration %.2f", duration))
+# A frame list for ffmpeg's concat demuxer: holds are single long frames,
+# transitions run at FPS (12.5, so every transition frame is exactly 8
+# hundredths of a second, the unit GIF delays are stored in). Each state is
+# rendered once and cached by its arguments, so identical frames cost one
+# render.
+FPS <- 12.5
+ease <- function(t) t * t * (3 - 2 * t)
+new_timeline <- function(dir) {
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  tl <- new.env()
+  tl$dir <- dir
+  tl$n <- 0L
+  tl$concat <- "ffconcat version 1.0"
+  tl$duration <- 0
+  tl$cache <- list()
+  tl
 }
-for (i in seq_along(states)) {
-  add_frame(imgs[[i]], states[[i]]$hold)
-  nxt <- imgs[[i %% length(imgs) + 1]]
-  # The last state equals the first, so the loop needs no fade.
-  if (i < length(states)) {
-    for (a in fade) add_frame((1 - a) * imgs[[i]] + a * nxt, fade_step)
+add_frame <- function(tl, img, duration) {
+  tl$n <- tl$n + 1L
+  f <- file.path(tl$dir, sprintf("f%03d.png", tl$n))
+  png::writePNG(img, f)
+  tl$concat <- c(tl$concat, sprintf("file '%s'", f), sprintf("duration %.3f", duration))
+  tl$duration <- tl$duration + duration
+  invisible(img)
+}
+cached <- function(tl, key, make) {
+  key <- paste(deparse(key, width.cutoff = 500L), collapse = "")
+  if (is.null(tl$cache[[key]])) tl$cache[[key]] <- make()
+  tl$cache[[key]]
+}
+
+write_gif <- function(tl, out, max_kb) {
+  # ffmpeg drops the last duration, so repeat the last file.
+  concat <- c(tl$concat, utils::tail(tl$concat, 2)[1])
+  list_file <- file.path(tl$dir, "frames.txt")
+  writeLines(concat, list_file)
+  status <- system2("ffmpeg", c(
+    "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", shQuote(list_file),
+    "-vf", shQuote(paste0(
+      "split[a][b];[a]palettegen=max_colors=128:stats_mode=full[p];",
+      "[b][p]paletteuse=dither=none:diff_mode=rectangle"
+    )),
+    "-fps_mode", "vfr", "-loop", "0", out
+  ))
+  stopifnot(status == 0)
+  kb <- file.size(out) / 1024
+  if (kb > max_kb) stop(sprintf("%s is %.0f KB, over the %d KB budget", out, kb, max_kb))
+  message(sprintf("Wrote %s: %d frames, %.1f s, %.0f KB", out, tl$n, tl$duration, kb))
+}
+
+# The story, as beats shared by both GIFs ------------------------------------
+#
+# `frame(left, right)` renders a state for the current layout. The thread
+# beats only touch the left panel; the trace beats only the right one.
+
+thread_beats <- function(tl, frame, with_ledger = TRUE) {
+  R <- function(n) if (with_ledger) list(asked = asked_after(n)) else list(asked = character())
+  add_frame(tl, frame(list(n_msgs = 1), R(1)), 1.1)
+  for (m in 2:7) {
+    who <- first_name(thread[[m]]$who)
+    is_sam <- who == "Sam"
+    add_frame(tl, frame(list(n_msgs = m - 1, typing_who = who), R(m - 1)),
+              if (is_sam) 0.65 else 0.45)
+    for (r in c(0.35, 0.7)) add_frame(tl, frame(list(n_msgs = m, rise = r), R(m - 1)), 1 / FPS)
+    if (is_sam && with_ledger) {
+      # The question lands, then a beat later its rows turn to "unknown".
+      add_frame(tl, frame(list(n_msgs = m), R(m - 1)), 0.25)
+      add_frame(tl, frame(list(n_msgs = m), R(m)), 1.95)
+    } else {
+      add_frame(tl, frame(list(n_msgs = m), R(m)), if (is_sam) 2.2 else if (m == 7) 1.2 else 1.0)
+    }
   }
 }
-concat <- c(concat, utils::tail(concat, 2)[1])  # ffmpeg drops the last duration
-list_file <- file.path(frames_dir, "frames.txt")
-writeLines(concat, list_file)
 
-out <- "man/figures/lineage.gif"
-status <- system2("ffmpeg", c(
-  "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", shQuote(list_file),
-  "-vf", shQuote(paste0(
-    "split[a][b];[a]palettegen=max_colors=128:stats_mode=full[p];",
-    "[b][p]paletteuse=dither=none:diff_mode=rectangle"
-  )),
-  "-fps_mode", "vfr", "-loop", "0", out
-))
-stopifnot(status == 0)
+trace_beats <- function(tl, frame, final) {
+  L <- list(n_msgs = 7)
+  all_asked <- asked_after(7)
+  add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE)), 0.6)
+  add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE, loupe_on = TRUE)), 0.4)
+  for (k in 1:9) {
+    add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE,
+                                scan = ease(k / 9))), 1 / FPS)
+  }
+  add_frame(tl, frame(L, list(asked = all_asked, console = 2, id_shown = TRUE)), 1.5)
+  add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE)), 0.7)
+  for (i in seq_along(lineage_rows)) {
+    add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i,
+                                fill_alpha = 0.45)), 1 / FPS)
+    add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i)),
+              if (i < length(lineage_rows)) 0.16 else 0.5)
+  }
+  add_frame(tl, final, 2.0)
+}
 
-# Stills: the finished story, side by side and stacked for phones.
-png::writePNG(imgs[[1]], "man/figures/lineage-still.png")
-MOBILE_W <- PANEL_W + 2 * 20
-MOBILE_H <- 20 + 2 * (18 + LEFT_H) + 30 + 20
-invisible(render("man/figures/lineage-mobile.png", MOBILE_W, MOBILE_H, function() {
-  draw_left(20, 20, 7)
-  draw_right(20, 20 + 18 + LEFT_H + 30, 3)
-}, scale = 2))
+FINAL_RIGHT <- list(asked = lineage_rows, console = 3, id_shown = TRUE, filled = 6, note = TRUE)
 
-duration <- sum(vapply(states, `[[`, 0, "hold")) +
-  (length(states) - 1) * length(fade) * fade_step
-message(sprintf("Wrote %s: %d frames, %.1f s, %.0f KB; ID %s matches plots.csv",
-                out, n_frames, duration, file.size(out) / 1024, decoded))
+# Desktop GIF ------------------------------------------------------------------
+#
+# Opens on the finished story (the first frame is the static preview), rewinds
+# with a short fade, plays, and ends on the same finished frame so the loop
+# has no seam. The opener's elements all sit where they do in the final frame,
+# so the rewind is a pure fade-out of what the story adds.
+
+frames_dir <- tempfile("lineage-frames")
+tl <- new_timeline(file.path(frames_dir, "desktop"))
+frame <- function(left, right) cached(tl, list(left, right), function() scene(left, right))
+final <- frame(list(n_msgs = 7), FINAL_RIGHT)
+add_frame(tl, final, 2.4)
+opener <- frame(list(n_msgs = 1), list())
+for (t in c(0.25, 0.5, 0.75)) add_frame(tl, (1 - ease(t)) * final + ease(t) * opener, 1 / FPS)
+thread_beats(tl, frame)
+trace_beats(tl, frame, final)
+write_gif(tl, "man/figures/lineage.gif", max_kb = 600)
+png::writePNG(final, "man/figures/lineage-still.png")
+
+# Mobile GIF --------------------------------------------------------------------
+#
+# One column, two acts: the thread, then the trace panel (its six rows
+# already "unknown", since Sam has just asked). Acts change by a short fade
+# through the empty card, which is far cheaper than a slide and never
+# overlays one act's text on the other's. Opens and closes on the finished
+# trace panel; the rewind is the same fade back to the thread's first message.
+
+tm <- new_timeline(file.path(frames_dir, "mobile"))
+mframe <- function(left = NULL, right = NULL, blank = FALSE) {
+  cached(tm, list(left, right, blank), function() mobile_scene(left, right, blank))
+}
+m_blank <- mframe(blank = TRUE)
+fade_through <- function(from, to) {
+  for (t in c(0.4, 0.75)) add_frame(tm, (1 - t) * from + t * m_blank, 1 / FPS)
+  add_frame(tm, m_blank, 1 / FPS)
+  for (t in c(0.35, 0.7)) add_frame(tm, (1 - t) * m_blank + t * to, 1 / FPS)
+}
+m_final <- mframe(right = FINAL_RIGHT)
+add_frame(tm, m_final, 2.4)
+fade_through(m_final, mframe(left = list(n_msgs = 1)))
+thread_beats(tm, function(left, right) mframe(left = left), with_ledger = FALSE)
+trace_opener <- mframe(right = list(asked = lineage_rows))
+fade_through(mframe(left = list(n_msgs = 7)), trace_opener)
+add_frame(tm, trace_opener, 0.9)
+trace_beats(tm, function(left, right) mframe(right = right), m_final)
+write_gif(tm, "man/figures/lineage-mobile.gif", max_kb = 450)
+
+message(sprintf("ID %s matches plots.csv; script %s", decoded, record$script))

@@ -26,8 +26,8 @@ its run, code and data.
 <p align="center">
 
 <picture>
-<source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/despresj/watermark/main/man/figures/lineage-mobile.png" />
-<img src="man/figures/lineage.gif" width="100%" alt="Two panels. Left: a chat thread in which someone shares a chart screenshot and asks what it means; the analyst asks which client, project, run ID, data snapshot, script version and original report it came from, and nobody knows. Right: the same screenshot, a 552 by 378 pixel JPEG with no file metadata. extract_watermark() reads the ID 7K3M9QXD from its dot row, and looking that ID up in a plots.csv manifest returns the client, project, run, script, data snapshot and output file. A note says only the ID is in the pixels; the rest is the row logged when the plot was saved." />
+<source media="(max-width: 640px)" srcset="man/figures/lineage-mobile.gif" />
+<img src="man/figures/lineage.gif" width="100%" alt="Animation in two panels. Left: a chat thread. Someone shares a chart screenshot and asks what it means; the analyst asks which client, which project, which run, which data snapshot, which script version and where the original file is, and nobody knows. Right: the same screenshot, a 552 by 378 pixel JPEG with no file metadata, and a ledger of those six unknowns. In an R console, extract_watermark() reads the ID 7K3M9QXD from the screenshot's dot row, shown as a strip of its magnified pixels, and looking the ID up in a plots.csv manifest fills in the six rows: client, project, run, data, script and output. A note says only the ID is in the pixels; the rest is the row logged when the plot was saved, with client, project and run as demo values." />
 </picture>
 </p>
 
@@ -35,15 +35,14 @@ its run, code and data.
 
 <sub>A screenshot arrives with no context. <b>Left:</b> six questions,
 no answers. <b>Right:</b> <code>extract_watermark()</code> reads the ID
-out of the same JPEG, and the ID finds the row logged in
-<code>plots.csv</code> when the plot was saved. Only the ID is in the
-pixels; everything else comes from that log, here filled with fictional
-demo values. The decode is real: made and checked by
+out of the same JPEG (the strip is its own pixels around the dot row,
+magnified), and the ID finds the row logged in <code>plots.csv</code>
+when the plot was saved. Only the ID is in the pixels; everything else
+comes from that log, with the client, project and run as demo values.
+The decode is real: made and checked by
 <a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>.
-<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png">Still
-image</a> ·
-<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.png">Phone-sized
-version</a></sub>
+<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png">Still image</a> ·
+<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.gif">Phone-sized version</a></sub>
 </p>
 
 ## Installation
