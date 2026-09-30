@@ -1,10 +1,13 @@
 # "Where did this chart come from?": the README animation.
 #
-# Left, the usual support thread: a screenshot with no context and six
-# questions nobody can answer. Right, the same screenshot traced with
-# watermark. The six questions are also the six rows of the lineage ledger
-# on the right: each one Sam asks turns a row into "unknown", and the decode
-# fills them back in.
+# Left, the usual thread: a client wants to act on a chart, all anyone has is
+# a screenshot from their deck, and the six things Sam would need to check
+# the recommendation are unknown. Right, the same screenshot traced with
+# watermark. Sam's questions are also the six rows of the lineage ledger on
+# the right: each thing Sam asks for turns a row into "unknown", and the
+# decode fills them back in. On desktop Sam then closes the thread: the
+# source run is found, and the recommendation can now be checked (the trace
+# recovers the source; it does not vouch for the conclusion).
 #
 # Everything shown on the right is computed here, not typed in:
 #
@@ -290,30 +293,36 @@ INNER_W <- PANEL_W - 2 * PAD
 
 # Left: the thread ------------------------------------------------------------
 
+# Lines are wrapped by hand (each must fit the card's text width). `asks`
+# names the ledger rows a message turns to "unknown". The first N_PLAY
+# messages are the exchange that stalls; the last one is Sam's reply after
+# the trace, shown only in the desktop finale.
 thread <- list(
-  list(who = "Morgan (Sales)", at = "9:41 AM",
-       lines = c("Hey, you're gonna hate me. Can you help me",
-                 "understand what this plot means?"),
+  list(who = "Morgan (Accounts)", at = "9:41 AM",
+       lines = c("Hey, you're gonna hate me. The client wants",
+                 "to move ahead based on this chart. Can we",
+                 "stand behind that recommendation?"),
        attach = TRUE),
   list(who = "Sam (Analytics)", at = "9:52 AM",
-       lines = c("Sure! Which client is this for?",
-                 "And which project or study ID?"),
-       asks = c("client", "project")),
-  list(who = "Morgan (Sales)", at = "9:58 AM",
-       lines = "A retail one? It was in last quarter's deck."),
+       lines = "Which client is this for?",
+       asks = "client"),
+  list(who = "Morgan (Accounts)", at = "9:58 AM",
+       lines = "I've only got the screenshot from their deck."),
   list(who = "Sam (Analytics)", at = "10:06 AM",
-       lines = c("Do you know the run ID?",
-                 "Or which data snapshot it used?"),
-       asks = c("run", "data")),
-  list(who = "Morgan (Sales)", at = "10:31 AM",
-       lines = "No idea, someone forwarded it to me."),
+       lines = "Which study was this? Do you have the run ID?",
+       asks = c("project", "run")),
+  list(who = "Morgan (Accounts)", at = "10:31 AM",
+       lines = "No idea, sorry. They want an answer today."),
   list(who = "Sam (Analytics)", at = "10:34 AM",
-       lines = c("Which version of the script made it?",
-                 "Is the original report saved anywhere?"),
-       asks = c("script", "output")),
-  list(who = "Morgan (Sales)", at = "11:02 AM",
-       lines = "Let me ask around…")
+       lines = c("Can you find the original report? I can't check",
+                 "it without the data snapshot and script version."),
+       asks = c("data", "script", "output")),
+  list(who = "Sam (Analytics)", at = "10:47 AM",
+       lines = c("Never mind, found the source run.",
+                 "Let's check the recommendation."))
 )
+N_PLAY <- 6L             # messages exchanged before Sam traces the screenshot
+N_ALL <- length(thread)  # ... plus Sam's reply once the trace is done
 first_name <- function(who) sub(" .*", "", who)
 # The rows Sam has asked about once the first n messages are up.
 asked_after <- function(n) unlist(lapply(thread[seq_len(n)], `[[`, "asks"))
@@ -574,8 +583,8 @@ write_gif <- function(tl, out, max_kb) {
 
 thread_beats <- function(tl, frame, with_ledger = TRUE) {
   R <- function(n) if (with_ledger) list(asked = asked_after(n)) else list(asked = character())
-  add_frame(tl, frame(list(n_msgs = 1), R(1)), 1.1)
-  for (m in 2:7) {
+  add_frame(tl, frame(list(n_msgs = 1), R(1)), 2.3)
+  for (m in 2:N_PLAY) {
     who <- first_name(thread[[m]]$who)
     is_sam <- who == "Sam"
     add_frame(tl, frame(list(n_msgs = m - 1, typing_who = who), R(m - 1)),
@@ -586,14 +595,18 @@ thread_beats <- function(tl, frame, with_ledger = TRUE) {
       add_frame(tl, frame(list(n_msgs = m), R(m - 1)), 0.25)
       add_frame(tl, frame(list(n_msgs = m), R(m)), 1.95)
     } else {
-      add_frame(tl, frame(list(n_msgs = m), R(m)), if (is_sam) 2.2 else if (m == 7) 1.2 else 1.0)
+      add_frame(tl, frame(list(n_msgs = m), R(m)),
+                if (is_sam) 2.2 else if (m == N_PLAY) 1.2 else 1.0)
     }
   }
 }
 
-trace_beats <- function(tl, frame, final) {
-  L <- list(n_msgs = 7)
-  all_asked <- asked_after(7)
+# `closing(rise)`, if given, renders Sam's reply lifting into the thread once
+# the ledger is full; while the rows fill, the thread shows Sam typing.
+trace_beats <- function(tl, frame, final, closing = NULL) {
+  L <- list(n_msgs = N_PLAY)
+  LT <- if (is.null(closing)) L else c(L, list(typing_who = "Sam"))
+  all_asked <- asked_after(N_PLAY)
   add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE)), 0.6)
   add_frame(tl, frame(L, list(asked = all_asked, console = 1, cursor = TRUE, loupe_on = TRUE)), 0.4)
   for (k in 1:9) {
@@ -603,11 +616,12 @@ trace_beats <- function(tl, frame, final) {
   add_frame(tl, frame(L, list(asked = all_asked, console = 2, id_shown = TRUE)), 1.5)
   add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE)), 0.7)
   for (i in seq_along(lineage_rows)) {
-    add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i,
-                                fill_alpha = 0.45)), 1 / FPS)
-    add_frame(tl, frame(L, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i)),
+    add_frame(tl, frame(LT, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i,
+                                 fill_alpha = 0.45)), 1 / FPS)
+    add_frame(tl, frame(LT, list(asked = all_asked, console = 3, id_shown = TRUE, filled = i)),
               if (i < length(lineage_rows)) 0.16 else 0.5)
   }
+  if (!is.null(closing)) for (r in c(0.35, 0.7)) add_frame(tl, closing(r), 1 / FPS)
   add_frame(tl, final, 2.0)
 }
 
@@ -618,17 +632,19 @@ FINAL_RIGHT <- list(asked = lineage_rows, console = 3, id_shown = TRUE, filled =
 # Opens on the finished story (the first frame is the static preview), rewinds
 # with a short fade, plays, and ends on the same finished frame so the loop
 # has no seam. The opener's elements all sit where they do in the final frame,
-# so the rewind is a pure fade-out of what the story adds.
+# so the rewind is a pure fade-out of what the story adds. The finished story
+# includes Sam's reply in the thread, posted once the ledger is full.
 
 frames_dir <- tempfile("lineage-frames")
 tl <- new_timeline(file.path(frames_dir, "desktop"))
 frame <- function(left, right) cached(tl, list(left, right), function() scene(left, right))
-final <- frame(list(n_msgs = 7), FINAL_RIGHT)
+final <- frame(list(n_msgs = N_ALL), FINAL_RIGHT)
 add_frame(tl, final, 2.4)
 opener <- frame(list(n_msgs = 1), list())
 for (t in c(0.25, 0.5, 0.75)) add_frame(tl, (1 - ease(t)) * final + ease(t) * opener, 1 / FPS)
 thread_beats(tl, frame)
-trace_beats(tl, frame, final)
+trace_beats(tl, frame, final,
+            closing = function(rise) frame(list(n_msgs = N_ALL, rise = rise), FINAL_RIGHT))
 write_gif(tl, "man/figures/lineage.gif", max_kb = 600)
 png::writePNG(final, "man/figures/lineage-still.png")
 
@@ -639,6 +655,7 @@ png::writePNG(final, "man/figures/lineage-still.png")
 # through the empty card, which is far cheaper than a slide and never
 # overlays one act's text on the other's. Opens and closes on the finished
 # trace panel; the rewind is the same fade back to the thread's first message.
+# Sam's closing reply is desktop-only: here the filled ledger is the finale.
 
 tm <- new_timeline(file.path(frames_dir, "mobile"))
 mframe <- function(left = NULL, right = NULL, blank = FALSE) {
@@ -655,7 +672,7 @@ add_frame(tm, m_final, 2.4)
 fade_through(m_final, mframe(left = list(n_msgs = 1)))
 thread_beats(tm, function(left, right) mframe(left = left), with_ledger = FALSE)
 trace_opener <- mframe(right = list(asked = lineage_rows))
-fade_through(mframe(left = list(n_msgs = 7)), trace_opener)
+fade_through(mframe(left = list(n_msgs = N_PLAY)), trace_opener)
 add_frame(tm, trace_opener, 0.9)
 trace_beats(tm, function(left, right) mframe(right = right), m_final)
 write_gif(tm, "man/figures/lineage-mobile.gif", max_kb = 450)
