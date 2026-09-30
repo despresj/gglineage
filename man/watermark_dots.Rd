@@ -65,10 +65,12 @@ text ID, so they are rejected with a message. Any text of 16 bytes or fewer
 is carried literally, so no text ID can ever be mistaken for a UUID.
 
 Each UUID row has 136 dot positions to a text row's 77-200 (112 for an
-8-character \code{wm_id()}), so a UUID needs about 20\% more pixel width than an
-8-character ID to survive the same JPEG compression: measured on a 7 x 5
-in figure, quality 50 holds down to about 360 px wide for a UUID and 300
-px for an 8-character ID. The full table is in the README.
+8-character \code{wm_id()}), so a UUID needs more pixel width than an
+8-character ID to survive the same JPEG compression. Measured on 7 x 5 in
+figures (12 trials per width), quality 50 held in every trial down to 400
+px wide for a UUID and 300 px for an 8-character ID; below that, some
+decodes return \code{NULL}. The full table is in the README. These are
+measurements, not guarantees: the limits vary with the ID and the plot.
 }
 
 \examples{

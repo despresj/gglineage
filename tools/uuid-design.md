@@ -471,3 +471,20 @@ Two reviewers attacked commit c5b1b68. What changed, and the evidence:
   13.6 s (bound by the number of candidate geometries, not addressed).
   Images with a code, and plain plots without one, take 0.1-1 s.
 
+**Observed** re-measurement on 176af3b (`Rscript tools/uuid-measure.R 6`,
+6 random IDs of each kind x 2 plots = 12 trials per cell, 2016 decodes,
+0 wrong IDs, 495 s; CSV in `tools/uuid-measure-176af3b.csv`). Narrowest
+width at and above which all 12 decoded (partial passes just below):
+
+| transform | `wm_id(8)` | UUID |
+|---|---:|---:|
+| lossless resize | 220 | 220 |
+| JPEG 75 | 240 | 320 (11/12 at 300) |
+| JPEG 50 | 300 (10/12 at 280) | 400 (10/12 at 360) |
+| JPEG 35 | 320 | 480 (8/12 at 400, 1/12 at 430) |
+| padded + JPEG 50 | 400 | 480 (10/12 at 430, 12/12 at 400, 10/12 at 360) |
+| retina screenshot chain | 280 (0/12 at 260, 12/12 at 240) | 280 (0/12 at 260) |
+
+The UUID JPEG 50 floor is 400 px, not the 360 px of the earlier 3-ID sweep;
+the README and `?watermark_dots` now say 400.
+
