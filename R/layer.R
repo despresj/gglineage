@@ -50,3 +50,21 @@ bottom_margin <- function(pt) {
     ggplot2::margin(5.5, 5.5, pt, 5.5)
   }
 }
+
+# Arguments that would draw a mark nobody can read back are errors, not
+# silent no-ops: fully transparent dots, dots of no size, no colour.
+check_mark_style <- function(colour, alpha, size) {
+  rgba <- tryCatch(grDevices::col2rgb(colour, alpha = TRUE), error = function(e) NULL)
+  if (length(colour) != 1L || is.na(colour) || is.null(rgba) || rgba[4, 1] == 0) {
+    stop("`colour` must be a single visible colour, e.g. \"grey30\" or \"white\".",
+         call. = FALSE)
+  }
+  if (!is.numeric(alpha) || length(alpha) != 1L || !is.finite(alpha) ||
+      alpha <= 0 || alpha > 1) {
+    stop("`alpha` must be a number greater than 0 and at most 1.", call. = FALSE)
+  }
+  if (!is.numeric(size) || length(size) != 1L || !is.finite(size) || size <= 0) {
+    stop("`size` must be a positive number (a dot diameter in mm).", call. = FALSE)
+  }
+  invisible(TRUE)
+}

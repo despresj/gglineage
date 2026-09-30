@@ -70,6 +70,7 @@
 #' ggsave(file, p2, width = 6, height = 4, dpi = 150)
 #' extract_watermark(file)
 watermark_dots <- function(id, colour = "grey30", alpha = 0.15, size = 1.2) {
+  check_mark_style(colour, alpha, size)
   rows <- encode_rows(id)
   spec <- list(
     rows = rows,
@@ -88,6 +89,9 @@ watermark_dots <- function(id, colour = "grey30", alpha = 0.15, size = 1.2) {
 #' @param ... Passed to `watermark_dots()`.
 #' @export
 add_watermark <- function(plot, id, ...) {
+  if (!inherits(plot, "ggplot")) {
+    stop("`plot` must be a ggplot object.", call. = FALSE)
+  }
   plot + watermark_dots(id, ...)
 }
 

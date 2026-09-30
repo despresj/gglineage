@@ -35,6 +35,10 @@
 #' ggsave(file, p, width = 6, height = 4, dpi = 150)
 #' extract_watermark(file)
 watermark_tiles <- function(id, colour = "black", alpha = 0.04, size = 1.05, pitch = 3) {
+  check_mark_style(colour, alpha, size)
+  if (!is.numeric(pitch) || length(pitch) != 1L || !is.finite(pitch) || pitch <= 0) {
+    stop("`pitch` must be a positive number (lattice spacing in mm).", call. = FALSE)
+  }
   structure(
     list(bits = encode_tile(id), colour = colour, alpha = alpha, size = size, pitch = pitch),
     class = "watermark_tiles_spec"

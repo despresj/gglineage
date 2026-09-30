@@ -114,6 +114,11 @@ parse_id <- function(id, arg = "id") {
   if (Encoding(id) == "bytes" || !validUTF8(enc2utf8(id))) {
     stop("`", arg, "` must be valid UTF-8 text.", call. = FALSE)
   }
+  # Whitespace-only IDs round-trip, but they are almost always a bug (an
+  # empty variable pasted in), and nobody could tell them apart when read.
+  if (!grepl("[^[:space:]\u00a0\u200b-\u200d\u2060\ufeff]", enc2utf8(id), perl = TRUE)) {
+    stop("`", arg, "` has no visible characters.", call. = FALSE)
+  }
   uuid <- parse_uuid(id)
   if (!is.null(uuid)) {
     return(list(kind = "uuid", id = format_uuid(uuid), bytes = uuid))

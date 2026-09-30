@@ -177,8 +177,10 @@ find_at_figure_geometry <- function(gray, accept) {
   left <- dots_inset * w + 0.5
   right <- (1 - dots_inset) * w + 0.5
   pitches <- (right - left) / (frame_lengths - 1)
-  # Start-sync dot positions for every candidate frame length at once.
-  sync_x <- outer(2 * (0:7), pitches) + left
+  # Start-sync positions (all 16 bits) for every candidate frame length at
+  # once; the dots are the odd rows.
+  start_x <- outer(0:15, pitches) + left
+  on_bit <- sync_start == 1L
 
   # The dot row sits a few millimetres above the bottom edge.
   for (r in rev(seq(max(2L, floor(0.88 * n)), n - 1L))) {
@@ -186,15 +188,26 @@ find_at_figure_geometry <- function(gray, accept) {
       signal <- colMeans(gray[rows, , drop = FALSE])
       # Blank rows (most of any margin) can't hold a frame.
       diff <- signal - local_background(signal, k)
-      if (stats::quantile(abs(diff), 0.85, names = FALSE) < 0.005) next
-      sync_dots <- matrix(
-        stats::approx(seq_len(w), diff, xout = sync_x, rule = 2)$y,
-        nrow = 8L
+      if (stats::quantile(abs(diff), 0.95, names = FALSE) < 0.005) next
+      start <- matrix(
+        stats::approx(seq_len(w), diff, xout = start_x, rule = 2)$y,
+        nrow = 16L
       )
-      polarity <- ifelse(colMeans(sync_dots) < 0, -1, 1)
+      contrast <- colMeans(start[on_bit, , drop = FALSE]) -
+        colMeans(start[!on_bit, , drop = FALSE])
+      polarity <- ifelse(contrast < 0, -1, 1)
+      # Cheap gate, as in decode_frame(): skip lengths whose start sync does
+      # not read as alternating on/off (13 of 16), before paying for the
+      # accurate background. Noisy rows otherwise cost seconds each.
+      agree <- vapply(seq_along(frame_lengths), function(i) {
+        v <- polarity[i] * start[, i]
+        cut <- (mean(v[on_bit]) + mean(v[!on_bit])) / 2
+        sum((v > cut) == on_bit)
+      }, numeric(1))
+      candidates <- which(agree >= 13L)
       oriented <- list()
       # Rank lengths by how strongly their start sync reads, best first.
-      for (i in order(abs(colMeans(sync_dots)), decreasing = TRUE)) {
+      for (i in candidates[order(abs(contrast[candidates]), decreasing = TRUE)]) {
         key <- as.character(polarity[i])
         if (is.null(oriented[[key]])) {
           oriented[[key]] <- oriented_signal(signal, k, polarity[i])
@@ -212,24 +225,61 @@ find_at_figure_geometry <- function(gray, accept) {
 }
 
 read_image <- function(image) {
-  if (is.numeric(image) && length(dim(image)) %in% 2:3) return(image)
-  if (!is.character(image) || length(image) != 1L) {
-    stop("`image` must be a file path or a numeric pixel array.", call. = FALSE)
+  if (is.numeric(image) && length(dim(image)) %in% 2:3) return(check_pixels(image))
+  if (!is.character(image) || length(image) != 1L || is.na(image)) {
+    stop("`image` must be a single file path or a numeric pixel array.",
+         call. = FALSE)
+  }
+  if (dir.exists(image)) {
+    stop("`image` is a directory, not an image file: ", image, call. = FALSE)
   }
   if (!file.exists(image)) stop("File not found: ", image, call. = FALSE)
+  if (file.size(image) == 0) stop("File is empty: ", image, call. = FALSE)
 
   magic <- readBin(image, "raw", 4L)
+  read <- function(reader, format) {
+    tryCatch(reader(image), error = function(e) {
+      stop("Could not read ", format, " file ", image, " (",
+           conditionMessage(e), "). Is it truncated or corrupt?", call. = FALSE)
+    })
+  }
   if (identical(magic, as.raw(c(0x89, 0x50, 0x4e, 0x47)))) {
-    return(png::readPNG(image))
+    return(read(png::readPNG, "PNG"))
   }
   if (identical(magic[1:2], as.raw(c(0xff, 0xd8)))) {
     if (!requireNamespace("jpeg", quietly = TRUE)) {
       stop("Reading JPEG files needs the jpeg package: install.packages(\"jpeg\")",
            call. = FALSE)
     }
-    return(jpeg::readJPEG(image))
+    return(read(jpeg::readJPEG, "JPEG"))
   }
-  stop("Unsupported image format (expected PNG or JPEG): ", image, call. = FALSE)
+  stop("Unsupported image format (expected PNG or JPEG): ", image,
+       ". Convert it first, e.g. with `sips -s format png` or ffmpeg.",
+       call. = FALSE)
+}
+
+# Validate a user-supplied pixel array: intensities in [0, 1], height x width
+# with 1 (gray), 2 (gray + alpha), 3 (RGB) or 4 (RGBA) channels. File readers
+# already guarantee this; arrays from elsewhere often come as 0-255.
+check_pixels <- function(img) {
+  if (length(dim(img)) == 3L && !dim(img)[3] %in% 1:4) {
+    stop("`image` has ", dim(img)[3], " channels; expected 1 (gray), 2 (gray + ",
+         "alpha), 3 (RGB) or 4 (RGBA).", call. = FALSE)
+  }
+  if (anyNA(img)) stop("`image` has missing (NA) pixel values.", call. = FALSE)
+  if (any(is.infinite(img))) {
+    stop("`image` has infinite pixel values.", call. = FALSE)
+  }
+  if (length(img) > 0L) {
+    range <- range(img)
+    if (range[1] < -1e-6 || range[2] > 1 + 1e-6) {
+      stop("`image` pixel values must be in [0, 1]; these run from ",
+           format(range[1]), " to ", format(range[2]), ".",
+           if (range[2] <= 255 && range[1] >= 0) " For 0-255 data, divide by 255.",
+           call. = FALSE)
+    }
+  }
+  img
 }
 
 as_gray <- function(img) {
@@ -257,9 +307,13 @@ decode_row <- function(signal) {
   if (k < 3L) return(NULL)
   diff <- signal - local_background(signal, k)
   dev <- abs(diff)
-  # Dots cover roughly a third of the row, so a high quantile sits inside
-  # them while ignoring a few extreme pixels (borders, stray text).
+  # Dots usually cover about a third of the row, so the 85th percentile sits
+  # inside them while ignoring borders, stray text and screenshot chrome
+  # (which can fill a tenth of the row). On large figures the dots, capped at
+  # their maximum size, cover far less, the 85th percentile is plain
+  # background, and the 95th is needed instead.
   peak <- stats::quantile(dev, 0.85, names = FALSE)
+  if (peak < 0.01) peak <- stats::quantile(dev, 0.95, names = FALSE)
   if (peak < 0.01) return(NULL)
 
   # Coarse pass: find dot-like runs. These only locate the frame; bits are
@@ -301,6 +355,16 @@ decode_frame <- function(centers, diff, orient, pitch) {
   # the signal so dots are positive, judging by the start sync's dots.
   sync_dots <- sample_signal(diff, left + 2 * pitch * (0:7), pitch)
   polarity <- if (mean(sync_dots) < 0) -1 else 1
+
+  # Cheap check before any frame search, on the fast signal: the start sync
+  # itself must read as alternating on/off. Evenly spaced clusters turn up
+  # by chance in noisy rows (textures, photos, dense data), and without this
+  # check each one costs the accurate background and a search over every
+  # frame length. 13 of 16 matches the agreement decode_geometry() demands
+  # of both syncs (26 of 32).
+  start <- polarity * sample_signal(diff, left + (0:15) * pitch, pitch)
+  cut <- (mean(start[sync_start == 1L]) + mean(start[sync_start == 0L])) / 2
+  if (sum((start > cut) == (sync_start == 1L)) < 13L) return(NULL)
   oriented <- orient(polarity)
 
   try_frame <- function(right, n) {
@@ -324,7 +388,8 @@ decode_frame <- function(centers, diff, orient, pitch) {
     predicted <- left + (n - 1) * pitch
     window <- 0.03 * (n - 1) * pitch + pitch
     nearby <- centers[abs(centers - predicted) <= window]
-    for (right in nearby[order(abs(nearby - predicted))]) {
+    # The nearest few are enough; in a dense row every cluster is "nearby".
+    for (right in utils::head(nearby[order(abs(nearby - predicted))], 3L)) {
       found <- try_frame(right, n)
       if (!is.null(found)) return(found)
     }
@@ -406,17 +471,37 @@ local_background <- function(signal, k) {
 # median this cannot drift into a dense run of dots, since any window a
 # dozen bits wide still holds a gap. Windows shrink towards the row's ends.
 oriented_signal <- function(signal, k, polarity) {
-  polarity * (signal - running_extreme(signal, k, if (polarity < 0) pmax else pmin))
+  # The background is the running extreme on the side away from the dots.
+  # Cap excursions on that side first: a plot border (ggplot2 draws a white
+  # one by default, invisible only on white plots) or any bright mark would
+  # otherwise hold the extreme for k / 2 pixels and hide the sync dots.
+  # The cap tracks the row's own noise: tight on a clean PNG, where even a
+  # few hundredths would rival faint dots, looser under JPEG noise.
+  median <- local_background(signal, k)
+  slack <- max(0.005, 3 * stats::mad(signal - median, constant = 1))
+  capped <- if (polarity < 0) pmin(signal, median + slack) else pmax(signal, median - slack)
+  polarity * (signal - running_extreme(capped, k, if (polarity < 0) pmax else pmin))
 }
 
 running_extreme <- function(x, k, extreme) {
+  # Centred sliding min/max over k values (truncated at the ends), in linear
+  # time: van Herk / Gil-Werman block prefix and suffix scans. Equivalent to
+  # combining each value with its neighbours at distance 1..k %/% 2, which
+  # costs O(n * k) and dominated decoding time on noisy images.
   n <- length(x)
-  out <- x
-  for (d in seq_len(min(k %/% 2L, n - 1L))) {
-    out[(d + 1L):n] <- extreme(out[(d + 1L):n], x[1L:(n - d)])
-    out[1L:(n - d)] <- extreme(out[1L:(n - d)], x[(d + 1L):n])
-  }
-  out
+  h <- min(k %/% 2L, n - 1L)
+  if (h < 1L) return(x)
+  is_min <- identical(extreme, pmin)
+  pad <- if (is_min) Inf else -Inf
+  scan <- if (is_min) cummin else cummax
+  w <- 2L * h + 1L
+  y <- c(rep(pad, h), x, rep(pad, h))
+  blocks <- (length(y) + w - 1L) %/% w
+  y <- matrix(c(y, rep(pad, blocks * w - length(y))), nrow = w)
+  prefix <- as.vector(apply(y, 2, scan))
+  suffix <- as.vector(apply(y[w:1, , drop = FALSE], 2, scan)[w:1, , drop = FALSE])
+  i <- seq_len(n)
+  extreme(suffix[i], prefix[i + w - 1L])
 }
 
 edge_nudges <- c(0, -0.25, 0.25, -0.5, 0.5, -0.75, 0.75, -1, 1)
