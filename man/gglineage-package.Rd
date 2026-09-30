@@ -14,6 +14,7 @@ Stamp 'ggplot2' plots with an ID that can be read back out of the pixels, so a s
 Useful links:
 \itemize{
   \item \url{https://github.com/despresj/watermark}
+  \item \url{https://despresj.github.io/watermark/}
   \item Report bugs at \url{https://github.com/despresj/watermark/issues}
 }
 
