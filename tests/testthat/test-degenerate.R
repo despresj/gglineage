@@ -149,12 +149,10 @@ test_that("figures too small to hold the code return NULL, not a wrong ID", {
 
 test_that("rendering works on vector devices and inside other layouts", {
   p <- base_plot() + watermark_dots("K7Q2M9XD")
-  for (ext in c(".pdf", ".svg")) {
-    skip_if(ext == ".svg" && !capabilities("cairo"), "no cairo for SVG")
-    f <- withr_tempfile(ext)
-    expect_no_error(ggsave(f, p, width = 5, height = 4))
-    expect_gt(file.size(f), 0)
-  }
+  # PDF is built into R; SVG would need svglite, which isn't a dependency.
+  f <- withr_tempfile(".pdf")
+  expect_no_error(ggsave(f, p, width = 5, height = 4))
+  expect_gt(file.size(f), 0)
   skip_if_no_raster()
   f <- withr_tempfile(".png")
   grDevices::png(f, 1400, 1000, res = 150)
