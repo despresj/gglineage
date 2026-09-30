@@ -4,19 +4,30 @@
 #' or `U`, so it survives being read aloud or retyped). Eight characters give
 #' 40 bits and fit in a single row of [watermark_dots()].
 #'
-#' `wm_uuid()` returns a UUID (RFC 9562) as its canonical lowercase string.
-#' Version 4 (the default) is 122 random bits; version 7 starts with a
-#' 48-bit millisecond timestamp, so IDs sort by creation time, followed by 74
-#' random bits. Either takes two rows of dots; see [watermark_dots()] for the
+#' `wm_uuid()` returns a UUID (RFC 9562) as a lowercase hyphenated string.
+#' Version 4 (the default) has 122 random bits. Version 7 starts with a
+#' 48-bit Unix timestamp in milliseconds, so IDs from different milliseconds
+#' sort by creation time, followed by 74 random bits; IDs made within the
+#' same millisecond are in random order (RFC 9562 makes stricter ordering
+#' optional). Either takes two rows of dots; see [watermark_dots()] for the
 #' width that needs.
 #'
 #' @section Randomness:
-#' Random bytes come from the operating system (`/dev/urandom`) where it
-#' exists. Otherwise the uuid package is used if it is installed, and failing
-#' that a Mersenne-Twister stream private to this package, seeded once per
-#' session from the clock and process ID. None of these touch R's own random
-#' number generator: `set.seed()` in your analysis neither repeats the IDs nor
-#' is disturbed by them. IDs are for provenance, not security.
+#' Random bits come from the operating system's cryptographically secure
+#' generator: `/dev/urandom` on Linux, macOS and other Unix-alikes, and
+#' otherwise (on Windows) `openssl::rand_bytes()`, which needs the openssl
+#' package. If neither is available the functions stop with an error rather
+#' than fall back to a weaker source. R's own random number generator is
+#' never used, so `set.seed()` in your analysis neither repeats the IDs nor
+#' is disturbed by them, and forked workers (`parallel::mclapply()`) get
+#' different IDs.
+#'
+#' Uniqueness is probabilistic: two version 4 UUIDs collide with probability
+#' about \eqn{2^{-122}}, and an 8-character `wm_id()` has only 40 bits, so
+#' among a million of them a repeat is likely (about 36\%). Use UUIDs where
+#' IDs from many people or machines share one record. The IDs identify plots;
+#' they are not secrets, and the dot code is not authentication: anyone can
+#' read it, and anyone can draw it.
 #'
 #' @param n Number of characters, 1 to 16.
 #' @param version UUID version: `4` (random) or `7` (time-ordered).
@@ -59,9 +70,15 @@ wm_uuid <- function(version = 4) {
   format_uuid(bytes)
 }
 
-# Random bytes from the best source available; see wm_id()'s docs.
+# Random bytes from the operating system's CSPRNG; see wm_id()'s docs.
 random_bytes <- function(n) {
-  os_random_bytes(n) %||% uuid_package_bytes(n) %||% private_stream_bytes(n)
+  bytes <- os_random_bytes(n) %||% openssl_random_bytes(n)
+  if (is.null(bytes)) {
+    stop("No secure source of random numbers: /dev/urandom is not available. ",
+         "Install the openssl package (install.packages(\"openssl\")) to ",
+         "generate IDs, or supply your own.", call. = FALSE)
+  }
+  bytes
 }
 
 os_random_bytes <- function(n) {
@@ -75,41 +92,8 @@ os_random_bytes <- function(n) {
   if (length(bytes) == n) bytes else NULL
 }
 
-# The uuid package makes version 4 UUIDs from the platform's own generator;
-# their 16 bytes (6 of them fixed by the version and variant, which the
-# callers overwrite anyway) serve as random bytes.
-uuid_package_bytes <- function(n) {
-  if (!requireNamespace("uuid", quietly = TRUE)) return(NULL)
-  bytes <- raw()
-  while (length(bytes) < n) {
-    one <- parse_uuid(tryCatch(uuid::UUIDgenerate(), error = function(e) NULL))
-    if (is.null(one)) return(NULL)
-    bytes <- c(bytes, one)
-  }
-  bytes[seq_len(n)]
-}
-
-# A Mersenne-Twister stream of our own: its state is kept here, swapped in
-# for the draw and swapped out again, so the session's .Random.seed is left
-# exactly as it was (or absent, if it was absent).
-private_rng <- new.env(parent = emptyenv())
-
-private_stream_bytes <- function(n) {
-  global <- globalenv()
-  had_seed <- exists(".Random.seed", envir = global, inherits = FALSE)
-  saved <- if (had_seed) get(".Random.seed", envir = global, inherits = FALSE)
-  on.exit({
-    private_rng$seed <- get(".Random.seed", envir = global, inherits = FALSE)
-    if (had_seed) {
-      assign(".Random.seed", saved, envir = global)
-    } else {
-      rm(".Random.seed", envir = global)
-    }
-  })
-  if (is.null(private_rng$seed)) {
-    set.seed(NULL)  # from the clock and process ID
-  } else {
-    assign(".Random.seed", private_rng$seed, envir = global)
-  }
-  as.raw(sample.int(256L, n, replace = TRUE) - 1L)
+openssl_random_bytes <- function(n) {
+  if (!requireNamespace("openssl", quietly = TRUE)) return(NULL)
+  bytes <- tryCatch(as.raw(openssl::rand_bytes(n)), error = function(e) NULL)
+  if (length(bytes) == n) bytes else NULL
 }

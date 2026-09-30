@@ -4,11 +4,11 @@
 \name{gglineage-package}
 \alias{gglineage}
 \alias{gglineage-package}
-\title{gglineage: Traceable Watermarks for 'ggplot2' Graphics}
+\title{gglineage: Machine-Readable Lineage IDs for 'ggplot2' Graphics}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Stamp 'ggplot2' plots with watermarks you can trace back to the analysis that made them. An invisible dot code along the bottom margin carries a short ID that survives screenshots, JPEG compression and rescaling, and is protected by a checksum so a decode is either exact or rejected. Visible text stamps ("DRAFT", "CONFIDENTIAL") and provenance metadata embedded in PNG files complete the toolkit. Watermarks are ordinary plot components added with '+', and never alter scales, coordinates or facets.
+Stamp 'ggplot2' plots with an ID that can be read back out of the pixels, so a stray screenshot of a chart can be traced to the analysis run that made it. A faint dot code along the bottom margin carries either a short text ID or a complete 128-bit UUID (RFC 9562 \doi{10.17487/RFC9562}), survives screenshots, JPEG compression and rescaling within measured limits, and is protected by a 32-bit check so a decode is either exact or rejected. The ID is the key to a record the user keeps, such as a manifest of saved plots; provenance fields can also be embedded in PNG metadata. Visible text stamps ("DRAFT", "CONFIDENTIAL") are included. Watermarks are ordinary plot components added with '+', and never alter scales, coordinates or facets.
 }
 \seealso{
 Useful links:

@@ -19,10 +19,13 @@
 #' A UUID in canonical form (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, either
 #' case, optionally in braces or with a `urn:uuid:` prefix) is recognised and
 #' carried in full: all 128 bits, as two rows of dots, one above the other.
-#' [extract_watermark()] returns it lowercase, which is the canonical form
-#' (RFC 9562); a UUID's letter case is not part of its identity, so an
+#' [extract_watermark()] returns it lowercase. The letter case of a UUID's
+#' hex digits is not part of its value (RFC 9562, section 4), so an
 #' uppercase input is not an error, just not preserved. Nothing else is
 #' interpreted: the version and variant fields are carried as given.
+#'
+#' One plot carries one code: two `watermark_dots()` layers draw over each
+#' other, and only one of them (or neither) can be read back.
 #'
 #' Thirty-two hexadecimal digits without hyphens are *not* treated as a UUID
 #' (that could equally be an MD5 hash), and at 32 bytes are too long for a

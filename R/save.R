@@ -1,6 +1,6 @@
 #' Save a plot with a dot watermark and embedded provenance metadata
 #'
-#' A drop-in replacement for [ggplot2::ggsave()] that stamps the plot with
+#' A replacement for [ggplot2::ggsave()] that stamps the plot with
 #' [watermark_dots()] and, for PNG files, also writes provenance fields into
 #' the file's `tEXt` metadata chunks. The dots survive screenshots and
 #' recompression; the metadata is lossless and can carry much more (a UUID,
@@ -11,14 +11,17 @@
 #' @param filename File to create, as in [ggplot2::ggsave()].
 #' @param plot Plot to save; defaults to the last plot displayed.
 #' @param id ID to embed: text of at most 16 bytes or a UUID (see
-#'   [watermark_dots()]). Defaults to a fresh [wm_id()].
+#'   [watermark_dots()]). Defaults to a fresh [wm_id()]. This is the third
+#'   argument, where [ggplot2::ggsave()] has `device`, so pass `device` and
+#'   the other `ggsave()` arguments by name.
 #' @param metadata A named list of extra fields to store in the PNG metadata,
-#'   e.g. `list(commit = "a1b2c3d", script = "analysis/fig2.R")`.
+#'   e.g. `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. The names
+#'   `id`, `created`, `title` and `software` are reserved.
 #' @param dots If `FALSE`, skip the dot code and only write metadata.
 #' @param ... Passed to [ggplot2::ggsave()] (`width`, `height`, `dpi`, ...).
 #'
-#' @return The ID, invisibly: as given for text, or in canonical lowercase
-#'   form for a UUID.
+#' @return The ID (not the file path, unlike `ggsave()`), invisibly: as
+#'   given for text, or in lowercase form for a UUID.
 #' @seealso [read_watermark_metadata()], [extract_watermark()].
 #' @export
 #' @examples
@@ -44,12 +47,24 @@ ggsave_watermark <- function(filename,
       (is.null(names(metadata)) || any(!nzchar(names(metadata))))) {
     stop("`metadata` must be a named list.", call. = FALSE)
   }
+  clash <- intersect(names(metadata), reserved_fields)
+  if (length(clash) > 0L) {
+    stop("`metadata` can't use the reserved field name",
+         if (length(clash) > 1L) "s", " ", paste0("`", clash, "`", collapse = ", "),
+         "; these are written by ggsave_watermark() itself.", call. = FALSE)
+  }
 
   to_save <- if (dots) plot + watermark_dots(id) else plot
-  ggplot2::ggsave(filename, to_save, ...)
+  # ggsave() returns the path it wrote, which differs from `filename` when
+  # `path` is given in `...`.
+  saved <- ggplot2::ggsave(filename, to_save, ...)
+  if (!is.character(saved) || length(saved) != 1L) {
+    dir <- list(...)$path
+    saved <- if (is.null(dir)) filename else file.path(dir, filename)
+  }
 
-  if (is_png(filename)) {
-    write_png_metadata(filename, c(
+  if (is_png(saved)) {
+    write_png_metadata(saved, c(
       list(
         id = id,
         created = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
@@ -99,6 +114,8 @@ read_watermark_metadata <- function(file) {
   }
   list()
 }
+
+reserved_fields <- c("id", "created", "title", "software")
 
 metadata_prefix <- "gglineage:"
 legacy_metadata_prefix <- "watermark:"

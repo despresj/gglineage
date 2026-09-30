@@ -32,8 +32,11 @@ is not rotated.
 \details{
 Every row of the image is a candidate; a row is accepted only if its start
 and end sync patterns, header and 32-bit checksum all agree, so false
-positives are vanishingly rare. A UUID is spread over two such rows, each
-checked on its own, and is returned only when both are read.
+positives are vanishingly rare. A UUID is spread over two such rows, one
+above the other; each row is checked on its own and against the whole
+UUID, so a UUID is returned only when both of its rows are read, and
+halves of two different UUIDs (charts stacked in a report, say) are never
+joined.
 }
 \examples{
 library(ggplot2)

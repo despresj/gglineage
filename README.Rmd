@@ -111,7 +111,7 @@ later:
 ```{r save}
 manifest <- file.path(tempdir(), "plots.csv")
 
-id <- wm_uuid(version = 7)          # time-ordered, so the manifest sorts itself
+id <- wm_uuid(version = 7)          # starts with a timestamp, so rows sort by time
 file <- file.path(tempdir(), "retention-by-cohort.png")
 ggsave_watermark(
   file,
@@ -174,7 +174,7 @@ a string and work out how to carry it:
 |---|---|:---:|:---:|---|
 | `wm_id()`: Crockford base32, 1–16 characters | `K7Q2M9XD` | 1 | 77–152 (112 for 8 characters) | Packed at 5 bits per character. No `I`, `L`, `O` or `U`, so it survives being read aloud. |
 | Free text, up to 16 UTF-8 bytes | `RUN-42`, `fig 2 (v3)`, `café` | 1 | 80–200 | Stored as bytes; returned exactly as given. |
-| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in `{}` or prefixed `urn:uuid:`; output is the lowercase canonical form. `wm_uuid()` makes version 4 or 7. |
+| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in `{}` or prefixed `urn:uuid:`; output is always lowercase. `wm_uuid()` makes version 4 or 7. |
 
 Thirty-two hex digits without hyphens are rejected rather than guessed at
 (they could as well be an MD5), with a message saying to write the UUID as
@@ -184,12 +184,16 @@ ID can never be mistaken for a UUID.
 ```{r ids}
 wm_id()                # 8 characters, 40 bits
 wm_uuid()              # random (version 4)
-wm_uuid(version = 7)   # time-ordered (version 7)
+wm_uuid(version = 7)   # starts with the time in ms (version 7)
 ```
 
-IDs come from operating-system randomness (or the uuid package, or a
-private random stream, whichever is available). `set.seed()` in your
-analysis won't repeat them, and generating them won't disturb your seed.
+IDs come from the operating system's secure random generator
+(`/dev/urandom`; on Windows, `openssl::rand_bytes()`, which needs the openssl
+package). With neither, `wm_id()` and `wm_uuid()` stop with an error instead
+of quietly using something weaker. `set.seed()` in your analysis won't repeat
+them, and generating them won't disturb your seed. An 8-character `wm_id()`
+is 40 random bits, fine for one team's plots; when IDs from many people or
+machines share one record, use UUIDs.
 
 ## Three kinds of watermark
 
@@ -280,7 +284,12 @@ rescues images too small or compressed to find the dots one by one.
 
 A row is accepted only if both syncs, the header and the 32-bit check all
 agree. A damaged row slips past that about once in four billion readings,
-so a decode is exact or `NULL`: it doesn't guess.
+so a decode is exact or `NULL`: it doesn't guess. A UUID's two rows split
+their check bits: 16 check a row on its own, and 16 check it against the
+whole UUID, with a different CRC on each row. A UUID comes back only when
+all 64 check bits agree, so the halves of two different UUIDs (charts
+stacked in a report, or a copy pasted over another) are never joined; the
+decoder moves on and returns an intact code or nothing.
 
 ## How tough is it?
 
@@ -319,17 +328,21 @@ lossless_floor <- function(img, id) {
 }
 min_width <- lossless_floor(img, "K7Q2M9XD")
 uuid_demo <- "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-min_width_uuid <- lossless_floor(
-  render_plot(ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_dots(uuid_demo),
-              width = 7, height = 5, dpi = 150),
-  uuid_demo
+img_uuid <- render_plot(
+  ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_dots(uuid_demo),
+  width = 7, height = 5, dpi = 150
 )
-min_q <- NA
-for (q in c(50, 40, 30, 25, 20, 15, 10, 8, 6, 5)) {
-  got <- extract_watermark(suppressWarnings(tf_jpeg(img, q)))
-  if (!identical(got, "K7Q2M9XD")) break
-  min_q <- q
+min_width_uuid <- lossless_floor(img_uuid, uuid_demo)
+jpeg_floor <- function(img, id) {
+  floor_q <- NA
+  for (q in c(50, 40, 30, 25, 20, 15, 10, 8, 6, 5)) {
+    if (!identical(extract_watermark(suppressWarnings(tf_jpeg(img, q))), id)) break
+    floor_q <- q
+  }
+  floor_q
 }
+min_q <- jpeg_floor(img, "K7Q2M9XD")
+min_q_uuid <- jpeg_floor(img_uuid, uuid_demo)
 ```
 
 A 7 × 5 in plot saved at 150 dpi, pushed through `r nrow(res)`
@@ -365,7 +378,9 @@ sweep of random IDs and two plot types; the full tables are in
 | Window chrome around the figure, JPEG quality 50 | 400 px | 400 px |
 | Retina screenshot, shrunk, JPEG quality 80 | 280 px | 280 px |
 
-At full size, JPEG holds down to about **quality `r min_q`**. A UUID's two
+At full size (1050 px), JPEG holds down to about **quality `r min_q`** for
+this 8-character ID and **quality `r min_q_uuid`** for this UUID; the exact
+floor varies from ID to ID. A UUID's two
 rows have more, smaller dots than a short ID's one, so it needs about 20%
 more width under JPEG; a padded screenshot is limited by finding the dots
 at all, which costs both the same.

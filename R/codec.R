@@ -3,11 +3,11 @@
 #   sync_start (16) | header (8) | payload | check (32) | sync_end (16)
 #
 # The header byte says what the payload is (the frame type registry below).
-# The check is two CRC-16s (CCITT-FALSE and ARC) over the header and the
-# payload bytes: 32 bits, so a damaged frame that happens to pass is about a
-# one-in-four-billion event per reading attempt. A frame whose header is not
-# in the registry is rejected outright, so a decoder never guesses at a
-# format it does not know.
+# For text, the check is two CRC-16s (CCITT-FALSE and ARC) over the header
+# and the payload bytes: 32 bits, so a damaged frame that happens to pass is
+# about a one-in-four-billion event per reading attempt. A frame whose header
+# is not in the registry is rejected outright, so a decoder never guesses at
+# a format it does not know.
 #
 # Frame types (header byte):
 #
@@ -18,8 +18,21 @@
 #   others     reserved
 #
 # The text types are the original (0.1.0) format, unchanged. A UUID is drawn
-# as two of these frames on two rows, each self-checking, so the row scanner
-# finds them like any other frame; their headers say which half they hold.
+# as two of these frames on two rows; their headers say which half they hold.
+# A UUID row's 32 check bits are split in two:
+#
+#   own  (16)  CRC over the row's header and its own 8 bytes, so the row
+#              scanner can recognise a row on its own;
+#   pair (16)  CRC over the row's header and all 16 bytes of the UUID, so a
+#              row only fits the other half of its own UUID.
+#
+# Row 1 uses ARC for its own check and CCITT-FALSE for the pair check; row 2
+# the other way round. CRCs are linear, so two checks of one kind over the
+# same UUID would fail or pass together; with one of each, a first half from
+# one UUID and a second half from another (two stacked charts, say) pass
+# both pair checks about once in four billion tries. A UUID is accepted only
+# when all four checks agree: 64 bits in all.
+#
 # Decoders from before the UUID types read 0x40/0x41 as an impossible text
 # length and return NULL.
 #
@@ -78,11 +91,28 @@ check_bits <- function(header, bytes) {
   c(int_to_bits(crc16_ccitt(content), 16L), int_to_bits(crc16_arc(content), 16L))
 }
 
+# The own and pair checks of each UUID row (see the frame layout above).
+uuid_own_crc <- list(crc16_arc, crc16_ccitt)
+uuid_pair_crc <- list(crc16_ccitt, crc16_arc)
+
+uuid_own_check <- function(half, part) {
+  uuid_own_crc[[half]](c(as.raw(header_uuid[half]), part))
+}
+
+uuid_pair_check <- function(half, uuid) {
+  uuid_pair_crc[[half]](c(as.raw(header_uuid[half]), uuid))
+}
+
 # Validate an ID and say how it will be carried: as text (at most 16 UTF-8
 # bytes) or as a UUID (canonical 8-4-4-4-12 hex, returned lowercase).
 parse_id <- function(id, arg = "id") {
   if (!is.character(id) || length(id) != 1L || is.na(id) || !nzchar(id)) {
     stop("`", arg, "` must be a single non-empty string.", call. = FALSE)
+  }
+  # The dots carry UTF-8 and the decoder rejects anything else, so an ID
+  # that can't be written as valid UTF-8 could never be read back.
+  if (Encoding(id) == "bytes" || !validUTF8(enc2utf8(id))) {
+    stop("`", arg, "` must be valid UTF-8 text.", call. = FALSE)
   }
   uuid <- parse_uuid(id)
   if (!is.null(uuid)) {
@@ -127,7 +157,9 @@ text_frame <- function(id) {
 
 uuid_frame <- function(bytes, half) {
   part <- bytes[(half - 1L) * uuid_row_bytes + seq_len(uuid_row_bytes)]
-  frame(header_uuid[half], as.integer(rawToBits(part)), part)
+  c(sync_start, int_to_bits(header_uuid[half], 8L), as.integer(rawToBits(part)),
+    int_to_bits(uuid_own_check(half, part), 16L),
+    int_to_bits(uuid_pair_check(half, bytes), 16L), sync_end)
 }
 
 #' Encode an ID as the rows of framed bits drawn by watermark_dots()
@@ -158,7 +190,9 @@ encode_bits <- function(id) {
 #'
 #' `NULL` unless the syncs, header, length and check all agree. Otherwise a
 #' list: `kind = "text"` with the `id`, or `kind = "uuid"` with `half` (1 or
-#' 2) and the 8 `bytes` of that half.
+#' 2), the 8 `bytes` of that half and its `pair` check, which only
+#' `assemble_uuid()` can verify. For a UUID row only the own check (16 bits)
+#' is verified here.
 #' @noRd
 parse_frame <- function(bits) {
   n <- length(bits)
@@ -173,9 +207,11 @@ parse_frame <- function(bits) {
 
   if (header %in% header_uuid) {
     if (n != frame_bits(8L * uuid_row_bytes)) return(NULL)
+    half <- match(header, header_uuid)
     bytes <- packBits(payload, "raw")
-    if (!identical(check, check_bits(header, bytes))) return(NULL)
-    return(list(kind = "uuid", half = match(header, header_uuid), bytes = bytes))
+    if (bits_to_int(check[1:16]) != uuid_own_check(half, bytes)) return(NULL)
+    return(list(kind = "uuid", half = half, bytes = bytes,
+                pair = bits_to_int(check[17:32])))
   }
 
   packed <- header >= 128L
@@ -208,7 +244,13 @@ decode_bits <- function(bits) {
   parsed$id
 }
 
-# Put the two halves of a UUID back together.
+# Put the two halves of a UUID back together: the canonical string, or NULL
+# unless both rows' pair checks agree with the whole UUID, which is what
+# stops halves of two different UUIDs being joined.
 assemble_uuid <- function(first, second) {
-  format_uuid(c(first$bytes, second$bytes))
+  if (!identical(c(first$half, second$half), 1:2)) return(NULL)
+  uuid <- c(first$bytes, second$bytes)
+  if (first$pair != uuid_pair_check(1L, uuid)) return(NULL)
+  if (second$pair != uuid_pair_check(2L, uuid)) return(NULL)
+  format_uuid(uuid)
 }

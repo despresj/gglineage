@@ -19,21 +19,24 @@ ggsave_watermark(
 \item{plot}{Plot to save; defaults to the last plot displayed.}
 
 \item{id}{ID to embed: text of at most 16 bytes or a UUID (see
-\code{\link[=watermark_dots]{watermark_dots()}}). Defaults to a fresh \code{\link[=wm_id]{wm_id()}}.}
+\code{\link[=watermark_dots]{watermark_dots()}}). Defaults to a fresh \code{\link[=wm_id]{wm_id()}}. This is the third
+argument, where \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} has \code{device}, so pass \code{device} and
+the other \code{ggsave()} arguments by name.}
 
 \item{metadata}{A named list of extra fields to store in the PNG metadata,
-e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}.}
+e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}. The names
+\code{id}, \code{created}, \code{title} and \code{software} are reserved.}
 
 \item{dots}{If \code{FALSE}, skip the dot code and only write metadata.}
 
 \item{...}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} (\code{width}, \code{height}, \code{dpi}, ...).}
 }
 \value{
-The ID, invisibly: as given for text, or in canonical lowercase
-form for a UUID.
+The ID (not the file path, unlike \code{ggsave()}), invisibly: as
+given for text, or in lowercase form for a UUID.
 }
 \description{
-A drop-in replacement for \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that stamps the plot with
+A replacement for \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} that stamps the plot with
 \code{\link[=watermark_dots]{watermark_dots()}} and, for PNG files, also writes provenance fields into
 the file's \code{tEXt} metadata chunks. The dots survive screenshots and
 recompression; the metadata is lossless and can carry much more (a UUID,

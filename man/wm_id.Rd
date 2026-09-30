@@ -23,20 +23,31 @@ or \code{U}, so it survives being read aloud or retyped). Eight characters give
 40 bits and fit in a single row of \code{\link[=watermark_dots]{watermark_dots()}}.
 }
 \details{
-\code{wm_uuid()} returns a UUID (RFC 9562) as its canonical lowercase string.
-Version 4 (the default) is 122 random bits; version 7 starts with a
-48-bit millisecond timestamp, so IDs sort by creation time, followed by 74
-random bits. Either takes two rows of dots; see \code{\link[=watermark_dots]{watermark_dots()}} for the
+\code{wm_uuid()} returns a UUID (RFC 9562) as a lowercase hyphenated string.
+Version 4 (the default) has 122 random bits. Version 7 starts with a
+48-bit Unix timestamp in milliseconds, so IDs from different milliseconds
+sort by creation time, followed by 74 random bits; IDs made within the
+same millisecond are in random order (RFC 9562 makes stricter ordering
+optional). Either takes two rows of dots; see \code{\link[=watermark_dots]{watermark_dots()}} for the
 width that needs.
 }
 \section{Randomness}{
 
-Random bytes come from the operating system (\verb{/dev/urandom}) where it
-exists. Otherwise the uuid package is used if it is installed, and failing
-that a Mersenne-Twister stream private to this package, seeded once per
-session from the clock and process ID. None of these touch R's own random
-number generator: \code{set.seed()} in your analysis neither repeats the IDs nor
-is disturbed by them. IDs are for provenance, not security.
+Random bits come from the operating system's cryptographically secure
+generator: \verb{/dev/urandom} on Linux, macOS and other Unix-alikes, and
+otherwise (on Windows) \code{openssl::rand_bytes()}, which needs the openssl
+package. If neither is available the functions stop with an error rather
+than fall back to a weaker source. R's own random number generator is
+never used, so \code{set.seed()} in your analysis neither repeats the IDs nor
+is disturbed by them, and forked workers (\code{parallel::mclapply()}) get
+different IDs.
+
+Uniqueness is probabilistic: two version 4 UUIDs collide with probability
+about \eqn{2^{-122}}, and an 8-character \code{wm_id()} has only 40 bits, so
+among a million of them a repeat is likely (about 36\\%). Use UUIDs where
+IDs from many people or machines share one record. The IDs identify plots;
+they are not secrets, and the dot code is not authentication: anyone can
+read it, and anyone can draw it.
 }
 
 \examples{

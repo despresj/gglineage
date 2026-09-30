@@ -50,8 +50,11 @@ min_errors <- function(img, bits, dpi_scale) {
       for (dl in edge_nudges) for (dr in edge_nudges) {
         xs <- (left + dl) + (seq_len(nb) - 1) * (right + dr - left - dl) / (nb - 1)
         v <- sample_signal(diff, xs, (right + dr - left - dl) / (nb - 1))
-        read <- slice_bits(v)
-        if (is.null(read)) next
+        known <- v[sync_index(nb)]
+        on <- mean(known[sync_bits == 1L])
+        off <- mean(known[sync_bits == 0L])
+        if (!(on > off)) next
+        read <- as.integer(v > (on + off) / 2)
         e <- sum(read != bits)
         if (e < best) {
           best <- e

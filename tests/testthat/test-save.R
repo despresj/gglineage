@@ -61,3 +61,26 @@ test_that("argument errors are clear", {
   writeLines("hello", txt)
   expect_error(extract_watermark(txt), "Unsupported")
 })
+
+test_that("`path` in ... is honoured for the metadata as well as the image", {
+  skip_if_no_raster()
+  dir <- tempfile("figs")
+  dir.create(dir)
+  on.exit(unlink(dir, recursive = TRUE), add = TRUE)
+  id <- ggsave_watermark("fig.png", base_plot(), path = dir,
+                         width = 4, height = 3, dpi = 100)
+  file <- file.path(dir, "fig.png")
+  expect_false(file.exists("fig.png"))
+  expect_identical(read_watermark_metadata(file)$id, id)
+  expect_identical(extract_watermark(file), id)
+})
+
+test_that("metadata can't overwrite the reserved fields", {
+  file <- withr_tempfile(".png")
+  expect_error(ggsave_watermark(file, base_plot(), metadata = list(id = "x")),
+               "reserved field name `id`")
+  expect_error(ggsave_watermark(file, base_plot(),
+                                metadata = list(created = 1, software = 2)),
+               "`created`, `software`")
+  expect_false(file.exists(file))
+})

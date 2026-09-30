@@ -73,8 +73,10 @@ test_that("wm_uuid(version = 7) is time-ordered and stamped with the current tim
   ms <- ((stamp[1] * 65536) + stamp[2]) * 65536 + stamp[3]
   expect_gte(ms, before - 1)
   expect_lte(ms, after + 1)
+  # Ordered by millisecond; within one millisecond the order is random.
+  Sys.sleep(0.005)
   later <- wm_uuid(version = 7)
-  expect_true(later >= u)
+  expect_true(later > u)
   expect_error(wm_uuid(version = 1), "4 or 7")
   expect_error(wm_uuid(version = "4"), "4 or 7")
 })
@@ -88,25 +90,49 @@ test_that("random bytes come from the OS where it offers them", {
   expect_false(identical(a, b))
 })
 
-test_that("the uuid package, when installed, supplies random bytes", {
-  skip_if_not_installed("uuid")
-  bytes <- uuid_package_bytes(40L)
-  expect_type(bytes, "raw")
-  expect_length(bytes, 40L)
-  expect_gt(length(unique(bytes)), 10L)
+test_that("openssl, when installed, supplies random bytes", {
+  skip_if_not_installed("openssl")
+  a <- openssl_random_bytes(40L)
+  expect_type(a, "raw")
+  expect_length(a, 40L)
+  expect_false(identical(a, openssl_random_bytes(40L)))
 })
 
-test_that("the private stream leaves the session's RNG state exactly as it was", {
+test_that("with no secure source, IDs are refused rather than made weakly", {
+  local_mocked_bindings(os_random_bytes = function(n) NULL,
+                        openssl_random_bytes = function(n) NULL)
+  expect_error(wm_uuid(), "No secure source of random numbers")
+  expect_error(wm_id(), "openssl")
+})
+
+test_that("Windows-like systems fall back to openssl", {
+  skip_if_not_installed("openssl")
+  local_mocked_bindings(os_random_bytes = function(n) NULL)
+  expect_match(wm_uuid(), uuid_re)
+  expect_equal(anyDuplicated(replicate(200, wm_uuid())), 0L)
+})
+
+test_that("IDs never touch the session's random number generator", {
   set.seed(99)
   before <- get(".Random.seed", globalenv())
   expected <- runif(2)
   set.seed(99)
-  a <- private_stream_bytes(16L)
-  b <- private_stream_bytes(16L)
+  a <- wm_uuid()
+  b <- wm_id()
   expect_identical(get(".Random.seed", globalenv()), before)
   expect_equal(runif(2), expected)
-  expect_length(a, 16L)
-  expect_false(identical(a, b))
+  # And set.seed() does not make them repeat.
+  set.seed(1)
+  x <- wm_uuid()
+  set.seed(1)
+  expect_false(identical(x, wm_uuid()))
+})
+
+test_that("forked workers make different IDs", {
+  skip_on_os("windows")
+  skip_on_cran()
+  ids <- unlist(parallel::mclapply(1:4, function(i) wm_uuid(), mc.cores = 2))
+  expect_equal(anyDuplicated(ids), 0L)
 })
 
 test_that("a plain plot with a UUID watermark keeps its scales and data", {
@@ -232,3 +258,117 @@ test_that("debug output names both rows of a UUID", {
   img <- render_plot(base_plot() + watermark_dots(v4), dpi = 100)
   expect_message(extract_watermark(img, debug = TRUE), "Decoded UUID from rows")
 })
+
+# Several codes in one image: stacked or copied charts, or a row painted over
+# with another chart's. Each UUID row fits only the other row of its own
+# UUID, so the answer is one of the UUIDs present, or nothing; never a mix.
+
+stack_rows <- function(top, bottom) {
+  out <- array(0, c(dim(top)[1] + dim(bottom)[1], dim(top)[2], dim(top)[3]))
+  out[seq_len(dim(top)[1]), , ] <- top
+  out[dim(top)[1] + seq_len(dim(bottom)[1]), , ] <- bottom
+  out
+}
+
+test_that("a row of one UUID transplanted under the other half of another is rejected", {
+  skip_if_no_raster()
+  a <- "0f6c5a0e-8a53-4b0c-9d51-5f2a0b3e7c11"
+  b <- "c3e1d2a4-7b6f-4e21-8c9d-0a1b2c3d4e5f"
+  ia <- render_plot(base_plot() + watermark_dots(a))
+  ib <- render_plot(base_plot() + watermark_dots(b))
+  h <- dim(ia)[1]
+  # At 150 dpi the lower row (bytes 1-8) is centred 14 px above the bottom
+  # edge and the upper row (bytes 9-16) 27 px; the two plots are identical
+  # apart from the dots, so the rows line up exactly.
+  lower <- (h - 20):h
+  upper <- (h - 33):(h - 21)
+  a_over_b <- ia
+  a_over_b[lower, , ] <- ib[lower, , ]
+  b_over_a <- ia
+  b_over_a[upper, , ] <- ib[upper, , ]
+  expect_null(extract_watermark(a_over_b))
+  expect_null(extract_watermark(b_over_a))
+  expect_null(extract_watermark(tf_jpeg(a_over_b, 80)))
+  # Same surgery with the matching row is harmless.
+  same <- ia
+  same[lower, , ] <- ia[lower, , ]
+  expect_identical(extract_watermark(same), a)
+})
+
+test_that("stacked strip charts decode to one of their own UUIDs, never a mix", {
+  skip_if_no_raster()
+  strip <- ggplot2::ggplot(ggplot2::economics, ggplot2::aes(date, unemploy)) +
+    ggplot2::geom_line() +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white", colour = NA),
+                   axis.title = ggplot2::element_blank())
+  ids <- c("5d0c7e7a-3f4b-4c55-a1d2-9e8f7a6b5c4d",
+           "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+           "9f8e7d6c-5b4a-4938-a726-15f4e3d2c1b0")
+  imgs <- lapply(ids, function(id) {
+    render_plot(strip + watermark_dots(id), width = 12, height = 0.6, dpi = 100)
+  })
+  stack <- stack_rows(stack_rows(imgs[[1]], imgs[[2]]), imgs[[3]])
+  n <- dim(stack)[1]
+  expect_identical(extract_watermark(stack), ids[3])
+  # Crop the bottom chart's lower row away: its upper row must not be joined
+  # to the lower row of the chart above, which is the nearest one that is
+  # intact. The middle chart is then the answer.
+  expect_identical(extract_watermark(stack[1:(n - 13), , ]), ids[2])
+  expect_identical(extract_watermark(tf_jpeg(stack[1:(n - 13), , ], 75)), ids[2])
+  # Cut through the middle chart's upper row as well.
+  got <- extract_watermark(stack[1:(n - 13 - 60 - 20), , ])
+  expect_true(is.null(got) || identical(got, ids[1]))
+})
+
+test_that("thin charts whose rows sit within reach of each other never mix", {
+  skip_if_no_raster()
+  skip_on_cran()
+  # Charts 0.45 in tall: the lower row of the bottom chart is close enough
+  # to the upper row of the chart above that only the pair check separates
+  # them.
+  thin <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_line() +
+    ggplot2::theme_void() +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white", colour = NA))
+  set.seed(21)
+  for (i in 1:4) {
+    a <- format_uuid(as.raw(sample(0:255, 16, replace = TRUE)))
+    b <- format_uuid(as.raw(sample(0:255, 16, replace = TRUE)))
+    ia <- render_plot(thin + watermark_dots(a), width = 12, height = 0.45, dpi = 100)
+    ib <- render_plot(thin + watermark_dots(b), width = 12, height = 0.45, dpi = 100)
+    st <- stack_rows(ia, ib)
+    n <- dim(st)[1]
+    hb <- dim(ib)[1]
+    # Erase the bottom chart's upper row (bytes 9-16), leaving its lower row
+    # directly below the other chart's rows.
+    erased <- st
+    erased[(n - 21):(n - 13), , ] <- 1
+    for (img in list(st, erased, st[1:(n - 12), , ], tf_jpeg(erased, 70))) {
+      got <- extract_watermark(img)
+      expect_true(is.null(got) || got %in% c(a, b),
+                  label = sprintf("decoded %s from %s over %s", format(got), a, b))
+    }
+    expect_identical(extract_watermark(erased), a)
+  }
+})
+
+test_that("narrow, high-resolution figures keep both rows within reach", {
+  skip_if_no_raster()
+  # The rows are 2.2 mm apart, which is more bit pitches the narrower the
+  # figure: about 8.5 at 1.5 in wide, 12.7 at 1 in.
+  for (s in list(c(1.5, 1.2, 600), c(1, 0.8, 600))) {
+    img <- render_plot(base_plot() + watermark_dots(v4),
+                       width = s[1], height = s[2], dpi = s[3])
+    expect_identical(extract_watermark(img), v4, label = paste(s, collapse = " x "))
+  }
+})
+
+test_that("pixel arrays with missing values are refused clearly", {
+  x <- matrix(1, 50, 50)
+  x[3, 3] <- NA
+  expect_error(extract_watermark(x), "missing")
+  expect_null(extract_watermark(array(1, c(1, 300, 3))))
+  expect_null(extract_watermark(array(1, c(300, 1, 3))))
+})
+

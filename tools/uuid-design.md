@@ -11,9 +11,10 @@ else is inference.
 
 - All 128 bits of a caller-supplied UUID, recovered from pixels alone: no
   truncation, no hashing to a short code, no reliance on PNG metadata.
-- Canonical hyphenated input in either case; canonical lowercase output
-  (RFC 9562 §4: "hexadecimal values are case-insensitive on input and
-  lowercase on output").
+- Canonical hyphenated input in either case; lowercase output. (RFC 9562
+  section 4 allows upper, lower or mixed case; lowercase output is the
+  convention of the obsoleted RFC 4122 section 3 and of ITU-T X.667. An
+  earlier draft of this note misquoted RFC 9562 on this.)
 - Versioned framing with error detection; existing text IDs keep encoding
   and decoding bit-for-bit; images already made keep decoding.
 - Never a wrong ID. The 32-bit check stays (CRC-8 produced real wrong IDs
@@ -120,8 +121,11 @@ Two things follow.
 
    Fix (adopted, §5): bits are now read against a background on the dots'
    far side, the running maximum of the row for dark dots or the running
-   minimum for light ones, which cannot drift into a run of dots because any
-   dozen-bit window still contains a gap. The median stays as the locator
+   minimum for light ones, which cannot drift into a run of dots as long as
+   a dozen-bit window still contains a gap. That holds for random payloads
+   but not for long runs of 1 bits (review, 2026-09-30: the max UUID and
+   `ZZZZZZZZZZZZZZZZ` fail, to NULL, at 525 px padded + JPEG 50 where a
+   random v4 passes), so limits are ID-dependent. The median stays as the locator
    for the run detection and the polarity decision.
 
    **Observed** A/B (`tools/uuid-ab.R`: same 3 UUIDs and 3 `wm_id(8)` as
@@ -402,12 +406,16 @@ pitch 7.16 px (1.21 mm), dots 5.7 px (0.97 mm) in diameter, rows 2.4 and
   character, digit count, hyphen placement, surrounding whitespace.
 - `extract_watermark()` returns the plain lowercase canonical string.
 - `wm_uuid(version = 4)` (default) or `7`. Random bytes: `/dev/urandom`
-  where present (macOS, Linux); else the uuid package if installed
-  (Suggests; its `UUIDgenerate()` string API is the one used, so no
-  reliance on newer arguments); else a Mersenne-Twister stream private to
-  the package, seeded once per session by `set.seed(NULL)` (clock + PID)
-  and swapped in and out around each draw so `.Random.seed` is untouched.
-  The Park-Miller generator is gone; `wm_id()` uses the same byte source.
+  where present (macOS, Linux, other Unix-alikes); else
+  `openssl::rand_bytes()` (Suggests; the Windows path); else an error. RFC
+  9562 section 6.9 says implementations SHOULD use a CSPRNG and reseed it
+  across forks; both sources do. (Revised after review: an earlier version
+  fell back to the uuid package and then to a private Mersenne-Twister
+  stream seeded from the clock and PID, which repeated the same UUIDs in
+  forked `mclapply()` workers and is not a CSPRNG.) R's `.Random.seed` is
+  never read or written. Version 7 fills all 74 non-timestamp bits with
+  random data (RFC 9562 section 5.7, no counter), so IDs made in the same
+  millisecond are not ordered among themselves; the docs say so.
 - Boundary, stated in the docs: the dots carry the ID and nothing else.
   Lineage (script, data, run) is whatever the user recorded against the ID
   when saving; a UUID resolves a manifest row, it does not contain one.
@@ -429,3 +437,37 @@ pitch 7.16 px (1.21 mm), dots 5.7 px (0.97 mm) in diameter, rows 2.4 and
 - Alpha 0.15 is the real JPEG limit: the dots are 10% contrast, below the
   quantiser step for mid frequencies at quality 50. Raising `alpha` is the
   user's knob; not measured here.
+
+## 10. Revisions after independent review (2026-09-30)
+
+Two reviewers attacked commit c5b1b68. What changed, and the evidence:
+
+- **Row-pair binding (format change).** Each UUID row had its own 32-bit
+  check and nothing tied the rows together. Observed: two 12 x 0.6 in strip
+  charts stacked, bottom 13 px cropped, decoded to a wrong UUID made of
+  halves of both (6 of 6). Each row's 32 check bits are now 16 own + 16
+  pair (see `R/codec.R`): row 1 = ARC(own) + CCITT-FALSE(all 16 bytes),
+  row 2 = CCITT-FALSE(own) + ARC(all 16 bytes). Different CRCs on the two
+  pair checks matter: CRCs are linear, so the same CRC over the same UUID
+  on both rows would pass or fail together, leaving 16 bits of binding.
+  The extractor also requires row 1 below row 2, looks for the partner
+  only in that direction, and keeps scanning past a half whose partner
+  does not verify. Tests: `test-codec.R` ("halves of two different UUIDs
+  never join", including every single-bit-different UUID) and
+  `test-uuid.R` (transplanted rows, stacked strips, thin charts within
+  reach). The new extractor tests fail on c5b1b68 with wrong UUIDs and
+  pass now. UUID images made with c4b16a9-c5b1b68 (never released) no
+  longer decode.
+- **Randomness.** The uuid-package and private Mersenne-Twister fallbacks
+  are gone (the MT stream gave identical UUIDs in forked workers).
+  `/dev/urandom`, else `openssl::rand_bytes()`, else an error.
+- **Partner reach.** 7 pitches missed the partner on figures narrower than
+  about 1.8 in at high dpi (the 2.2 mm gap is 323 / width-in-mm pitches);
+  now 16 pitches, enough above 20 mm.
+- **Decoder speed on images without a code.** Observed on a 1050 x 750
+  PNG with dotted grid lines: 80-90 s. The 81 edge nudges are now read in
+  one vectorised pass over the sync and header bits, and a whole frame is
+  read only where those are exact: 8.6 s. Uniform RGB noise: 15 s ->
+  13.6 s (bound by the number of candidate geometries, not addressed).
+  Images with a code, and plain plots without one, take 0.1-1 s.
+
