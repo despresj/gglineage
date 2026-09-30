@@ -1,0 +1,166 @@
+"case","sweep","x","status","got"
+"sweep.dots_id8","Chrome, light page @1x",160,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",160,"NULL",NA
+"sweep.tiles_id8","Chrome, light page @1x",160,"NULL",NA
+"sweep.dots_id8","Chrome, light page @1x",200,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",200,"NULL",NA
+"sweep.tiles_id8","Chrome, light page @1x",200,"NULL",NA
+"sweep.dots_id8","Chrome, light page @1x",240,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",240,"NULL",NA
+"sweep.tiles_id8","Chrome, light page @1x",240,"NULL",NA
+"sweep.dots_id8","Chrome, light page @1x",280,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",280,"NULL",NA
+"sweep.tiles_id8","Chrome, light page @1x",280,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",320,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",320,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",320,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",360,"NULL",NA
+"sweep.dots_uuid","Chrome, light page @1x",360,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",360,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",400,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",400,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",400,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",440,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",440,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",440,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",480,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",480,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",480,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",520,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",520,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",520,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",560,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",560,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",560,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",600,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",600,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",600,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome, light page @1x",640,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome, light page @1x",640,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome, light page @1x",640,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",640,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",640,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",640,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",800,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",800,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",800,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",1024,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",1024,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",1024,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",1280,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",1280,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",1280,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",1440,"exact","K7Q2M9XD"
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",1440,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",1440,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",1600,"NULL",NA
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",1600,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",1600,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",1920,"NULL",NA
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",1920,"NULL",NA
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",1920,"exact","K7Q2M9XD"
+"sweep.dots_id8","Chrome 480px chart @1x, browser window width",2560,"NULL",NA
+"sweep.dots_uuid","Chrome 480px chart @1x, browser window width",2560,"NULL",NA
+"sweep.tiles_id8","Chrome 480px chart @1x, browser window width",2560,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",160,"NULL",NA
+"sweep.dots_uuid","sips resample + JPEG q50",160,"NULL",NA
+"sweep.tiles_id8","sips resample + JPEG q50",160,"NULL",NA
+"sweep.dots_id8","sips resample + JPEG q50",200,"NULL",NA
+"sweep.dots_uuid","sips resample + JPEG q50",200,"NULL",NA
+"sweep.tiles_id8","sips resample + JPEG q50",200,"NULL",NA
+"sweep.dots_id8","sips resample + JPEG q50",240,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",240,"NULL",NA
+"sweep.tiles_id8","sips resample + JPEG q50",240,"NULL",NA
+"sweep.dots_id8","sips resample + JPEG q50",280,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",280,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",280,"NULL",NA
+"sweep.dots_id8","sips resample + JPEG q50",320,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",320,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",320,"NULL",NA
+"sweep.dots_id8","sips resample + JPEG q50",360,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",360,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",360,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",400,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",400,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",400,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",440,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",440,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",440,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",480,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",480,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",480,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",520,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",520,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",520,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",560,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",560,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",560,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",600,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",600,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",600,"exact","K7Q2M9XD"
+"sweep.dots_id8","sips resample + JPEG q50",640,"exact","K7Q2M9XD"
+"sweep.dots_uuid","sips resample + JPEG q50",640,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","sips resample + JPEG q50",640,"exact","K7Q2M9XD"
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",160,"NULL",NA
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",160,"NULL",NA
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",160,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",200,"NULL",NA
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",200,"NULL",NA
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",200,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",240,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",240,"NULL",NA
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",240,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",280,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",280,"NULL",NA
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",280,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",320,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",320,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",320,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",360,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",360,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",360,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",400,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",400,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",400,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",440,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",440,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",440,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",480,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",480,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",480,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",520,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",520,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",520,"NULL",NA
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",560,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",560,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",560,"exact","K7Q2M9XD"
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",600,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",600,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",600,"exact","K7Q2M9XD"
+"sweep.dots_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",640,"exact","K7Q2M9XD"
+"sweep.dots_uuid","ffmpeg lanczos + JPEG 4:2:0 ~q85",640,"exact","f47ac10b-58cc-4372-a567-0e02b2c3d479"
+"sweep.tiles_id8","ffmpeg lanczos + JPEG 4:2:0 ~q85",640,"exact","K7Q2M9XD"
+"sweep.dots_id8","Square crop of panel (mm), lossless",40,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",40,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",40,"NULL",NA
+"sweep.dots_id8","Square crop of panel (mm), lossless",50,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",50,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",50,"NULL",NA
+"sweep.dots_id8","Square crop of panel (mm), lossless",60,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",60,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",60,"NULL",NA
+"sweep.dots_id8","Square crop of panel (mm), lossless",70,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",70,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",70,"NULL",NA
+"sweep.dots_id8","Square crop of panel (mm), lossless",80,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",80,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",80,"exact","K7Q2M9XD"
+"sweep.dots_id8","Square crop of panel (mm), lossless",90,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",90,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",90,"exact","K7Q2M9XD"
+"sweep.dots_id8","Square crop of panel (mm), lossless",100,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",100,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",100,"exact","K7Q2M9XD"
+"sweep.dots_id8","Square crop of panel (mm), lossless",110,"NULL",NA
+"sweep.dots_uuid","Square crop of panel (mm), lossless",110,"NULL",NA
+"sweep.tiles_id8","Square crop of panel (mm), lossless",110,"exact","K7Q2M9XD"
