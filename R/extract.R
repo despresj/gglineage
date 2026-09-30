@@ -1,9 +1,12 @@
 #' Recover a dot watermark from an image
 #'
 #' Scans an image for the dot code written by [watermark_dots()] and decodes
-#' it. Works on the original file, screenshots, and recompressed or rescaled
-#' copies, as long as the bottom strip of the figure is intact and the image
-#' is not rotated.
+#' it; if no strip is found, looks for the tiles written by
+#' [watermark_tiles()]. Works on the original file, screenshots, and
+#' recompressed or rescaled copies. The strip needs the bottom of the figure
+#' intact; tiles survive crops that keep about two tiles across in each
+#' direction of open panel. Rotated images are not supported. When a plot
+#' carries both, the strip's ID is returned.
 #'
 #' Every row of the image is a candidate; a row is accepted only if its start
 #' and end sync patterns, header and 32-bit checksum all agree, so false
@@ -11,13 +14,14 @@
 #' above the other; each row is checked on its own and against the whole
 #' UUID, so a UUID is returned only when both of its rows are read, and
 #' halves of two different UUIDs (charts stacked in a report, say) are never
-#' joined.
+#' joined. Tiles are voted on across every visible copy and accepted only if
+#' their CRC-16 passes for exactly one ID.
 #'
 #' @param image Path to a PNG or JPEG file, or a numeric array of pixel
 #'   intensities in `[0, 1]` (height x width, optionally x channels), as
 #'   returned by [png::readPNG()] or [jpeg::readJPEG()].
 #' @param debug If `TRUE`, report which rows decoded and the estimated bit
-#'   pitch.
+#'   pitch, or each stage of the tile decoder.
 #'
 #' @return The embedded ID as a plain string, or `NULL` if no valid code was
 #'   found. Text IDs come back exactly as given. UUIDs come back in canonical
@@ -40,10 +44,12 @@ extract_watermark <- function(image, debug = FALSE) {
     stop("`image` has missing (NA) pixel values.", call. = FALSE)
   }
   found <- find_watermark(gray)
+  if (is.null(found)) {
+    if (debug) message("No dot strip found in ", nrow(gray), " rows; trying tiles")
+    return(decode_tiles(gray, debug))
+  }
   if (debug) {
-    if (is.null(found)) {
-      message("No valid watermark found in ", nrow(gray), " rows")
-    } else if (found$kind == "uuid") {
+    if (found$kind == "uuid") {
       message(sprintf(
         "Decoded UUID from rows %d and %d of %d (%s); 2 x %d bits at %.2f px/bit",
         found$row, found$partner_row, nrow(gray),

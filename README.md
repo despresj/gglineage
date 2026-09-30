@@ -142,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f238-e98a-74bd-a810-de0f0a310521"
+#> [1] "01a0f42e-3816-76c8-baf3-b51697e66be9"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f238-e98a-74bd-a810-de0f0a310521 analysis/fig2.R 9f3c2e1
+#> 1 01a0f42e-3816-76c8-baf3-b51697e66be9 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-09-30T08:10:11
+#> 1 snapshot-2026-09-12.csv 2026-09-30T17:17:44
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -185,11 +185,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "CGH9ZC5Q"
+#> [1] "SJFFBA1C"
 wm_uuid()              # random (version 4)
-#> [1] "55dc1a88-41d4-446e-a29d-ad8fcc7eb785"
+#> [1] "473aec1d-b0cf-4e58-8276-cf60b3812bde"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f238-eb09-7dbd-95aa-330d29ad6d32"
+#> [1] "01a0f42e-39b6-7277-9b37-5bcf69807bdf"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -279,48 +279,48 @@ matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
-|  | Transformation | Pixels | Dot code |
-|:---|:---|---:|:---|
-| Lossless | Original PNG | 1050 × 750 | ✅ recovered |
-|  | PNG re-save | 1050 × 750 | ✅ recovered |
-| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 75 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 50 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 25 | 1050 × 750 | ✅ recovered |
-|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered |
-|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered |
-| Resize | Downscale to 75% | 788 × 562 | ✅ recovered |
-|  | Downscale to 50% | 525 × 375 | ✅ recovered |
-|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered |
-|  | Odd scale 0.83x | 872 × 622 | ✅ recovered |
-|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered |
-| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered |
-|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered |
-|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered |
-|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered |
-| Colour | Brightness +5% | 1050 × 750 | ✅ recovered |
-|  | Contrast 70% | 1050 × 750 | ✅ recovered |
-|  | Gamma 1.8 | 1050 × 750 | ✅ recovered |
-|  | Grayscale | 1050 × 750 | ✅ recovered |
-|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered |
-|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered |
-| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
-|  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
-|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
-| Small + compressed | Shrink to 520 px wide + JPEG 35 | 520 × 371 | ✅ recovered |
-|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✅ recovered |
-|  | Shrink to 360 px wide + JPEG 50 | 360 × 257 | ✅ recovered |
-| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
-|  | Crop left 10% | 945 × 750 | ✖ not found |
-|  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
-|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
-|  | JPEG quality 5 | 1050 × 750 | ✖ not found |
-|  | Shrink to 240 px wide + JPEG 50 | 240 × 171 | ✖ not found |
-|  | Downscale to 15% | 158 × 112 | ✅ recovered |
+|  | Transformation | Pixels | Dot code | Tiles |
+|:---|:---|---:|:---|:---|
+| Lossless | Original PNG | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | PNG re-save | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 75 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 50 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 25 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Resize | Downscale to 75% | 788 × 562 | ✅ recovered | ✅ recovered |
+|  | Downscale to 50% | 525 × 375 | ✅ recovered | ✅ recovered |
+|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered | ✅ recovered |
+|  | Odd scale 0.83x | 872 × 622 | ✅ recovered | ✅ recovered |
+|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered | ✅ recovered |
+| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered | ✅ recovered |
+|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered | ✅ recovered |
+| Colour | Brightness +5% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Contrast 70% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Gamma 1.8 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Grayscale | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Box blur radius 1 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered | ✅ recovered |
+| Small + compressed | Shrink to 520 px wide + JPEG 35 | 520 × 371 | ✅ recovered | ✖ not found |
+|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✅ recovered | ✖ not found |
+|  | Shrink to 360 px wide + JPEG 50 | 360 × 257 | ✅ recovered | ✖ not found |
+| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found | ✅ recovered |
+|  | Crop left 10% | 945 × 750 | ✖ not found | ✅ recovered |
+|  | Rotate 90 degrees | 750 × 1050 | ✖ not found | ✖ not found |
+|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found | ✖ not found |
+|  | JPEG quality 5 | 1050 × 750 | ✖ not found | ✖ not found |
+|  | Shrink to 240 px wide + JPEG 50 | 240 × 171 | ✖ not found | ✖ not found |
+|  | Downscale to 15% | 158 × 112 | ✅ recovered | ✖ not found |
 
-**30 of 36 recovered exactly, and 0 wrong IDs.** The rows under “past
-the limits” mark where the guarantee ends. A result there is either
-exact or nothing.
+**Dot code: 30 of 36 recovered exactly. Tiles: 28 of 36. Wrong IDs
+across both: 0.** The rows under “past the limits” mark where the
+guarantee ends. A result there is either exact or nothing.
 
 ### Measured limits
 
@@ -364,6 +364,28 @@ again inside a padded screenshot.
 
 When it fails, it fails to `NULL`. Across every sweep behind this
 README, no transform has ever produced a wrong ID.
+
+### When images get cropped: tiles
+
+The strip lives in the bottom margin, so a crop that removes it removes
+the ID. `watermark_tiles()` repeats the whole ID (up to 12 bytes, so a
+short ID rather than a UUID), with its own CRC-16, in a faint 12 × 12
+grid of dots behind the data in every panel. A tile is 36 mm square, and
+a crop that keeps about two tiles across in each direction (roughly 70
+mm square of open panel) still decodes. `extract_watermark()` tries the
+tiles whenever no strip is found.
+
+``` r
+ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
+```
+
+Tiles need open panel between the data: a plot whose data fills the
+whole panel leaves nothing to read. On a dark panel, use
+`colour = "white"`. Figures smaller than about 5 × 4 in hold too few
+tiles at the default pitch; use
+`watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at 150 dpi
+or more. Use both watermarks when you can; the strip wins if both are
+present.
 
 ### Provenance, not security
 

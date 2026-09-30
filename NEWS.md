@@ -2,6 +2,10 @@
 
 First release.
 
+* `watermark_tiles()` adds a crop-resistant watermark: a faint, tiled 12 x 12
+  dot grid behind the data in every panel, each tile carrying the full ID (up
+  to 12 bytes) and a CRC-16. `extract_watermark()` reads tiles when no dot
+  strip is found, including inverted (dark mode) images.
 * `watermark_dots()` adds an invisible, machine-readable ID along the plot's
   bottom margin as an ordinary `+` component. It is drawn relative to the
   figure, so scales, coordinates and facets are untouched, and it is framed

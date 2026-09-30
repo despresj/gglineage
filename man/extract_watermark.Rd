@@ -12,7 +12,7 @@ intensities in \verb{[0, 1]} (height x width, optionally x channels), as
 returned by \code{\link[png:readPNG]{png::readPNG()}} or \code{\link[jpeg:readJPEG]{jpeg::readJPEG()}}.}
 
 \item{debug}{If \code{TRUE}, report which rows decoded and the estimated bit
-pitch.}
+pitch, or each stage of the tile decoder.}
 }
 \value{
 The embedded ID as a plain string, or \code{NULL} if no valid code was
@@ -25,9 +25,12 @@ is whatever you recorded against it when you saved the plot.
 }
 \description{
 Scans an image for the dot code written by \code{\link[=watermark_dots]{watermark_dots()}} and decodes
-it. Works on the original file, screenshots, and recompressed or rescaled
-copies, as long as the bottom strip of the figure is intact and the image
-is not rotated.
+it; if no strip is found, looks for the tiles written by
+\code{\link[=watermark_tiles]{watermark_tiles()}}. Works on the original file, screenshots, and
+recompressed or rescaled copies. The strip needs the bottom of the figure
+intact; tiles survive crops that keep about two tiles across in each
+direction of open panel. Rotated images are not supported. When a plot
+carries both, the strip's ID is returned.
 }
 \details{
 Every row of the image is a candidate; a row is accepted only if its start
@@ -36,7 +39,8 @@ positives are vanishingly rare. A UUID is spread over two such rows, one
 above the other; each row is checked on its own and against the whole
 UUID, so a UUID is returned only when both of its rows are read, and
 halves of two different UUIDs (charts stacked in a report, say) are never
-joined.
+joined. Tiles are voted on across every visible copy and accepted only if
+their CRC-16 passes for exactly one ID.
 }
 \examples{
 library(ggplot2)
