@@ -14,26 +14,36 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/despresj/watermark/blob/main/LICENSE.md)
 <!-- badges: end -->
 
-**Trace every ggplot back to the code that made it.**
+**Get from a stray screenshot back to the run that made it.**
 
 Charts escape. They get screenshotted into slide decks, pasted into
 Slack, re-saved as JPEGs and forwarded until nobody knows which script,
 which data pull, or which version produced them. watermark stamps each
-plot with an ID you can read back out of the pixels, even after all of
-that.
+plot with a short ID you can read back out of the pixels, even after all
+of that. Log the ID when you save the plot, and any copy leads back to
+its run, code and data.
 
 <p align="center">
 
-<img src="man/figures/ping.gif" width="720" alt="Animation: a random chart is watermarked, screenshotted, shrunk and JPEG-compressed; a sonar sweep scans it, the faint dot row lights up, and the ID is decoded with a passing checksum." />
+<picture>
+<source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/despresj/watermark/main/man/figures/lineage-mobile.png" />
+<img src="man/figures/lineage.gif" width="100%" alt="Two panels. Left: a chat thread in which someone shares a chart screenshot and asks what it means; the analyst asks which client, project, run ID, data snapshot, script version and original report it came from, and nobody knows. Right: the same screenshot, a 552 by 378 pixel JPEG with no file metadata. extract_watermark() reads the ID 7K3M9QXD from its dot row, and looking that ID up in a plots.csv manifest returns the client, project, run, script, data snapshot and output file. A note says only the ID is in the pixels; the rest is the row logged when the plot was saved." />
+</picture>
 </p>
 
 <p align="center">
 
-<sub><b>Ping a rando chart.</b> A random chart is screenshotted, shrunk
-and JPEG-crunched, then the real decoder finds the dot row and reads its
-ID back. Made by
-<a href="https://github.com/despresj/watermark/blob/main/data-raw/ping.R"><code>data-raw/ping.R</code></a>;
-nothing is faked.</sub>
+<sub>A screenshot arrives with no context. <b>Left:</b> six questions,
+no answers. <b>Right:</b> <code>extract_watermark()</code> reads the ID
+out of the same JPEG, and the ID finds the row logged in
+<code>plots.csv</code> when the plot was saved. Only the ID is in the
+pixels; everything else comes from that log, here filled with fictional
+demo values. The decode is real: made and checked by
+<a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>.
+<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png">Still
+image</a> ·
+<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.png">Phone-sized
+version</a></sub>
 </p>
 
 ## Installation
@@ -120,8 +130,8 @@ id <- ggsave_watermark(
 
 str(read_watermark_metadata(file))
 #> List of 6
-#>  $ id      : chr "CG7J7CK5"
-#>  $ created : chr "2026-09-29T17:47:45-0400"
+#>  $ id      : chr "W0GP5FZ7"
+#>  $ created : chr "2026-09-29T20:23:11-0400"
 #>  $ title   : chr "Weight vs MPG"
 #>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
 #>  $ script  : chr "analysis/fig2.R"
@@ -130,14 +140,36 @@ str(read_watermark_metadata(file))
 
 Metadata is rich but fragile: a screenshot throws it away. The dots are
 terse but tough. Together you get the full record when the original file
-travels and the ID when only the pixels do. Keep a log of `id`, commit
-and script, and any stray copy leads back to its source.
+travels and the ID when only the pixels do.
+
+### Tracing a screenshot back
+
+The dots carry only the ID, so keep a record of what each ID means: a
+row in a CSV file, a database table, a lab notebook. When a copy turns
+up with no context, read its ID and look it up:
+
+``` r
+plots_csv <- tempfile(fileext = ".csv")
+write.csv(
+  data.frame(id = id, script = "analysis/fig2.R", commit = "9f3c2e1",
+             data = "snapshot-2026-09-12.csv"),
+  plots_csv, row.names = FALSE
+)
+
+screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
+                      quality = 60)
+
+plots <- read.csv(plots_csv)
+plots[plots$id == extract_watermark(screenshot), ]
+#>         id          script  commit                    data
+#> 1 W0GP5FZ7 analysis/fig2.R 9f3c2e1 snapshot-2026-09-12.csv
+```
 
 ``` r
 wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "9KP0AF7Q"
+#> [1] "0BCCWC55"
 wm_uuid()   # for metadata; too long for the dots
-#> [1] "fb1a7374-b6bd-4115-8c10-031147d00d16"
+#> [1] "36c4046c-e0e9-49d8-aaa5-faf325042606"
 ```
 
 IDs come from a private random stream. `set.seed()` in your analysis
