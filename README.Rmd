@@ -424,20 +424,32 @@ The strip lives in the bottom margin, so a crop that removes it removes the
 ID. `watermark_tiles()` repeats the whole ID (up to 12 bytes, so a short ID
 rather than a UUID), with its own CRC-16, in a faint 12 × 12 grid of dots
 behind the data in every panel. A tile is 36 mm square,
-and a crop that keeps about two tiles across in each direction (roughly
-70 mm square of open panel) still decodes. `extract_watermark()` tries the
-tiles whenever no strip is found.
+and a crop that keeps about two tiles across in each direction still
+decodes: in the real-world tests that meant about 80 mm square of open panel
+on a plain scatter, more on busy plots. `extract_watermark()` tries the tiles
+whenever no strip is found.
 
 ```r
 ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
 ```
 
 Tiles need open panel between the data: a plot whose data fills the whole
-panel leaves nothing to read. On a dark panel, use `colour = "white"`.
-Figures smaller than about 5 × 4 in hold too few tiles at the default pitch;
-use `watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at
-150 dpi or more. Use both
-watermarks when you can; the strip wins if both are present.
+panel (a heatmap) leaves nothing to read. On a dark panel, use
+`colour = "white"`. Figures smaller than about 5 × 4 in hold too few tiles at
+the default pitch; use `watermark_tiles(id, pitch = 2, size = 0.7)` for
+those, saved at 150 dpi or more.
+
+Tiles are less robust than the strip, and the limits are worth knowing:
+
+- **Each panel needs room.** Tiles are read per panel, so a
+  `facet_grid()` of small panels (under about 70 mm each) doesn't decode
+  even though the figure as a whole is large.
+- **Busy panels can defeat them, depending on the ID.** Tiles have a
+  checksum but no error correction, so if lines and gridlines cover the same
+  few cells in every tile, some IDs fail where others pass.
+- **Dark panels with light gridlines** often don't decode.
+
+Use both watermarks when you can; the strip wins if both are present.
 
 ### Provenance, not security
 

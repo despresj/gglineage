@@ -26,9 +26,9 @@ An object to add to a ggplot with \code{+}.
 Tiles a faint 12 x 12 grid of dots behind the data in every panel. Each tile
 carries the whole ID and a CRC-16 checksum, so a crop that keeps enough of
 the panel still decodes with \code{\link[=extract_watermark]{extract_watermark()}}: about two tiles across
-in each direction, roughly 70 mm square of open panel at the default pitch.
-Use it alongside, or instead of, \code{\link[=watermark_dots]{watermark_dots()}} when images may be
-cropped.
+in each direction, roughly 80 mm square of open panel at the default pitch
+(more on busy plots). Use it alongside, or instead of, \code{\link[=watermark_dots]{watermark_dots()}}
+when images may be cropped.
 }
 \details{
 Tiles are drawn in the panels, on a lattice anchored to the page, so facets
@@ -37,6 +37,12 @@ whose data covers the whole panel (such as \code{geom_raster()}) leaves nothing
 to read. On a dark panel use \code{colour = "white"}. At the default 3 mm pitch a
 tile is 36 mm square, so figures smaller than about 5 x 4 in hold too few
 tiles; use \verb{pitch = 2, size = 0.7} for those, saved at 150 dpi or more.
+
+Tiles are read per panel, so small facets (under about 70 mm each) don't
+decode. Each tile has a checksum but no error correction: when lines or
+gridlines cover the same cells in every tile, some IDs fail where others
+pass, and dark panels with light gridlines often fail. The strip from
+\code{\link[=watermark_dots]{watermark_dots()}} is more robust; use both when you can.
 }
 \examples{
 library(ggplot2)

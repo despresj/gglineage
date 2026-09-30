@@ -3,9 +3,9 @@
 #' Tiles a faint 12 x 12 grid of dots behind the data in every panel. Each tile
 #' carries the whole ID and a CRC-16 checksum, so a crop that keeps enough of
 #' the panel still decodes with [extract_watermark()]: about two tiles across
-#' in each direction, roughly 70 mm square of open panel at the default pitch.
-#' Use it alongside, or instead of, [watermark_dots()] when images may be
-#' cropped.
+#' in each direction, roughly 80 mm square of open panel at the default pitch
+#' (more on busy plots). Use it alongside, or instead of, [watermark_dots()]
+#' when images may be cropped.
 #'
 #' Tiles are drawn in the panels, on a lattice anchored to the page, so facets
 #' share one continuous pattern. They need open panel between the data: a plot
@@ -13,6 +13,12 @@
 #' to read. On a dark panel use `colour = "white"`. At the default 3 mm pitch a
 #' tile is 36 mm square, so figures smaller than about 5 x 4 in hold too few
 #' tiles; use `pitch = 2, size = 0.7` for those, saved at 150 dpi or more.
+#'
+#' Tiles are read per panel, so small facets (under about 70 mm each) don't
+#' decode. Each tile has a checksum but no error correction: when lines or
+#' gridlines cover the same cells in every tile, some IDs fail where others
+#' pass, and dark panels with light gridlines often fail. The strip from
+#' [watermark_dots()] is more robust; use both when you can.
 #'
 #' @param id The ID to embed: a string of at most 12 bytes. [wm_id()] makes
 #'   8-character ones.

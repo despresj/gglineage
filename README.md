@@ -142,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f42e-3816-76c8-baf3-b51697e66be9"
+#> [1] "01a0f4b8-afab-71dc-b1a3-926242f6dc76"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f42e-3816-76c8-baf3-b51697e66be9 analysis/fig2.R 9f3c2e1
+#> 1 01a0f4b8-afab-71dc-b1a3-926242f6dc76 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-09-30T17:17:44
+#> 1 snapshot-2026-09-12.csv 2026-09-30T19:48:59
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -185,11 +185,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "SJFFBA1C"
+#> [1] "EZA04B0H"
 wm_uuid()              # random (version 4)
-#> [1] "473aec1d-b0cf-4e58-8276-cf60b3812bde"
+#> [1] "b3ef534e-95c9-48c6-8ac2-4029c81fce72"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f42e-39b6-7277-9b37-5bcf69807bdf"
+#> [1] "01a0f4b8-b1c1-7849-b172-6447de14ef82"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -371,21 +371,33 @@ The strip lives in the bottom margin, so a crop that removes it removes
 the ID. `watermark_tiles()` repeats the whole ID (up to 12 bytes, so a
 short ID rather than a UUID), with its own CRC-16, in a faint 12 × 12
 grid of dots behind the data in every panel. A tile is 36 mm square, and
-a crop that keeps about two tiles across in each direction (roughly 70
-mm square of open panel) still decodes. `extract_watermark()` tries the
-tiles whenever no strip is found.
+a crop that keeps about two tiles across in each direction still
+decodes: in the real-world tests that meant about 80 mm square of open
+panel on a plain scatter, more on busy plots. `extract_watermark()`
+tries the tiles whenever no strip is found.
 
 ``` r
 ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
 ```
 
 Tiles need open panel between the data: a plot whose data fills the
-whole panel leaves nothing to read. On a dark panel, use
+whole panel (a heatmap) leaves nothing to read. On a dark panel, use
 `colour = "white"`. Figures smaller than about 5 × 4 in hold too few
 tiles at the default pitch; use
 `watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at 150 dpi
-or more. Use both watermarks when you can; the strip wins if both are
-present.
+or more.
+
+Tiles are less robust than the strip, and the limits are worth knowing:
+
+- **Each panel needs room.** Tiles are read per panel, so a
+  `facet_grid()` of small panels (under about 70 mm each) doesn’t decode
+  even though the figure as a whole is large.
+- **Busy panels can defeat them, depending on the ID.** Tiles have a
+  checksum but no error correction, so if lines and gridlines cover the
+  same few cells in every tile, some IDs fail where others pass.
+- **Dark panels with light gridlines** often don’t decode.
+
+Use both watermarks when you can; the strip wins if both are present.
 
 ### Provenance, not security
 

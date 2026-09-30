@@ -94,15 +94,28 @@ find_watermark <- function(gray) {
     if (is.null(result)) failed <<- c(failed, key)
     result
   }
+  # Charts repeat rows exactly (every row of a panel between two points is
+  # the same), and a row full of evenly spaced gridlines is expensive to
+  # rule out. Identical pixels give an identical result, so remember the
+  # rows that held nothing and skip their repeats.
+  weights <- (sin(seq_len(ncol(gray)) * 12.9898) * 43758.5453) %% 1
+  empty <- new.env(parent = emptyenv())
+  read_row <- function(signal) {
+    key <- sprintf("%.15g", sum(signal * weights))
+    if (!is.null(empty[[key]])) return(NULL)
+    found <- decode_row(signal)
+    if (is.null(found)) empty[[key]] <- TRUE
+    found
+  }
   for (r in rev(seq_len(n))) {
-    found <- decode_row(gray[r, ])
+    found <- read_row(gray[r, ])
     if (!is.null(found)) {
       result <- accept(c(found, row = r, rows_averaged = 1L))
       if (!is.null(result)) return(result)
     }
   }
   for (r in rev(seq_len(max(0L, n - 2L))) + 1L) {
-    found <- decode_row(colMeans(gray[(r - 1L):(r + 1L), , drop = FALSE]))
+    found <- read_row(colMeans(gray[(r - 1L):(r + 1L), , drop = FALSE]))
     if (!is.null(found)) {
       result <- accept(c(found, row = r, rows_averaged = 3L))
       if (!is.null(result)) return(result)
@@ -367,6 +380,16 @@ decode_frame <- function(centers, diff, orient, pitch) {
   if (sum((start > cut) == (sync_start == 1L)) < 13L) return(NULL)
   oriented <- orient(polarity)
 
+  # The 8 bits after the start sync are the header, and only 35 of 256
+  # values are headers any frame uses. Evenly spaced gridlines pass the sync
+  # check (they alternate too) but read 0x55 or 0xAA here; rejecting them now
+  # saves a search over every frame length and edge nudge, repeated on every
+  # row the gridlines cross. A few offsets allow for the pitch estimate.
+  # The header also fixes the frame length, so only lengths it allows are
+  # tried below.
+  lengths <- header_lengths(oriented, left, pitch)
+  if (length(lengths) == 0L) return(NULL)
+
   try_frame <- function(right, n) {
     found <- decode_geometry(oriented, left, right, n)
     if (!is.null(found)) c(found, polarity = polarity)
@@ -375,7 +398,7 @@ decode_frame <- function(centers, diff, orient, pitch) {
   # Normal case: the last dot on the row closes the frame.
   right <- centers[length(centers)]
   estimate <- (right - left) / pitch + 1
-  for (n in utils::head(frame_lengths[order(abs(frame_lengths - estimate))], 5L)) {
+  for (n in utils::head(lengths[order(abs(lengths - estimate))], 5L)) {
     found <- try_frame(right, n)
     if (!is.null(found)) return(found)
   }
@@ -384,7 +407,7 @@ decode_frame <- function(centers, diff, orient, pitch) {
   # try each frame length, closing it on each dot near where it should end.
   # The pitch estimate is only good to a fraction of a pixel, so the window
   # grows with frame length.
-  for (n in frame_lengths) {
+  for (n in lengths) {
     predicted <- left + (n - 1) * pitch
     window <- 0.03 * (n - 1) * pitch + pitch
     nearby <- centers[abs(centers - predicted) <= window]
@@ -414,10 +437,12 @@ decode_geometry <- function(signal, left, right, n, accept = NULL) {
   dl <- rep(edge_nudges, each = length(edge_nudges))
   dr <- rep(edge_nudges, times = length(edge_nudges))
   step <- (right + dr - left - dl) / (n - 1)
-  xs <- outer(seq_len(n) - 1, step) + rep(left + dl, each = n)
   idx <- sync_index(n)
   lead <- c(idx, 17:24)
-  v <- matrix(sample_signal(signal, xs[lead, , drop = FALSE], pitch), nrow = length(lead))
+  # Positions of just the bits read here; a full frame's positions are built
+  # only for the few nudges that pass (this runs on every candidate row).
+  lead_xs <- outer(lead - 1, step) + rep(left + dl, each = length(lead))
+  v <- matrix(sample_signal(signal, lead_xs, pitch), nrow = length(lead))
   on <- colMeans(v[which(sync_bits == 1L), , drop = FALSE])
   off <- colMeans(v[which(sync_bits == 0L), , drop = FALSE])
   threshold <- (on + off) / 2
@@ -427,7 +452,8 @@ decode_geometry <- function(signal, left, right, n, accept = NULL) {
     colSums(bits[1:32, , drop = FALSE] == sync_bits) == 32L &
     header %in% frame_headers(n)
   for (j in which(plausible)) {
-    frame <- parse_frame(as.integer(sample_signal(signal, xs[, j], pitch) > threshold[j]))
+    xs <- left + dl[j] + (seq_len(n) - 1) * step[j]
+    frame <- parse_frame(as.integer(sample_signal(signal, xs, pitch) > threshold[j]))
     if (!is.null(frame) && (is.null(accept) || accept(frame))) {
       return(list(frame = frame, n_bits = n, pitch = step[j],
                   left = left + dl[j], right = right + dr[j]))
@@ -503,6 +529,35 @@ running_extreme <- function(x, k, extreme) {
   i <- seq_len(n)
   extreme(suffix[i], prefix[i + w - 1L])
 }
+
+# Frame lengths allowed by the header read just after the start sync, at a
+# few small offsets (the pitch is only estimated); empty if no reading is a
+# header any frame uses.
+header_lengths <- function(signal, left, pitch) {
+  table <- header_table()
+  out <- integer()
+  for (dl in c(0, -0.5, 0.5)) {
+    v <- sample_signal(signal, left + dl + (0:23) * pitch, pitch)
+    on <- mean(v[1:16][sync_start == 1L])
+    off <- mean(v[1:16][sync_start == 0L])
+    if (!(on > off)) next
+    header <- sum((v[17:24] > (on + off) / 2) * 2^(0:7))
+    out <- c(out, table$n[table$header == header])
+  }
+  unique(out)
+}
+
+header_table <- local({
+  cache <- NULL
+  function() {
+    if (is.null(cache)) {
+      cache <<- do.call(rbind, lapply(frame_lengths, function(n) {
+        data.frame(n = n, header = frame_headers(n))
+      }))
+    }
+    cache
+  }
+})
 
 edge_nudges <- c(0, -0.25, 0.25, -0.5, 0.5, -0.75, 0.75, -1, 1)
 sync_bits <- c(sync_start, sync_end)
