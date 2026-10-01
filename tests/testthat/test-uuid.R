@@ -372,3 +372,116 @@ test_that("pixel arrays with missing values are refused clearly", {
   expect_null(extract_watermark(array(1, c(300, 1, 3))))
 })
 
+
+# ---- passed around: multi-hop sharing chains --------------------------------
+# Pure-R stand-ins for what happens to a screenshot as it travels: shown on a
+# web page and screenshotted (page colour around it, 1x/2x/3x), cropped back
+# to the chart, recompressed by a chat app (fit to a width, JPEG). The chart's
+# box is tracked through every hop so crops land on it. tools/
+# uuid-sharing-hammer.R runs the same idea through real Chrome, sips, ffmpeg
+# and libwebp.
+
+share_state <- function(img) list(img = img, box = c(1, 1, dim(img)[2], dim(img)[1]))
+
+hop_screenshot <- function(st, chart_px, scale = 1, page = 1) {
+  img <- tf_resize_to_width(st$img, chart_px * scale / (st$box[3] - st$box[1] + 1) * dim(st$img)[2])
+  s <- dim(img)[2] / dim(st$img)[2]
+  off <- round(c(24, 96) * scale)
+  w <- max(round(1280 * scale), dim(img)[2] + 2 * off[1])
+  out <- array(page, c(dim(img)[1] + off[2] + off[1], w, 3))
+  out[off[2] + seq_len(dim(img)[1]), off[1] + seq_len(dim(img)[2]), ] <- img[, , 1:3]
+  list(img = out, box = c(off[1] + (st$box[c(1, 3)] - 1) * s + 1, off[2] + (st$box[c(2, 4)] - 1) * s + 1)[c(1, 3, 2, 4)])
+}
+
+hop_crop_to_chart <- function(st, margin = 12) {
+  b <- round(st$box)
+  x <- max(1, b[1] - margin):min(dim(st$img)[2], b[3] + margin)
+  y <- max(1, b[2] - margin):min(dim(st$img)[1], b[4] + margin)
+  list(img = st$img[y, x, , drop = FALSE], box = st$box - c(x[1] - 1, y[1] - 1, x[1] - 1, y[1] - 1))
+}
+
+hop_platform <- function(st, max_w, quality) {
+  s <- min(1, max_w / dim(st$img)[2])
+  img <- if (s < 1) tf_resize(st$img, s) else st$img
+  list(img = tf_jpeg(img, quality), box = st$box * s)
+}
+
+chart_width <- function(st) st$box[3] - st$box[1]
+
+test_that("UUIDs survive being passed around: screenshot, crop, recompress, repeat", {
+  skip_if_no_raster()
+  skip_if_not_installed("jpeg")
+  skip_on_cran()
+  chains <- list(
+    "dark page 800px -> X -> crop -> email -> retina shot on white -> halved" = function(st) {
+      st <- hop_screenshot(st, 800, page = 0.05)
+      st <- hop_platform(st, 1200, 85)
+      st <- hop_crop_to_chart(st)
+      st <- hop_platform(st, 1024, 75)
+      st <- hop_screenshot(st, 640, scale = 2, page = 1)
+      hop_platform(st, dim(st$img)[2] / 2, 92)
+    },
+    "phone @3x -> iMessage-ish -> WhatsApp -> grey page 640px -> JPEG 60" = function(st) {
+      st <- hop_screenshot(st, 342, scale = 3, page = 1)
+      st <- hop_platform(st, 4000, 80)
+      st <- hop_platform(st, 1600, 70)
+      st <- hop_screenshot(st, 640, page = 0.94)
+      hop_platform(st, 4000, 60)
+    },
+    "retina 2x -> Slack -> X -> crop -> Teams -> email" = function(st) {
+      st <- hop_screenshot(st, 640, scale = 2, page = 0.1)
+      st <- hop_platform(st, 1600, 88)
+      st <- hop_platform(st, 1200, 85)
+      st <- hop_crop_to_chart(st, margin = 4)
+      st <- hop_platform(st, 800, 75)
+      hop_platform(st, 1024, 75)
+    },
+    "five screenshots of screenshots on alternating pages" = function(st) {
+      for (i in 1:5) {
+        st <- hop_screenshot(st, c(800, 640, 720, 560, 600)[i], scale = c(1, 2, 1, 2, 1)[i],
+                             page = c(1, 0.08, 0.94, 0.15, 1)[i])
+        st <- hop_platform(st, 1600, 85)
+      }
+      st
+    }
+  )
+  set.seed(21)
+  for (plot_name in c("light", "dark")) {
+    for (version in c(4, 7)) {
+      id <- wm_uuid(version)
+      p <- if (plot_name == "light") base_plot() + watermark_dots(id) else
+        base_plot() + theme_dark() + theme(plot.background = element_rect(fill = "grey10")) +
+          watermark_dots(id, colour = "white")
+      start <- share_state(render_plot(p))
+      for (name in names(chains)) {
+        st <- chains[[name]](start)
+        expect_gte(chart_width(st), 480)
+        expect_identical(extract_watermark(st$img), id,
+                         label = sprintf("%s v%d: %s (chart %d px)", plot_name, version, name,
+                                         round(chart_width(st))))
+      }
+    }
+  }
+})
+
+test_that("random sharing chains never yield a wrong UUID, even far past the limits", {
+  skip_if_no_raster()
+  skip_if_not_installed("jpeg")
+  skip_on_cran()
+  set.seed(77)
+  id <- wm_uuid()
+  start <- share_state(render_plot(base_plot() + watermark_dots(id)))
+  for (trial in 1:12) {
+    st <- start
+    for (h in seq_len(sample(2:6, 1))) {
+      st <- switch(sample(c("shot", "crop", "platform"), 1),
+        shot = hop_screenshot(st, sample(c(200, 300, 400, 640), 1),
+                              scale = sample(c(1, 2), 1), page = runif(1)),
+        crop = hop_crop_to_chart(st, margin = sample(0:20, 1)),
+        platform = hop_platform(st, sample(c(480, 800, 1200), 1), sample(c(30, 50, 70), 1)))
+    }
+    got <- extract_watermark(st$img)
+    expect_true(is.null(got) || identical(got, id),
+                label = sprintf("trial %d decoded %s", trial, format(got)))
+  }
+})
