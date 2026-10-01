@@ -7,7 +7,7 @@
 ggsave_watermark(
   filename,
   plot = ggplot2::last_plot(),
-  id = wm_id(),
+  id = NULL,
   metadata = list(),
   dots = TRUE,
   ...
@@ -19,13 +19,19 @@ ggsave_watermark(
 \item{plot}{Plot to save; defaults to the last plot displayed.}
 
 \item{id}{ID to embed: text of at most 16 bytes or a UUID (see
-\code{\link[=watermark_dots]{watermark_dots()}}). Defaults to a fresh \code{\link[=wm_id]{wm_id()}}. This is the third
-argument, where \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} has \code{device}, so pass \code{device} and
-the other \code{ggsave()} arguments by name.}
+\code{\link[=watermark_dots]{watermark_dots()}}). Defaults to the ID the plot already carries, if it
+has a \code{\link[=watermark_dots]{watermark_dots()}} or \code{\link[=watermark_tiles]{watermark_tiles()}} mark, and otherwise to a
+fresh \code{\link[=wm_id]{wm_id()}}. A different ID from the one the plot carries is an
+error, so the file's metadata and its dots always name the same ID. This
+is the third argument, where \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} has \code{device}, so pass
+\code{device} and the other \code{ggsave()} arguments by name.}
 
 \item{metadata}{A named list of extra fields to store in the PNG metadata,
-e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}. The names
-\code{id}, \code{created}, \code{title} and \code{software} are reserved.}
+e.g. \code{list(commit = "a1b2c3d", script = "analysis/fig2.R")}. Each field
+is an atomic vector (stored as text, elements separated by spaces), each
+name is used once and is at most 69 bytes (PNG limits keywords to 79,
+including the package's prefix). The names \code{id}, \code{created}, \code{title} and
+\code{software} are reserved. Problems are reported before anything is saved.}
 
 \item{dots}{If \code{FALSE}, skip the dot code and only write metadata.}
 

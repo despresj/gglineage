@@ -43,6 +43,12 @@ decode. Each tile has a checksum but no error correction: when lines or
 gridlines cover the same cells in every tile, some IDs fail where others
 pass, and dark panels with light gridlines often fail. The strip from
 \code{\link[=watermark_dots]{watermark_dots()}} is more robust; use both when you can.
+
+The tile checksum is 16 bits, against the strip's 32 (64 for a UUID), so a
+corrupted tile reading is accepted as a wrong ID about once in 65,000
+tries. Treat an ID read from tiles alone as a lead to confirm against your
+records. A plot carries one ID: tiles with a different ID from the plot's
+\code{\link[=watermark_dots]{watermark_dots()}} strip are an error.
 }
 \examples{
 library(ggplot2)

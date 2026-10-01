@@ -24,9 +24,6 @@
 #' uppercase input is not an error, just not preserved. Nothing else is
 #' interpreted: the version and variant fields are carried as given.
 #'
-#' One plot carries one code: two `watermark_dots()` layers draw over each
-#' other, and only one of them (or neither) can be read back.
-#'
 #' Thirty-two hexadecimal digits without hyphens are *not* treated as a UUID
 #' (that could equally be an MD5 hash), and at 32 bytes are too long for a
 #' text ID, so they are rejected with a message. Any text of 16 bytes or fewer
@@ -40,6 +37,15 @@
 #' decodes return `NULL`. The full table is in the README. These are
 #' measurements, not guarantees: the limits vary with the ID and the plot.
 #'
+#' @section One plot, one ID:
+#' A plot carries one ID. Adding `watermark_dots()` or [watermark_tiles()]
+#' with a different ID to a plot that already has one is an error, because a
+#' figure carrying two IDs could be traced to either. Adding the same ID
+#' again changes nothing. The ID belongs to the plot object, so a plot built
+#' from a watermarked one (`p + labs(...)`, or `p` given new data) carries the
+#' same ID; to give every saved figure its own ID, leave the watermark off the
+#' shared plot and add it when saving, with [ggsave_watermark()].
+#'
 #' @param id The ID to embed: text of at most 16 bytes, or a UUID. Shorter
 #'   text is more robust; [wm_id()] makes 8-character IDs and [wm_uuid()]
 #'   UUIDs.
@@ -51,7 +57,8 @@
 #'   the size; the cap matters on wide figures, whose dots would otherwise be
 #'   too small to survive being shown small and recompressed.
 #'
-#' @return A list of ggplot2 components, to be added to a plot with `+`.
+#' @return An object to add to a plot with `+`; `add_watermark()` returns
+#'   the watermarked plot.
 #' @seealso [add_watermark()] for a pipe-friendly version,
 #'   [ggsave_watermark()] to also embed file metadata.
 #' @export
@@ -73,17 +80,24 @@
 #' extract_watermark(file)
 watermark_dots <- function(id, colour = "grey30", alpha = 0.15, size = 2) {
   check_mark_style(colour, alpha, size)
-  rows <- encode_rows(id)
-  spec <- list(
-    rows = rows,
-    colour = colour,
-    alpha = alpha,
-    size = size
+  structure(
+    list(
+      id = check_id(id),
+      rows = encode_rows(id),
+      colour = colour,
+      alpha = alpha,
+      size = size
+    ),
+    class = "watermark_dots_spec"
   )
-  list(
-    watermark_layer(GeomWatermarkDots, spec),
-    ggplot2::theme(plot.margin = bottom_margin(dots_margin_pt(length(rows))))
-  )
+}
+
+#' @exportS3Method ggplot2::ggplot_add
+ggplot_add.watermark_dots_spec <- function(object, plot, ...) {
+  spec <- unclass(object)
+  if (!needs_watermark(plot, spec$id, "GeomWatermarkDots")) return(plot)
+  plot$layers <- c(plot$layers, list(watermark_layer(GeomWatermarkDots, spec)))
+  plot + ggplot2::theme(plot.margin = bottom_margin(dots_margin_pt(length(spec$rows))))
 }
 
 #' @rdname watermark_dots
