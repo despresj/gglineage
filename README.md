@@ -142,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f6b2-c529-7fcb-9923-618535a32038"
+#> [1] "01a0f6f9-fdeb-797c-b0b6-2153549e9d8d"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f6b2-c529-7fcb-9923-618535a32038 analysis/fig2.R 9f3c2e1
+#> 1 01a0f6f9-fdeb-797c-b0b6-2153549e9d8d analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T05:01:46
+#> 1 snapshot-2026-09-12.csv 2026-10-01T06:19:33
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -185,11 +185,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "TEG95458"
+#> [1] "HN7XYBAH"
 wm_uuid()              # random (version 4)
-#> [1] "faa935b7-3cf2-4b83-847c-41cb23562e61"
+#> [1] "5844fa50-fd4a-4b77-bd35-b0e4ccf15230"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f6b2-cbd6-715e-a942-e90fc7cfb0a2"
+#> [1] "01a0f6fa-0026-7522-a5c7-799ae8e74989"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -365,26 +365,29 @@ The decoder has to cope with all of it: page colours around the chart, a
 chart that is a small part of a huge screenshot, and bits lost to
 repeated compression, which it repairs (see below).
 
-The latest run used 400 chains, nine plot types and 1,121 decodes:
+Results from the latest run (400 chains, nine plot types, 1,110
+decodes), grouped by the narrowest the chart got anywhere along its
+chain (detail lost while a chart is shown small doesn’t come back when a
+later screenshot shows it larger) and by how many lossy hops it went
+through:
 
-| After hop | Within limits, exact | Wrong UUIDs |
-|----------:|---------------------:|------------:|
-|         1 |    388 of 388 (100%) |           0 |
-|         2 |    254 of 254 (100%) |           0 |
-|         3 |   134 of 135 (99.3%) |           0 |
-|         4 |      58 of 58 (100%) |           0 |
-|         5 |      22 of 22 (100%) |           0 |
+| Narrowest chart width | After 0–1 lossy hops | After 2+ lossy hops |
+|-----------------------|---------------------:|--------------------:|
+| 640 px or more        |    665 of 665 (100%) |     30 of 30 (100%) |
+| 560–640 px            |      52 of 52 (100%) |     15 of 15 (100%) |
+| 480–560 px            |       77 of 81 (95%) |       9 of 12 (75%) |
+| under 480 px          |     121 of 214 (57%) |      11 of 41 (27%) |
 
-Here, *within limits* means the chart was never narrower than 480 px at
-any point in the chain, and no hop compressed it below JPEG quality 50.
-Narrowness is judged over the whole chain: detail lost while a chart is
-shown small doesn’t come back when a later screenshot shows it larger.
+**Keep the chart at least about 560 px wide, roughly a phone screen or
+half a laptop window, and the UUID survived every chain tested,** up to
+five hops of screenshots, crops and recompression. Below that, recovery
+falls off gradually.
 
-Beyond those limits, decodes start returning `NULL`. Across three full
-campaigns (about 3,300 decodes) and 1,250 adversarial trials (pairs of
-charts with different UUIDs, stacked, cropped through and compressed
-hard), **no decode has ever returned a wrong UUID.** The full report,
-every hop type and every miss, is in
+A failed decode returns `NULL`. Across four full campaigns (about 4,450
+decodes) and the adversarial runs (pairs of charts with different UUIDs,
+stacked, cropped through and compressed hard), **no decode has ever
+returned a wrong UUID.** The full report, every hop type and every miss,
+is in
 [`tools/uuid-sharing-report.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-report.md).
 
 **Repair.** A UUID row that loses a few bits to compression is repaired
