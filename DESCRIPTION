@@ -15,9 +15,9 @@ Description: Stamp 'ggplot2' plots with an ID that can be read back out of
     "CONFIDENTIAL") are included. Watermarks are ordinary plot components
     added with '+', and never alter scales, coordinates or facets.
 License: MIT + file LICENSE
-URL: https://github.com/despresj/watermark,
-    https://despresj.github.io/watermark/
-BugReports: https://github.com/despresj/watermark/issues
+URL: https://github.com/despresj/gglineage,
+    https://despresj.github.io/gglineage/
+BugReports: https://github.com/despresj/gglineage/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 

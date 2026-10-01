@@ -5,13 +5,13 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/R-CMD-check.yaml)
-[![robustness](https://github.com/despresj/watermark/actions/workflows/robustness.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/robustness.yaml)
-[![test-coverage](https://github.com/despresj/watermark/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/despresj/watermark/actions/workflows/test-coverage.yaml)
+[![R-CMD-check](https://github.com/despresj/gglineage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/despresj/gglineage/actions/workflows/R-CMD-check.yaml)
+[![robustness](https://github.com/despresj/gglineage/actions/workflows/robustness.yaml/badge.svg)](https://github.com/despresj/gglineage/actions/workflows/robustness.yaml)
+[![test-coverage](https://github.com/despresj/gglineage/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/despresj/gglineage/actions/workflows/test-coverage.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License:
-MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/despresj/watermark/blob/main/LICENSE.md)
+MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/despresj/gglineage/blob/main/LICENSE.md)
 <!-- badges: end -->
 
 **Trace a chart screenshot back to the run that made it.**
@@ -43,23 +43,22 @@ the UUID finds the row logged in <code>plots.csv</code> when the plot
 was saved. Only the ID is in the pixels; everything else comes from that
 log, with the client, project and run as demo values. The decode is
 real: made and checked by
-<a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>,
+<a href="https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>,
 and you can repeat it on
-<a href="https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo/screenshot.jpg"><code>screenshot.jpg</code></a>.
-<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png">Still
+<a href="https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo/screenshot.jpg"><code>screenshot.jpg</code></a>.
+<a href="https://github.com/despresj/gglineage/blob/main/man/figures/lineage-still.png">Still
 image</a> ·
-<a href="https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.gif">Phone-sized
+<a href="https://github.com/despresj/gglineage/blob/main/man/figures/lineage-mobile.gif">Phone-sized
 version</a></sub>
 </p>
 
 ## Installation
 
-gglineage is not on CRAN yet. Install it from GitHub (the repository is
-still named `watermark`):
+gglineage is not on CRAN yet. Install it from GitHub:
 
 ``` r
 # install.packages("pak")
-pak::pak("despresj/watermark")
+pak::pak("despresj/gglineage")
 ```
 
 ## Thirty-second tour
@@ -92,7 +91,7 @@ extract_watermark(abused)
 
 <sup>`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms
 from the package’s [stress-test
-suite](https://github.com/despresj/watermark/blob/main/tests/testthat/helper-transforms.R).</sup>
+suite](https://github.com/despresj/gglineage/blob/main/tests/testthat/helper-transforms.R).</sup>
 
 ## The workflow: save, log, share, scan, look up
 
@@ -142,14 +141,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f9a2-f049-7616-918c-a7a039e12b07"
+#> [1] "01a0f9cc-807a-73d8-8add-4639ad30a5fd"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f9a2-f049-7616-918c-a7a039e12b07 analysis/fig2.R 9f3c2e1
+#> 1 01a0f9cc-807a-73d8-8add-4639ad30a5fd analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T18:43:20
+#> 1 snapshot-2026-09-12.csv 2026-10-01T19:28:44
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -201,18 +200,18 @@ query, a checksum) is something you record in the manifest row.
   UUIDs are normalised, to lowercase.
 
 These properties are pinned by
-[`test-lineage-adversarial.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-adversarial.R)
+[`test-lineage-adversarial.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-lineage-adversarial.R)
 and the randomised
-[`test-lineage-fuzz.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-fuzz.R),
+[`test-lineage-fuzz.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-lineage-fuzz.R),
 which CI runs on Linux, macOS and Windows, along with a larger fuzz
 campaign
-([`tools/lineage-fuzz-campaign.R`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-campaign.R)).
+([`tools/lineage-fuzz-campaign.R`](https://github.com/despresj/gglineage/blob/main/tools/lineage-fuzz-campaign.R)).
 In the latest campaign (seed 2027: 100,000 random IDs through the codec,
 100,000 corrupted codes, 100,000 cross-joined UUID pairs, about 9,700
 row repairs and 1,500 stacked, side-by-side, blended, cropped,
 recompressed and row-spliced images, including tiles-only charts) no
 decode returned an ID that was not drawn; see
-[`tools/lineage-fuzz-report.md`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-report.md).
+[`tools/lineage-fuzz-report.md`](https://github.com/despresj/gglineage/blob/main/tools/lineage-fuzz-report.md).
 
 ## ID formats
 
@@ -232,11 +231,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "P4JC81PK"
+#> [1] "KVPJ9TB1"
 wm_uuid()              # random (version 4)
-#> [1] "43c1c2a2-6eb3-485c-9626-9fe14cffdfdb"
+#> [1] "6ec7c736-150b-4c06-b9b1-e9b5bf82906d"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f9a2-f285-7664-aeaa-c419191352f3"
+#> [1] "01a0f9cc-8340-7f16-ae65-6ee83af20874"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -323,7 +322,7 @@ nothing.
 A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
-[`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
+[`test-robustness.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
 |  | Transformation | Pixels | Dot code | Tiles |
@@ -377,7 +376,7 @@ limits below are for this 7 × 5 in figure shrunk to a given width. Each
 JPEG entry is the narrowest width at which every one of 12 trials (6
 random IDs × 2 plot types) decoded; just below it some decodes return
 `NULL`, never a wrong ID. The full tables are in
-[`tools/uuid-design.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-design.md).
+[`tools/uuid-design.md`](https://github.com/despresj/gglineage/blob/main/tools/uuid-design.md).
 
 | Treatment | 8-character `wm_id()` | UUID |
 |----|---:|---:|
@@ -397,7 +396,7 @@ again inside a padded screenshot.
 ### Passed around: UUIDs through real sharing chains
 
 A screenshot rarely makes one hop. To test that, each trial in
-[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-hammer.R)
+[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/gglineage/blob/main/tools/uuid-sharing-hammer.R)
 puts a chart with a fresh random UUID through a chain of one to five
 real hops, decoding after every one:
 
@@ -436,7 +435,7 @@ decodes) and the adversarial runs (pairs of charts with different UUIDs,
 stacked, cropped through and compressed hard), **no decode has ever
 returned a wrong UUID.** The full report, every hop type and every miss,
 is in
-[`tools/uuid-sharing-report.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-report.md).
+[`tools/uuid-sharing-report.md`](https://github.com/despresj/gglineage/blob/main/tools/uuid-sharing-report.md).
 
 **Repair.** A UUID row that loses a few bits to compression is repaired
 from the bits read least confidently. CRCs are linear, so candidate
@@ -521,6 +520,6 @@ the trail.
 ## Contributing
 
 Bug reports and ideas are welcome in the [issue
-tracker](https://github.com/despresj/watermark/issues). Run the test
+tracker](https://github.com/despresj/gglineage/issues). Run the test
 suite with `devtools::test()`; the robustness matrix lives in
 `tests/testthat/test-robustness.R`.

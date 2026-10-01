@@ -35,17 +35,31 @@ unpushed). Nothing submitted, uploaded, pushed or emailed.
 
 **Before submitting**
 
-- [ ] Push local `main` (16 commits) and merge `cran-hardening`, so the 6
-      README URLs resolve and CI runs the new matrix; confirm it green on
-      all three OSes.
-- [ ] Repository name: renaming to `gglineage` changes the pkgdown URL in
-      DESCRIPTION (GitHub Pages does not redirect), so either rename
-      *before* submitting and update `URL`, `BugReports`, badges and README
-      links, or submit as `watermark` and rename later with a DESCRIPTION
-      update in the next release.
+- [x] Push local `main` and merge `cran-hardening` (pushed as `818c19d`).
+      CI on that commit: 6 of 7 R-CMD-check jobs green, including Windows
+      release and devel and the CRAN-mode job. macOS failed one test:
+      headless Chrome hung on the runner (exit 124,
+      `CVDisplayLinkCreateWithCGDisplay failed`). That test now skips on a
+      Chrome timeout; any other Chrome error still fails it.
+- [x] Repository renamed to `despresj/gglineage` (the old URL redirects).
+      `URL`, `BugReports`, `_pkgdown.yml`, badges, README links and the
+      install line updated; pkgdown serves at
+      <https://despresj.github.io/gglineage/>.
+- [x] Tarball rebuilt after the rename and checked (see below).
 - [ ] Optional: win-builder (`devtools::check_win_devel()`; it emails the
       maintainer). The GitHub Actions Windows jobs cover the code.
-- [ ] Rebuild the tarball from the final commit and submit.
+- [ ] Confirm CI green on the final commit, then submit at
+      <https://CRAN.R-project.org/submit.html> and confirm the emailed link.
+
+**Final check after the rename (2026-10-01)**
+
+| Where | Command | Result |
+|---|---|---|
+| macOS 26.6.2 aarch64, R 4.6.1, openssl installed, tarball SHA-256 `3afa39752ec02cd3533bdbed08b9bcb4c4b6ad3651bd321fc71dd2458373716d` | `R CMD check --as-cran --no-manual`, remote URL checks on | **1 NOTE: New submission.** No URL NOTE. Tests OK (66 s). |
+| macOS, full suite `NOT_CRAN=true`, real Chrome | `testthat::test_local()` | 253 test blocks, 5,355 expectations, 0 failed, 2 skipped (openssl tests; covered by the check above) |
+
+The manual was not built here (no LaTeX on this Mac); the Linux R-devel
+check above built it without problems.
 
 ## Earlier record
 

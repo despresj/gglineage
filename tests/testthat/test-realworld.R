@@ -111,9 +111,20 @@ test_that("headless Chrome screenshots of a web page decode exactly", {
   dots <- rw_source(list(watermark_dots(rw_ids$id8)))
   uuid <- rw_source(list(watermark_dots(rw_ids$uuid)))
   tiles <- rw_source(list(watermark_tiles(rw_ids$id8)))
+  # Chrome can hang on a machine with no usable display (GitHub's macOS
+  # runners: CVDisplayLinkCreateWithCGDisplay fails). A timeout says nothing
+  # about the decoder, so skip; any other Chrome error still fails.
   shot <- function(src, ...) {
     out <- withr_tempfile(".png", env = parent.frame())
-    rw_chrome_shot(src, out, aspect = 5 / 7, chrome = chrome, ...)
+    tryCatch(
+      rw_chrome_shot(src, out, aspect = 5 / 7, chrome = chrome, ...),
+      error = function(e) {
+        if (grepl("(timed out)", conditionMessage(e), fixed = TRUE)) {
+          skip(paste("headless Chrome timed out:", conditionMessage(e)))
+        }
+        stop(e)
+      }
+    )
     out
   }
   expect_equal(extract_watermark(shot(dots, css_width = 640, dpr = 1)), rw_ids$id8)
