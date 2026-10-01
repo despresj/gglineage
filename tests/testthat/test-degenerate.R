@@ -187,3 +187,24 @@ test_that("frames with valid syncs but random payloads are rejected", {
     expect_false(any(hits), label = paste("frame length", n))
   }
 })
+
+test_that("a chart that is a small part of a wide screenshot still decodes", {
+  # Browser screenshots put the chart in a much wider image. The figure
+  # geometry fallback can't help there, so this exercises the dot-finding
+  # path, including the pitch estimate that a long ID's header depends on.
+  skip_if_no_raster()
+  skip_on_cran()
+  canvas <- function(chart, width) {
+    out <- array(1, c(nrow(chart) + 100, width, 3))
+    out[50 + seq_len(nrow(chart)), 48 + seq_len(ncol(chart)), ] <- chart
+    out
+  }
+  for (id in c("f47ac10b-58cc-4372-a567-0e02b2c3d479", "Zürich-δ✓",
+               "K7Q2M9XD")) {
+    img <- render_plot(base_plot() + watermark_dots(id))
+    for (w in c(640, 360)) {
+      got <- extract_watermark(canvas(tf_resize_to_width(img, w), 1920))
+      expect_equal(got, id, label = sprintf("%s at %d px in 1920", id, w))
+    }
+  }
+})

@@ -352,8 +352,12 @@ decode_row <- function(signal) {
   for (i in seq_len(min(6L, length(centers) - 8L))) {
     gaps <- diff(centers[i:(i + 7L)])
     if (all(abs(gaps - stats::median(gaps)) <= 0.25 * stats::median(gaps) + 1)) {
-      found <- decode_frame(centers[i:length(centers)], diff, orient,
-                            stats::median(gaps) / 2)
+      # Pitch from a least-squares fit through all 8 sync dots: each centre
+      # is only known to half a pixel, and the median gap's error (a few
+      # percent) is a whole bit of drift by the header.
+      sync_x <- centers[i:(i + 7L)]
+      pitch <- stats::cov(sync_x, 0:7) / stats::var(0:7) / 2
+      found <- decode_frame(centers[i:length(centers)], diff, orient, pitch)
       if (!is.null(found)) return(found)
     }
   }
@@ -531,13 +535,13 @@ running_extreme <- function(x, k, extreme) {
 }
 
 # Frame lengths allowed by the header read just after the start sync, at a
-# few small offsets (the pitch is only estimated); empty if no reading is a
-# header any frame uses.
+# few small offsets and pitches (both are estimates); empty if no reading is
+# a header any frame uses.
 header_lengths <- function(signal, left, pitch) {
   table <- header_table()
   out <- integer()
-  for (dl in c(0, -0.5, 0.5)) {
-    v <- sample_signal(signal, left + dl + (0:23) * pitch, pitch)
+  for (try in list(c(0, 1), c(-0.5, 1), c(0.5, 1), c(0, 0.98), c(0, 1.02))) {
+    v <- sample_signal(signal, left + try[1] + (0:23) * pitch * try[2], pitch)
     on <- mean(v[1:16][sync_start == 1L])
     off <- mean(v[1:16][sync_start == 0L])
     if (!(on > off)) next
