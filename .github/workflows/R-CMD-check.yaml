@@ -22,11 +22,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Every job but one runs the full suite (NOT_CRAN=true), including
+        # the image stress, adversarial and fuzz tests that skip on CRAN.
+        # One job runs exactly what CRAN's machines will run.
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'devel'}
           - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'release', not-cran: 'false', name: 'ubuntu-latest (release, CRAN mode)'}
           - {os: ubuntu-latest,  r: 'oldrel-1'}
           # Oldest supported ggplot2, which takes a different margin code path.
           - {os: ubuntu-latest,  r: 'release', extra: 'ggplot2@3.5.2', name: 'ubuntu-latest (ggplot2 3.5.2)'}
@@ -34,6 +38,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      NOT_CRAN: ${{ matrix.config.not-cran || 'true' }}
 
     steps:
       - uses: actions/checkout@v5
@@ -55,3 +60,20 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+      # Proof that the tests ran, and how many: testthat's own tally from
+      # inside R CMD check, in the log and on the run summary.
+      - name: Test results
+        if: always()
+        shell: Rscript {0}
+        run: |
+          out <- Sys.glob("check/*.Rcheck/tests/testthat.Rout*")
+          if (length(out) == 0L) stop("No testthat output: the tests did not run.")
+          lines <- unlist(lapply(out, readLines))
+          cat(tail(lines, 30), sep = "\n")
+          tally <- grep("\\[ FAIL [0-9]+ \\| WARN [0-9]+ \\| SKIP [0-9]+ \\| PASS [0-9]+ \\]", lines, value = TRUE)
+          summary <- Sys.getenv("GITHUB_STEP_SUMMARY")
+          if (nzchar(summary)) {
+            write(sprintf("NOT_CRAN=%s: %s", Sys.getenv("NOT_CRAN"), paste(tail(tally, 1), collapse = "")),
+                  summary, append = TRUE)
+          }

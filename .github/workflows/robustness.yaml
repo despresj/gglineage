@@ -1,6 +1,6 @@
-# Runs the full image-transform stress matrix on every OS and posts the
-# results table to the run summary. Weekly runs catch drift in ggplot2,
-# graphics devices or the JPEG library.
+# Runs the full image-transform stress matrix and a lineage fuzz campaign on
+# every OS and posts the results to the run summary. Weekly runs catch drift
+# in ggplot2, graphics devices or the JPEG library.
 on:
   push:
     branches: [main]
@@ -44,3 +44,9 @@ jobs:
 
       - name: Run stress matrix
         run: Rscript tools/robustness-report.R
+
+      # Lineage fuzz: random IDs, corrupted and cross-joined rows, repair
+      # against foreign rows, and composed, perturbed images. Fails on any
+      # wrong ID. The seed changes every run, and is printed in the summary.
+      - name: Lineage fuzz campaign
+        run: Rscript tools/lineage-fuzz-campaign.R 20000 1000 150 ${{ github.run_number }}
