@@ -133,14 +133,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">found</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_watermark.html">extract_watermark</a></span><span class="op">(</span><span class="va">screenshot</span><span class="op">)</span></span>
 <span><span class="va">found</span></span>
-<span><span class="co">#&gt; [1] "01a0f99a-165b-7f31-8afb-66570589ea8d"</span></span>
+<span><span class="co">#&gt; [1] "01a0f9a2-f049-7616-918c-a7a039e12b07"</span></span>
 <span></span>
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">manifest</span><span class="op">)</span></span>
 <span><span class="va">plots</span><span class="op">[</span><span class="va">plots</span><span class="op">$</span><span class="va">id</span> <span class="op">==</span> <span class="va">found</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;                                     id          script  commit</span></span>
-<span><span class="co">#&gt; 1 01a0f99a-165b-7f31-8afb-66570589ea8d analysis/fig2.R 9f3c2e1</span></span>
+<span><span class="co">#&gt; 1 01a0f9a2-f049-7616-918c-a7a039e12b07 analysis/fig2.R 9f3c2e1</span></span>
 <span><span class="co">#&gt;                      data               saved</span></span>
-<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T18:33:40</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T18:43:20</span></span></code></pre></div>
 <p>The row is yours to design: a CSV, a database table, a lab notebook. A row per saved plot, keyed by the ID, is all the lookup needs.</p>
 <div class="section level3">
 <h3 id="two-kinds-of-record">Two kinds of record<a class="anchor" aria-label="anchor" href="#two-kinds-of-record"></a>
@@ -252,11 +252,11 @@
 <p>Thirty-two hex digits without hyphens are rejected rather than guessed at (they could as well be an MD5), with a message saying to write the UUID as <code>8-4-4-4-12</code>. Any text of 16 bytes or fewer is carried literally, so a text ID can never be mistaken for a UUID.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/wm_id.html">wm_id</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># 8 characters, 40 bits</span></span>
-<span><span class="co">#&gt; [1] "KHSEFG7C"</span></span>
+<span><span class="co">#&gt; [1] "P4JC81PK"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># random (version 4)</span></span>
-<span><span class="co">#&gt; [1] "a8fd9e68-a1f3-490d-9dc8-210b65eb2705"</span></span>
+<span><span class="co">#&gt; [1] "43c1c2a2-6eb3-485c-9626-9fe14cffdfdb"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>   <span class="co"># starts with the time in ms (version 7)</span></span>
-<span><span class="co">#&gt; [1] "01a0f99a-1877-7e8b-92d2-dbf90939802c"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "01a0f9a2-f285-7664-aeaa-c419191352f3"</span></span></code></pre></div>
 <p>IDs come from the operating system’s secure random generator (<code>/dev/urandom</code>; on Windows, <code><a href="https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html" class="external-link">openssl::rand_bytes()</a></code>, which needs the openssl package). With neither, <code><a href="reference/wm_id.html">wm_id()</a></code> and <code><a href="reference/wm_id.html">wm_uuid()</a></code> stop with an error instead of quietly using something weaker. <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> in your analysis won’t repeat them, and generating them won’t disturb your seed. An 8-character <code><a href="reference/wm_id.html">wm_id()</a></code> is 40 random bits, fine for one team’s plots; when IDs from many people or machines share one record, use UUIDs.</p>
 </div>
 <div class="section level2">
@@ -340,7 +340,7 @@
 <div class="section level2">
 <h2 id="how-tough-is-it">How tough is it?<a class="anchor" aria-label="anchor" href="#how-tough-is-it"></a>
 </h2>
-<p>A 7 × 5 in plot saved at 150 dpi, pushed through 36 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types.</p>
+<p>A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types.</p>
 <table class="table">
 <colgroup>
 <col width="20%">
@@ -447,6 +447,13 @@
 <td align="right">640 × 457</td>
 <td align="left">✅ recovered</td>
 <td align="left">✅ recovered</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">Downscale to 15%</td>
+<td align="right">158 × 112</td>
+<td align="left">✅ recovered</td>
+<td align="left">✖ not found</td>
 </tr>
 <tr>
 <td align="left">Crop &amp; frame</td>
@@ -604,14 +611,14 @@
 </tr>
 <tr>
 <td align="left"></td>
-<td align="left">Downscale to 15%</td>
-<td align="right">158 × 112</td>
-<td align="left">✅ recovered</td>
+<td align="left">Downscale to 10%</td>
+<td align="right">105 × 75</td>
+<td align="left">✖ not found</td>
 <td align="left">✖ not found</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Dot code: 30 of 36 recovered exactly. Tiles: 28 of 36. Wrong IDs across both: 0.</strong> The rows under “past the limits” mark where the guarantee ends. A result there is either exact or nothing.</p>
+<p><strong>Dot code: 30 of 37 recovered exactly. Tiles: 28 of 37. Wrong IDs across both: 0.</strong> The rows under “past the limits” mark where the guarantee ends. A result there is either exact or nothing.</p>
 <div class="section level3">
 <h3 id="measured-limits">Measured limits<a class="anchor" aria-label="anchor" href="#measured-limits"></a>
 </h3>
@@ -722,7 +729,7 @@
 <li>
 <strong>Small <em>and</em> padded <em>and</em> compressed.</strong> A tiny screenshot with window chrome around it, saved at a low JPEG quality, fails below about 400 px (480 px for a UUID).</li>
 <li>
-<strong>Brightening past about +8%</strong> clips the faint dots to white. Raise <code>alpha</code> if your plots will be edited heavily.</li>
+<strong>Brightening past about +10%</strong> clips the faint dots to white. Raise <code>alpha</code> if your plots will be edited heavily.</li>
 </ul>
 <p>When it fails, it fails to <code>NULL</code>. Across every sweep behind this README, no transform has ever produced a wrong ID.</p>
 </div>

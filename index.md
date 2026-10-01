@@ -126,14 +126,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f99a-165b-7f31-8afb-66570589ea8d"
+#> [1] "01a0f9a2-f049-7616-918c-a7a039e12b07"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f99a-165b-7f31-8afb-66570589ea8d analysis/fig2.R 9f3c2e1
+#> 1 01a0f9a2-f049-7616-918c-a7a039e12b07 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T18:33:40
+#> 1 snapshot-2026-09-12.csv 2026-10-01T18:43:20
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -228,11 +228,11 @@ literally, so a text ID can never be mistaken for a UUID.
 ``` r
 
 wm_id()                # 8 characters, 40 bits
-#> [1] "KHSEFG7C"
+#> [1] "P4JC81PK"
 wm_uuid()              # random (version 4)
-#> [1] "a8fd9e68-a1f3-490d-9dc8-210b65eb2705"
+#> [1] "43c1c2a2-6eb3-485c-9626-9fe14cffdfdb"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f99a-1877-7e8b-92d2-dbf90939802c"
+#> [1] "01a0f9a2-f285-7664-aeaa-c419191352f3"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -331,7 +331,7 @@ nothing.
 
 ## How tough is it?
 
-A 7 × 5 in plot saved at 150 dpi, pushed through 36 transformations.
+A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
@@ -352,6 +352,7 @@ on every push, on several plot types.
 |  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered | ✅ recovered |
 |  | Odd scale 0.83x | 872 × 622 | ✅ recovered | ✅ recovered |
 |  | Downscale to 640 px wide | 640 × 457 | ✅ recovered | ✅ recovered |
+|  | Downscale to 15% | 158 × 112 | ✅ recovered | ✖ not found |
 | Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered | ✅ recovered |
 |  | Pad with light UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
 |  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
@@ -374,9 +375,9 @@ on every push, on several plot types.
 |  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found | ✖ not found |
 |  | JPEG quality 5 | 1050 × 750 | ✖ not found | ✖ not found |
 |  | Shrink to 240 px wide + JPEG 50 | 240 × 171 | ✖ not found | ✖ not found |
-|  | Downscale to 15% | 158 × 112 | ✅ recovered | ✖ not found |
+|  | Downscale to 10% | 105 × 75 | ✖ not found | ✖ not found |
 
-**Dot code: 30 of 36 recovered exactly. Tiles: 28 of 36. Wrong IDs
+**Dot code: 30 of 37 recovered exactly. Tiles: 28 of 37. Wrong IDs
 across both: 0.** The rows under “past the limits” mark where the
 guarantee ends. A result there is either exact or nothing.
 
@@ -469,7 +470,7 @@ repair, so they are never repaired.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
   chrome around it, saved at a low JPEG quality, fails below about 400
   px (480 px for a UUID).
-- **Brightening past about +8%** clips the faint dots to white. Raise
+- **Brightening past about +10%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 
 When it fails, it fails to `NULL`. Across every sweep behind this
