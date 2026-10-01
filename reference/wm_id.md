@@ -2,18 +2,15 @@
 
 `wm_id()` returns a short random ID in Crockford base32 (no `I`, `L`,
 `O` or `U`, so it survives being read aloud or retyped). Eight
-characters give 40 bits, which fits comfortably in a
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
-code. `wm_uuid()` returns a random (version 4) UUID, which is too long
-for the dot code but useful as a metadata field in
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md).
+characters give 40 bits and fit in a single row of
+[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md).
 
 ## Usage
 
 ``` r
 wm_id(n = 8)
 
-wm_uuid()
+wm_uuid(version = 4)
 ```
 
 ## Arguments
@@ -22,25 +19,55 @@ wm_uuid()
 
   Number of characters, 1 to 16.
 
+- version:
+
+  UUID version: `4` (random) or `7` (time-ordered).
+
 ## Value
 
 A character string.
 
 ## Details
 
-Both use the package's own generator, seeded from the clock and process
-ID, rather than R's random number generator:
+`wm_uuid()` returns a UUID (RFC 9562) as a lowercase hyphenated string.
+Version 4 (the default) has 122 random bits. Version 7 starts with a
+48-bit Unix timestamp in milliseconds, so IDs from different
+milliseconds sort by creation time, followed by 74 random bits; IDs made
+within the same millisecond are in random order (RFC 9562 makes stricter
+ordering optional). Either takes two rows of dots; see
+[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+for the width that needs.
+
+## Randomness
+
+Random bits come from the operating system's cryptographically secure
+generator: `/dev/urandom` on Linux, macOS and other Unix-alikes, and
+otherwise (on Windows)
+[`openssl::rand_bytes()`](https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html),
+which needs the openssl package. If neither is available the functions
+stop with an error rather than fall back to a weaker source. R's own
+random number generator is never used, so
 [`set.seed()`](https://rdrr.io/r/base/Random.html) in your analysis
-neither repeats the IDs nor is disturbed by them. IDs are for
-provenance, not security.
+neither repeats the IDs nor is disturbed by them, and forked workers
+([`parallel::mclapply()`](https://rdrr.io/r/parallel/mclapply.html)) get
+different IDs.
+
+Uniqueness is probabilistic: two version 4 UUIDs collide with
+probability about \\2^{-122}\\, and an 8-character `wm_id()` has only 40
+bits, so among a million of them a repeat is likely (about 36\\ IDs from
+many people or machines share one record. The IDs identify plots; they
+are not secrets, and the dot code is not authentication: anyone can read
+it, and anyone can draw it.
 
 ## Examples
 
 ``` r
 wm_id()
-#> [1] "4Q7KME46"
+#> [1] "X43XEGX3"
 wm_id(12)
-#> [1] "5NCXHMB9JX6R"
+#> [1] "QNKJR5G55QBE"
 wm_uuid()
-#> [1] "7d5acd25-ef1b-42ac-bb13-0a4e3f49b86d"
+#> [1] "32b6da1c-6dab-4e02-8c59-2c6f3b510078"
+wm_uuid(version = 7)
+#> [1] "01a0f98b-fc4f-7f26-a674-a1d41fa53231"
 ```

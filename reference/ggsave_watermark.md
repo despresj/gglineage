@@ -1,6 +1,6 @@
 # Save a plot with a dot watermark and embedded provenance metadata
 
-A drop-in replacement for
+A replacement for
 [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
 that stamps the plot with
 [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
@@ -37,13 +37,21 @@ ggsave_watermark(
 
 - id:
 
-  ID to embed. Defaults to a fresh
+  ID to embed: text of at most 16 bytes or a UUID (see
+  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)).
+  Defaults to a fresh
   [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md).
+  This is the third argument, where
+  [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  has `device`, so pass `device` and the other
+  [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
+  arguments by name.
 
 - metadata:
 
   A named list of extra fields to store in the PNG metadata, e.g.
-  `list(commit = "a1b2c3d", script = "analysis/fig2.R")`.
+  `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. The names
+  `id`, `created`, `title` and `software` are reserved.
 
 - dots:
 
@@ -57,7 +65,9 @@ ggsave_watermark(
 
 ## Value
 
-The ID, invisibly.
+The ID (not the file path, unlike
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)),
+invisibly: as given for text, or in lowercase form for a UUID.
 
 ## See also
 
@@ -75,16 +85,16 @@ id <- ggsave_watermark(file, p, metadata = list(script = "fig1.R"),
                        width = 6, height = 4, dpi = 150)
 
 extract_watermark(file)
-#> [1] "X7038V6N"
+#> [1] "BX3C8B7Y"
 read_watermark_metadata(file)
 #> $id
-#> [1] "X7038V6N"
+#> [1] "BX3C8B7Y"
 #> 
 #> $created
-#> [1] "2026-09-29T21:23:25+0000"
+#> [1] "2026-10-01T22:18:13+0000"
 #> 
 #> $software
-#> [1] "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
+#> [1] "R 4.6.1; ggplot2 4.0.3; gglineage 0.1.0"
 #> 
 #> $script
 #> [1] "fig1.R"

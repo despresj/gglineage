@@ -5,6 +5,8 @@
 - [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
   [`add_watermark()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
   : Invisible, machine-readable dot watermark
+- [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  : Crop-resistant tiled watermark
 - [`watermark_text()`](https://despresj.github.io/watermark/reference/watermark_text.md)
   : Visible text watermark
 

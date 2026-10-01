@@ -2,9 +2,13 @@
 
 Scans an image for the dot code written by
 [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
-and decodes it. Works on the original file, screenshots, and
-recompressed or rescaled copies, as long as the bottom strip of the
-figure is intact and the image is not rotated.
+and decodes it; if no strip is found, looks for the tiles written by
+[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md).
+Works on the original file, screenshots, and recompressed or rescaled
+copies. The strip needs the bottom of the figure intact; tiles survive
+crops that keep about two tiles across in each direction of open panel.
+Rotated images are not supported. When a plot carries both, the strip's
+ID is returned.
 
 ## Usage
 
@@ -23,17 +27,29 @@ extract_watermark(image, debug = FALSE)
 
 - debug:
 
-  If `TRUE`, report which row decoded and the estimated bit pitch.
+  If `TRUE`, report which rows decoded and the estimated bit pitch, or
+  each stage of the tile decoder.
 
 ## Value
 
-The embedded ID, or `NULL` if no valid code was found.
+The embedded ID as a plain string, or `NULL` if no valid code was found.
+Text IDs come back exactly as given. UUIDs come back in canonical
+lowercase form (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`), and only a UUID
+has that form: text IDs are at most 16 bytes, so the two cannot be
+confused. Nothing else is returned: the dots carry the ID and nothing
+more, so what the ID *means* (the script, data and run behind the plot)
+is whatever you recorded against it when you saved the plot.
 
 ## Details
 
 Every row of the image is a candidate; a row is accepted only if its
-start and end sync patterns, length byte and CRC-8 checksum all agree,
-so false positives are vanishingly rare.
+start and end sync patterns, header and 32-bit checksum all agree, so
+false positives are vanishingly rare. A UUID is spread over two such
+rows, one above the other; each row is checked on its own and against
+the whole UUID, so a UUID is returned only when both of its rows are
+read, and halves of two different UUIDs (charts stacked in a report,
+say) are never joined. Tiles are voted on across every visible copy and
+accepted only if their CRC-16 passes for exactly one ID.
 
 ## Examples
 

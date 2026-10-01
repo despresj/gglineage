@@ -1,21 +1,38 @@
-# watermark
+# gglineage
 
-**Trace every ggplot back to the code that made it.**
+**Trace a chart screenshot back to the run that made it.**
 
 Charts escape. They get screenshotted into slide decks, pasted into
-Slack, re-saved as JPEGs and forwarded until nobody knows which script,
-which data pull, or which version produced them. watermark stamps each
-plot with an ID you can read back out of the pixels, even after all of
-that.
+chat, re-saved as JPEGs and forwarded until nobody knows which script,
+which data pull or which version produced them. gglineage stamps each
+ggplot2 figure with an ID written as a faint row of dots in its bottom
+margin, and reads it back out of the pixels of any copy: a screenshot, a
+JPEG, a shrunken thumbnail. Log the ID when you save the plot, and every
+copy leads back to its run, code and data. The ID can be a short code or
+a full UUID.
 
-![Animation: a random chart is watermarked, screenshotted, shrunk and
-JPEG-compressed; a sonar sweep scans it, the faint dot row lights up,
-and the ID is decoded with a passing
-checksum.](reference/figures/ping.gif)
+![Animation in two panels. Left: a chat thread. An account manager
+shares a chart screenshot from a client deck: the client wants to move
+ahead based on it, can we stand behind that recommendation? The analyst
+asks which client, which study, which run, which data snapshot, which
+script version and where the original report is, and nobody knows.
+Right: the same screenshot, a 623 by 426 pixel JPEG with no file
+metadata, and a ledger of those six unknowns. In an R console,
+extract_watermark() reads the UUID 01a0f026-9e3e-729b-9cfa-87c8dd7bfb55
+from the screenshot's two rows of dots, shown as a strip of its
+magnified pixels, and looking the UUID up in a plots.csv manifest fills
+in the six rows: client, project, run, data, script and output. The
+analyst then replies in the thread: never mind, found the source run,
+let's check the recommendation. A note says only the ID is in the
+pixels; the rest is the row logged when the plot was saved, with client,
+project and run as demo values.](reference/figures/lineage.gif)
 
-_(**Ping a rando chart.** A random chart is screenshotted, shrunk and JPEG-crunched, then the real decoder finds the dot row and reads its ID back. Made by [`data-raw/ping.R`](https://github.com/despresj/watermark/blob/main/data-raw/ping.R); nothing is faked.)
+_(A screenshot arrives with no context. **The thread:** six questions, no answers. **The trace:** [`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md) reads a full UUID out of the same JPEG (the strip is its own pixels around the two dot rows, magnified), and the UUID finds the row logged in `plots.csv` when the plot was saved. Only the ID is in the pixels; everything else comes from that log, with the client, project and run as demo values. The decode is real: made and checked by [`data-raw/lineage-demo.R`](https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R), and you can repeat it on [`screenshot.jpg`](https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo/screenshot.jpg). [Still image](https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png) · [Phone-sized version](https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.gif))
 
 ## Installation
+
+gglineage is not on CRAN yet. Install it from GitHub (the repository is
+still named `watermark`):
 
 ``` r
 
@@ -28,7 +45,7 @@ pak::pak("despresj/watermark")
 ``` r
 
 library(ggplot2)
-library(watermark)
+library(gglineage)
 
 p <- ggplot(mtcars, aes(wt, mpg)) +
   geom_point() +
@@ -55,11 +72,135 @@ extract_watermark(abused)
 
 ^(`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from the package’s [stress-test suite](https://github.com/despresj/watermark/blob/main/tests/testthat/helper-transforms.R).)
 
+## The workflow: save, log, share, scan, look up
+
+The dots carry the ID and nothing else. Lineage is whatever you record
+against that ID when you save the plot, so the workflow has two halves:
+a manifest row at save time, and a lookup whenever a copy turns up.
+
+**Save and log.**
+[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+is a drop-in for
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). Give
+it a UUID, and append a row to a manifest with everything you’ll want to
+know later:
+
+``` r
+
+manifest <- file.path(tempdir(), "plots.csv")
+
+id <- wm_uuid(version = 7)          # starts with a timestamp, so rows sort by time
+file <- file.path(tempdir(), "retention-by-cohort.png")
+ggsave_watermark(
+  file,
+  ggplot(mtcars, aes(wt, mpg)) + geom_point() + labs(title = "Weight vs MPG"),
+  id = id,
+  metadata = list(script = "analysis/fig2.R", commit = "9f3c2e1"),
+  width = 7, height = 5, dpi = 150
+)
+
+row <- data.frame(
+  id = id,
+  script = "analysis/fig2.R",
+  commit = "9f3c2e1",
+  data = "snapshot-2026-09-12.csv",
+  saved = format(Sys.time(), "%Y-%m-%dT%H:%M:%S")
+)
+write.table(row, manifest, sep = ",", row.names = FALSE,
+            col.names = !file.exists(manifest), append = file.exists(manifest))
+```
+
+**Share.** The file goes into a deck, gets screenshotted, shrunk and
+saved as a JPEG by a chat app. Simulated here with the stress-test
+transforms:
+
+``` r
+
+screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
+                      quality = 60)
+```
+
+**Scan and look up.** Weeks later, all anyone has is that screenshot:
+
+``` r
+
+found <- extract_watermark(screenshot)
+found
+#> [1] "01a0f6f9-fdeb-797c-b0b6-2153549e9d8d"
+
+plots <- read.csv(manifest)
+plots[plots$id == found, ]
+#>                                     id          script  commit
+#> 1 01a0f6f9-fdeb-797c-b0b6-2153549e9d8d analysis/fig2.R 9f3c2e1
+#>                      data               saved
+#> 1 snapshot-2026-09-12.csv 2026-10-01T06:19:33
+```
+
+The row is yours to design: a CSV, a database table, a lab notebook. A
+row per saved plot, keyed by the ID, is all the lookup needs.
+
+### Two kinds of record
+
+|  | Lives in | Survives a screenshot | Carries |
+|----|----|:--:|----|
+| The **ID** | The pixels, as dots | ✅ | Up to 16 bytes of text, or a 128-bit UUID |
+| The **manifest row** | Wherever you keep it, keyed by the ID | n/a | Anything: script, commit, data checksum, client, run |
+| **PNG metadata** ([`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)) | The saved PNG’s `tEXt` chunks | ❌ | The ID, a timestamp, the plot title, versions, fields you add |
+
+PNG metadata is a lossless extra for when the original file itself is
+shared:
+[`read_watermark_metadata()`](https://despresj.github.io/watermark/reference/read_watermark_metadata.md)
+gets it all back with no decoding. A screenshot or a re-encode drops it,
+and then the dots are what’s left.
+
+## ID formats
+
+[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md),
+[`add_watermark()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+and
+[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+take the ID as a string and work out how to carry it:
+
+| ID | Example | Rows of dots | Positions per row | Notes |
+|----|----|:--:|:--:|----|
+| [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md): Crockford base32, 1–16 characters | `K7Q2M9XD` | 1 | 77–152 (112 for 8 characters) | Packed at 5 bits per character. No `I`, `L`, `O` or `U`, so it survives being read aloud. |
+| Free text, up to 16 UTF-8 bytes | `RUN-42`, `fig 2 (v3)`, `café` | 1 | 80–200 | Stored as bytes; returned exactly as given. |
+| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in [`{}`](https://rdrr.io/r/base/Paren.html) or prefixed `urn:uuid:`; output is always lowercase. [`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md) makes version 4 or 7. |
+
+Thirty-two hex digits without hyphens are rejected rather than guessed
+at (they could as well be an MD5), with a message saying to write the
+UUID as `8-4-4-4-12`. Any text of 16 bytes or fewer is carried
+literally, so a text ID can never be mistaken for a UUID.
+
+``` r
+
+wm_id()                # 8 characters, 40 bits
+#> [1] "HN7XYBAH"
+wm_uuid()              # random (version 4)
+#> [1] "5844fa50-fd4a-4b77-bd35-b0e4ccf15230"
+wm_uuid(version = 7)   # starts with the time in ms (version 7)
+#> [1] "01a0f6fa-0026-7522-a5c7-799ae8e74989"
+```
+
+IDs come from the operating system’s secure random generator
+(`/dev/urandom`; on Windows,
+[`openssl::rand_bytes()`](https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html),
+which needs the openssl package). With neither,
+[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) and
+[`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md)
+stop with an error instead of quietly using something weaker.
+[`set.seed()`](https://rdrr.io/r/base/Random.html) in your analysis
+won’t repeat them, and generating them won’t disturb your seed. An
+8-character
+[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) is
+40 random bits, fine for one team’s plots; when IDs from many people or
+machines share one record, use UUIDs.
+
 ## Three kinds of watermark
 
 |  | What it is | Survives screenshots | Carries | Use it for |
 |----|----|:--:|----|----|
-| [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md) | A faint row of dots in the bottom margin | ✅ | A short ID (up to 16 bytes) | Tracing any copy back to its source |
+| [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md) | A faint row of dots in the bottom margin (two rows for a UUID) | ✅ | A short ID, or a full UUID | Tracing any copy back to its source |
 | [`watermark_text()`](https://despresj.github.io/watermark/reference/watermark_text.md) | A visible stamp: diagonal, tiled, or corner | ✅ | Whatever you write | Deterring reuse: `"DRAFT"`, `"CONFIDENTIAL"` |
 | [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md) | Dots **plus** PNG metadata | Dots only | ID, timestamp, title, versions, any fields you add | The full provenance record for the original file |
 
@@ -91,144 +232,248 @@ label.](reference/figures/README-stamps-show-1.png)
 Visible text stays out of the strip reserved for the dot code, so you
 can stack a stamp and the dots in any order.
 
-### Provenance on save
-
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
-is a drop-in for
-[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). It
-adds the dots and writes a provenance record into the PNG itself:
-
-``` r
-
-id <- ggsave_watermark(
-  file,
-  ggplot(mtcars, aes(wt, mpg)) + geom_point() + labs(title = "Weight vs MPG"),
-  metadata = list(script = "analysis/fig2.R", commit = "9f3c2e1"),
-  width = 7, height = 5, dpi = 150
-)
-
-str(read_watermark_metadata(file))
-#> List of 6
-#>  $ id      : chr "8K7GQ7QM"
-#>  $ created : chr "2026-09-29T17:20:03-0400"
-#>  $ title   : chr "Weight vs MPG"
-#>  $ software: chr "R 4.6.1; ggplot2 4.0.3; watermark 0.1.0"
-#>  $ script  : chr "analysis/fig2.R"
-#>  $ commit  : chr "9f3c2e1"
-```
-
-Metadata is rich but fragile: a screenshot throws it away. The dots are
-terse but tough. Together you get the full record when the original file
-travels and the ID when only the pixels do. Keep a log of `id`, commit
-and script, and any stray copy leads back to its source.
-
-``` r
-
-wm_id()     # 8 chars of Crockford base32 (40 bits); never I, L, O or U
-#> [1] "8ZY75DVA"
-wm_uuid()   # for metadata; too long for the dots
-#> [1] "27b0c836-513b-4db6-8928-5c3aa9edfee2"
-```
-
-IDs come from a private random stream.
-[`set.seed()`](https://rdrr.io/r/base/Random.html) in your analysis
-won’t repeat them, and generating them won’t disturb your seed.
-
 ## How the dot code works
 
 ![Diagram of the 112-bit frame for K7Q2M9XD: 16-bit start sync, 8-bit
-length, 64-bit payload, 8-bit CRC and 16-bit end sync. Filled circles
+header, 40-bit payload, 32-bit check and 16-bit end sync. Filled circles
 are 1 bits.](reference/figures/README-anatomy-1.png)
 
-Each dot position is one bit; a dot means 1, a gap means 0. The frame
-is:
+Each dot position is one bit; a dot means 1, a gap means 0. A row is:
 
 - **Start sync**, `1010…`: eight evenly spaced dots. The decoder uses
   them to lock on and measure the pitch, so it doesn’t care about image
   size.
-- **Length** byte, then the **payload** (the ID’s UTF-8 bytes).
-- **CRC-8** over length and payload.
-- **End sync**, `…0101`. The frame’s first and last bits are both 1, so
-  the outermost dots mark the frame edges.
+- **Header**: what the payload is. Text IDs made only of
+  [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)’s
+  32 characters take 5 bits each; other text is stored as UTF-8 bytes;
+  the two halves of a UUID have codes of their own. Unknown codes are
+  rejected.
+- **Payload**, then a **32-bit check**: two CRC-16s over the header and
+  payload.
+- **End sync**, `…0101`. The row’s first and last bits are both 1, so
+  the outermost dots mark its edges.
 
-Decoding scans every row of the image. For each one it compares pixels
-with their local neighbourhood (so borders and UI chrome don’t confuse
-it), finds the start sync, samples each bit position, and accepts the
-row only if both syncs, the length and the checksum all agree. That is
-40 check bits, so a decode is exact or `NULL`: it doesn’t guess.
+A UUID is two such rows, one above the other, each checked on its own
+and against the other, and returned only together.
+
+Decoding scans the image row by row. It compares pixels with their local
+neighbourhood (so borders and UI chrome don’t confuse it), locks onto
+the start sync, and reads each bit by interpolating between pixels,
+against the paper level on the far side of the dots, with the threshold
+set by how the sync dots actually read. Rows too faint to read alone are
+averaged with their neighbours. As a last resort it reads the row where
+[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+always draws it, a fixed fraction of the way across the figure, which
+rescues images too small or compressed to find the dots one by one.
+
+A row is accepted only if both syncs, the header and the 32-bit check
+all agree. A damaged row slips past that about once in four billion
+readings, so a decode is exact or `NULL`: it doesn’t guess. A UUID’s two
+rows split their check bits: 16 check a row on its own, and 16 check it
+against the whole UUID, with a different CRC on each row. A UUID comes
+back only when all 64 check bits agree, so the halves of two different
+UUIDs (charts stacked in a report, or a copy pasted over another) are
+never joined; the decoder moves on and returns an intact code or
+nothing.
 
 ## How tough is it?
 
-A 7 × 5 in plot saved at 150 dpi, pushed through 34 transformations.
+A 7 × 5 in plot saved at 150 dpi, pushed through 36 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
 [`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
-|  | Transformation | Pixels | Dot code |
-|:---|:---|---:|:---|
-| Lossless | Original PNG | 1050 × 750 | ✅ recovered |
-|  | PNG re-save | 1050 × 750 | ✅ recovered |
-| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 75 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 50 | 1050 × 750 | ✅ recovered |
-|  | JPEG quality 25 | 1050 × 750 | ✅ recovered |
-|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered |
-|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered |
-| Resize | Downscale to 75% | 788 × 562 | ✅ recovered |
-|  | Downscale to 50% | 525 × 375 | ✅ recovered |
-|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered |
-|  | Odd scale 0.83x | 872 × 622 | ✅ recovered |
-|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered |
-| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered |
-|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered |
-|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered |
-|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered |
-| Colour | Brightness +5% | 1050 × 750 | ✅ recovered |
-|  | Contrast 70% | 1050 × 750 | ✅ recovered |
-|  | Gamma 1.8 | 1050 × 750 | ✅ recovered |
-|  | Grayscale | 1050 × 750 | ✅ recovered |
-|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered |
-|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered |
-| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered |
-|  | Box blur radius 1 | 1050 × 750 | ✅ recovered |
-|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered |
-|  | Shrink to 640 px wide + JPEG 50 | 640 × 457 | ✅ recovered |
-| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found |
-|  | Crop left 10% | 945 × 750 | ✖ not found |
-|  | Rotate 90 degrees | 750 × 1050 | ✖ not found |
-|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found |
-|  | JPEG quality 5 | 1050 × 750 | ✖ not found |
-|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✖ not found |
-|  | Downscale to 25% | 262 × 188 | ✅ recovered |
+|  | Transformation | Pixels | Dot code | Tiles |
+|:---|:---|---:|:---|:---|
+| Lossless | Original PNG | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | PNG re-save | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Compression | JPEG quality 95 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 75 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 50 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG quality 25 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG q75, re-encoded 10 times | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | JPEG -\> PNG -\> JPEG | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Resize | Downscale to 75% | 788 × 562 | ✅ recovered | ✅ recovered |
+|  | Downscale to 50% | 525 × 375 | ✅ recovered | ✅ recovered |
+|  | Upscale 2x (retina) | 2100 × 1500 | ✅ recovered | ✅ recovered |
+|  | Odd scale 0.83x | 872 × 622 | ✅ recovered | ✅ recovered |
+|  | Downscale to 640 px wide | 640 × 457 | ✅ recovered | ✅ recovered |
+| Crop & frame | Crop top 30% | 1050 × 525 | ✅ recovered | ✅ recovered |
+|  | Pad with light UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Pad with dark UI chrome | 1170 × 870 | ✅ recovered | ✅ recovered |
+|  | Screenshot chain (2x, pad, 0.5x, JPEG 80) | 1130 × 830 | ✅ recovered | ✅ recovered |
+| Colour | Brightness +5% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Contrast 70% | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Gamma 1.8 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Grayscale | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Inverted (dark mode) | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Posterize to 32 levels | 1050 × 750 | ✅ recovered | ✅ recovered |
+| Degrade | Gaussian noise sd 0.01 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Box blur radius 1 | 1050 × 750 | ✅ recovered | ✅ recovered |
+|  | Social re-share (0.6x, JPEG 70, x3) | 630 × 450 | ✅ recovered | ✅ recovered |
+| Small + compressed | Shrink to 520 px wide + JPEG 35 | 520 × 371 | ✅ recovered | ✖ not found |
+|  | Shrink to 430 px wide + JPEG 50 | 430 × 307 | ✅ recovered | ✖ not found |
+|  | Shrink to 360 px wide + JPEG 50 | 360 × 257 | ✅ recovered | ✖ not found |
+| Past the limits | Crop bottom 5% | 1050 × 713 | ✖ not found | ✅ recovered |
+|  | Crop left 10% | 945 × 750 | ✖ not found | ✅ recovered |
+|  | Rotate 90 degrees | 750 × 1050 | ✖ not found | ✖ not found |
+|  | Brightness +15% (dots clip to white) | 1050 × 750 | ✖ not found | ✖ not found |
+|  | JPEG quality 5 | 1050 × 750 | ✖ not found | ✖ not found |
+|  | Shrink to 240 px wide + JPEG 50 | 240 × 171 | ✖ not found | ✖ not found |
+|  | Downscale to 15% | 158 × 112 | ✅ recovered | ✖ not found |
 
-**28 of 34 recovered exactly, and 0 wrong IDs.** The rows under “past
-the limits” mark where the guarantee ends. A result there is either
-exact or nothing:
+**Dot code: 30 of 36 recovered exactly. Tiles: 28 of 36. Wrong IDs
+across both: 0.** The rows under “past the limits” mark where the
+guarantee ends. A result there is either exact or nothing.
 
-- **The dot strip must survive.** Cropping the bottom edge or either
-  side removes part of the frame; there is no partial recovery.
-- **No rotation.** Rows are scanned horizontally.
-- **Minimum size.** This 8-character ID decodes reliably down to about
-  **280 px wide**, and sometimes lower. Shorter IDs go further; 16-byte
-  IDs need about twice the width.
-- **Compression.** At full size, JPEG holds down to about **quality 8**.
-- **Small *and* compressed.** The two limits compound. Down to about 640
-  px wide, JPEG holds to quality 50; below that, heavy compression gets
-  unreliable, and by about 430 px anything under quality 90 can erase
-  the dots.
+### Measured limits
+
+Pixel width is what matters (the dots scale with the figure), so the
+limits below are for this 7 × 5 in figure shrunk to a given width. Each
+JPEG entry is the narrowest width at which every one of 12 trials (6
+random IDs × 2 plot types) decoded; just below it some decodes return
+`NULL`, never a wrong ID. The full tables are in
+[`tools/uuid-design.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-design.md).
+
+| Treatment | 8-character [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) | UUID |
+|----|---:|---:|
+| Lossless copy, shrunk | 120 px | 150 px |
+| JPEG quality 75 | 240 px | 320 px |
+| JPEG quality 50 | 300 px | 400 px |
+| JPEG quality 35 | 320 px | 480 px |
+| Window chrome around the figure, JPEG quality 50 | 400 px | 480 px |
+| Retina screenshot, shrunk, JPEG quality 80 | 280 px | 280 px |
+
+At full size (1050 px), JPEG holds down to about **quality 8** for this
+8-character ID and **quality 10** for this UUID; the exact floor varies
+from ID to ID. A UUID’s two rows have more, smaller dots than a short
+ID’s one, so it needs about a third more width under JPEG, and more
+again inside a padded screenshot.
+
+### Passed around: UUIDs through real sharing chains
+
+A screenshot rarely makes one hop. To test that, each trial in
+[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-hammer.R)
+puts a chart with a fresh random UUID through a chain of one to five
+real hops, decoding after every one:
+
+- **Browser screenshots:** headless Chrome at 360–1000 CSS px and
+  1×/2×/3×, on white, light-grey and dark (GitHub, Slack) pages.
+- **Phone screenshots:** 390 pt at 3×.
+- **Crops:** the chart cropped back out of a screenshot.
+- **Chat and social recompression:** Slack, X, WhatsApp, Teams and email
+  JPEGs, iMessage HEIC, Discord WebP.
+- **A retina image halved:** pasted into a document.
+
+The decoder has to cope with all of it: page colours around the chart, a
+chart that is a small part of a huge screenshot, and bits lost to
+repeated compression, which it repairs (see below).
+
+Results from the latest run (400 chains, nine plot types, 1,110
+decodes), grouped by the narrowest the chart got anywhere along its
+chain (detail lost while a chart is shown small doesn’t come back when a
+later screenshot shows it larger) and by how many lossy hops it went
+through:
+
+| Narrowest chart width | After 0–1 lossy hops | After 2+ lossy hops |
+|-----------------------|---------------------:|--------------------:|
+| 640 px or more        |    665 of 665 (100%) |     30 of 30 (100%) |
+| 560–640 px            |      52 of 52 (100%) |     15 of 15 (100%) |
+| 480–560 px            |       77 of 81 (95%) |       9 of 12 (75%) |
+| under 480 px          |     121 of 214 (57%) |      11 of 41 (27%) |
+
+**Keep the chart at least about 560 px wide, roughly a phone screen or
+half a laptop window, and the UUID survived every chain tested,** up to
+five hops of screenshots, crops and recompression. Below that, recovery
+falls off gradually.
+
+A failed decode returns `NULL`. Across four full campaigns (about 4,450
+decodes) and the adversarial runs (pairs of charts with different UUIDs,
+stacked, cropped through and compressed hard), **no decode has ever
+returned a wrong UUID.** The full report, every hop type and every miss,
+is in
+[`tools/uuid-sharing-report.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-report.md).
+
+**Repair.** A UUID row that loses a few bits to compression is repaired
+from the bits read least confidently. CRCs are linear, so candidate
+repairs are tested against the check bits directly. A repair is accepted
+only if the row’s own check and both rows’ pair checks over the whole
+UUID agree: at least 48 check bits, which leaves about a 1-in-10¹¹
+chance of a wrong row. Text IDs have one row and no partner to confirm a
+repair, so they are never repaired.
+
+### What fails
+
+- **Anything through the dot strip.** Cropping the bottom edge or either
+  side removes part of a row; there is no partial recovery, and half a
+  UUID is never returned.
+- **Rotation.** Rows are scanned horizontally. Rotate the image back
+  first.
+- **Too small.** Below the widths above the dots merge. Even a lossless
+  copy stops decoding at about 120 px (8-character ID) or 150 px (UUID),
+  where the dots are under two pixels apart. Ask for the original.
+- **Small *and* padded *and* compressed.** A tiny screenshot with window
+  chrome around it, saved at a low JPEG quality, fails below about 400
+  px (480 px for a UUID).
 - **Brightening past about +8%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 
-Watermarks here are for provenance, not security. Anyone who knows the
-dots are there can crop or paint over them. The point is that ordinary
-sharing doesn’t destroy them.
+When it fails, it fails to `NULL`. Across every sweep behind this
+README, no transform has ever produced a wrong ID.
+
+### When images get cropped: tiles
+
+The strip lives in the bottom margin, so a crop that removes it removes
+the ID.
+[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+repeats the whole ID (up to 12 bytes, so a short ID rather than a UUID),
+with its own CRC-16, in a faint 12 × 12 grid of dots behind the data in
+every panel. A tile is 36 mm square, and a crop that keeps about two
+tiles across in each direction still decodes: in the real-world tests
+that meant about 80 mm square of open panel on a plain scatter, more on
+busy plots.
+[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md)
+tries the tiles whenever no strip is found.
+
+``` r
+
+ggplot(mtcars, aes(wt, mpg)) + geom_point() + watermark_tiles("K7Q2M9XD")
+```
+
+Tiles need open panel between the data: a plot whose data fills the
+whole panel (a heatmap) leaves nothing to read. On a dark panel, use
+`colour = "white"`. Figures smaller than about 5 × 4 in hold too few
+tiles at the default pitch; use
+`watermark_tiles(id, pitch = 2, size = 0.7)` for those, saved at 150 dpi
+or more.
+
+Tiles are less robust than the strip, and the limits are worth knowing:
+
+- **Each panel needs room.** Tiles are read per panel, so a
+  [`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html)
+  of small panels (under about 70 mm each) doesn’t decode even though
+  the figure as a whole is large.
+- **Busy panels can defeat them, depending on the ID.** Tiles have a
+  checksum but no error correction, so if lines and gridlines cover the
+  same few cells in every tile, some IDs fail where others pass.
+- **Dark panels with light gridlines** often don’t decode.
+
+Use both watermarks when you can; the strip wins if both are present.
+
+### Provenance, not security
+
+Watermarks here are for provenance. Anyone who knows the dots are there
+can crop or paint over them, and the dots make no claim about the
+chart’s conclusions: they get you back to the run, and checking the run
+is still your job. The point is that ordinary sharing doesn’t destroy
+the trail.
 
 ## Related work
 
 - [ggplot2](https://ggplot2.tidyverse.org), which this extends.
 - Steganography packages hide data in the least significant bits of
-  pixels, which a single JPEG pass or screenshot destroys. watermark
+  pixels, which a single JPEG pass or screenshot destroys. gglineage
   trades capacity for survival.
 
 ## Contributing
