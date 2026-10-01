@@ -102,7 +102,11 @@ test_that("fuzz: repairing a damaged UUID row restores it exactly or gives up", 
   expect_gt(repaired, n / 2)
 })
 
-test_that("fuzz: a damaged row of another UUID is never repaired into a match", {
+# A row of another UUID may be repaired to fit only when its payload is the
+# partner's own half byte for byte (two UUIDs sharing 8 bytes, whose rows
+# then differ only in the pair bits): the result is then the partner's UUID,
+# every byte of it read from the image. Anything else would be a third ID.
+test_that("fuzz: a damaged row of another UUID never yields a UUID that was not drawn", {
   set.seed(fuzz_seed(106))
   n <- fuzz_n(300)
   for (i in seq_len(n)) {
@@ -118,11 +122,31 @@ test_that("fuzz: a damaged row of another UUID is never repaired into a match", 
     v <- soft_row(foreign, weak = sample(25:120, sample(0:4, 1L)))
     frame <- repair_uuid_row(v, 0.5, half, partner_accept(partner), partner)
     if (!is.null(frame)) {
-      fail(sprintf("trial %d: a row of %s was repaired to fit %s (joined: %s)",
-                   i, format_uuid(b), format_uuid(a), format(join_halves(partner, frame))))
+      same_payload <- identical(foreign[25:88], encode_rows(format_uuid(a))[[half]][25:88])
+      joined <- join_halves(partner, frame)
+      if (!same_payload || !identical(joined, format_uuid(a))) {
+        fail(sprintf("trial %d: a row of %s was repaired to fit %s (joined: %s)",
+                     i, format_uuid(b), format_uuid(a), format(joined)))
+      }
     }
   }
   succeed()
+})
+
+test_that("a row sharing the partner's bytes completes the partner's UUID, nothing else", {
+  # Found by the fuzz campaign (seed 2026): these two UUIDs share bytes 1-8,
+  # so their first rows differ only in two pair-check bits.
+  a <- "4f77baf8-9f08-2124-e851-88c49df21030"
+  b <- "4f77baf8-9f08-2124-23d1-bc9c2aaedb7c"
+  ra <- encode_rows(a)
+  rb <- encode_rows(b)
+  expect_identical(ra[[1]][25:88], rb[[1]][25:88])
+  partner <- parse_frame(ra[[2]])
+  set.seed(1)
+  frame <- repair_uuid_row(soft_row(rb[[1]]), 0.5, 1L, partner_accept(partner), partner)
+  expect_identical(join_halves(partner, frame), a)
+  # Read cleanly, without repair, the same pair of rows is rejected.
+  expect_null(decode_rows(list(rb[[1]], ra[[2]])))
 })
 
 test_that("fuzz: composed, perturbed images decode to a drawn ID or NULL", {

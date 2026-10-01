@@ -92,8 +92,14 @@ for (i in seq_len(repair_n)) {
     frame <- repair_uuid_row(soft_row(foreign, weak = sample(free, sample(0:4, 1L))), 0.5, half,
                              partner_accept(partner), partner)
     if (!is.null(frame)) {
+      # Allowed only when the row carries the partner's own half byte for
+      # byte (the UUIDs share those 8 bytes), so every byte of the result
+      # was read from the image; see test-lineage-fuzz.R.
       repair["foreign_accepted"] <- repair["foreign_accepted"] + 1L
-      note_wrong("repair foreign", "row of %s fitted to %s", format_uuid(b), id)
+      same_payload <- identical(foreign[25:88], rows[[half]][25:88])
+      if (!same_payload || !identical(join_halves(partner, frame), id)) {
+        note_wrong("repair foreign", "row of %s fitted to %s", format_uuid(b), id)
+      }
     }
   }
 }
@@ -129,7 +135,7 @@ md <- c(
   sprintf("| Rows of two UUIDs sharing bytes, cross-joined | %d | all NULL unless listed below |", joins),
   sprintf("| Repair of own damaged row against true partner | %d | %d repaired exactly, rest NULL |",
           repair[["own"]], repair[["own_repaired"]]),
-  sprintf("| Repair of another UUID's row against a partner | %d | %d accepted |",
+  sprintf("| Repair of another UUID's row against a partner | %d | %d accepted, each only where the row carried the partner's own 8 bytes |",
           repair[["foreign"]], repair[["foreign_accepted"]]),
   sprintf("| Composed, perturbed images | %d | %d decoded to a drawn ID, %d NULL; median %.2f s, max %.1f s |",
           image_n, sum(images$exact & images$ok), sum(!images$exact),
