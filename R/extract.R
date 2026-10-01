@@ -126,12 +126,15 @@ find_watermark <- function(gray) {
   # A small chart in a wide screenshot: the background window, sized from the
   # whole image, reaches past the chart into the page around it, and on a
   # page of a contrasting colour that hides the syncs at the frame's ends.
-  # Try once more with a window sized for a chart a third of the width.
-  for (r in rev(seq_len(n))) {
-    found <- read_row(gray[r, ], zoom = 3)
-    if (!is.null(found)) {
-      result <- accept(c(found, row = r, rows_averaged = 1L))
-      if (!is.null(result)) return(result)
+  # Try again with windows sized for a chart a third, then a sixth, of the
+  # width (a chart in a phone's 3x screenshot can be that small a part).
+  for (zoom in c(3, 6)) {
+    for (r in rev(seq_len(n))) {
+      found <- read_row(gray[r, ], zoom = zoom)
+      if (!is.null(found)) {
+        result <- accept(c(found, row = r, rows_averaged = 1L))
+        if (!is.null(result)) return(result)
+      }
     }
   }
   NULL
@@ -171,6 +174,7 @@ find_partner <- function(gray, found) {
       if (!syncs_agree(fast, found$left, found$right, found$n_bits)) next
       oriented <- oriented_signal(signal, k, found$polarity)
       hit <- decode_geometry(oriented, found$left, found$right, found$n_bits,
+                             partner = found$frame,
                              accept = function(frame) {
                                frame$kind == "uuid" && frame$half == want &&
                                  !is.null(join_halves(found$frame, frame))
@@ -449,7 +453,7 @@ decode_frame <- function(centers, diff, orient, pitch) {
 # Read an n-bit frame whose first and last dots sit near `left` and `right`.
 # `signal` is oriented so dots are positive. `accept`, if given, must also
 # approve the parsed frame before the search stops.
-decode_geometry <- function(signal, left, right, n, accept = NULL) {
+decode_geometry <- function(signal, left, right, n, accept = NULL, partner = NULL) {
   pitch <- (right - left) / (n - 1)
   # Cheap gate: the 32 known sync bits must mostly read correctly before
   # spending time on the rest of the frame.
@@ -485,7 +489,123 @@ decode_geometry <- function(signal, left, right, n, accept = NULL) {
                   left = left + dl[j], right = right + dr[j]))
     }
   }
+
+  # A UUID row whose checksum fails has usually lost a few bits to
+  # compression. Repair it from the bits read least confidently; see
+  # repair_uuid_row() for why this cannot yield a wrong UUID in practice.
+  # The syncs and a UUID row's header are known in advance, so a row whose
+  # syncs mostly agree and whose header is within one bit of a UUID header
+  # qualifies too; those bits are restored rather than guessed.
+  if (n == frame_bits(8L * uuid_row_bytes)) {
+    sync_agree <- colSums(bits[1:32, , drop = FALSE] == sync_bits)
+    header_bits <- bits[33:40, , drop = FALSE]
+    near <- vapply(header_uuid, function(h) {
+      colSums(header_bits != int_to_bits(h, 8L))
+    }, numeric(length(on)))
+    near <- matrix(near, ncol = length(header_uuid))
+    candidates <- which(on > off & sync_agree >= 30L & apply(near, 1, min) <= 1L)
+    if (length(candidates) > 0L) {
+      # The syncs are a poor guide to how well the middle of the frame is
+      # aligned. Rank alignments by how cleanly every bit splits into on and
+      # off (separation over spread) and repair the best few.
+      reads <- lapply(candidates, function(j) {
+        sample_signal(signal, left + dl[j] + (seq_len(n) - 1) * step[j], pitch)
+      })
+      clean <- vapply(seq_along(candidates), function(i) {
+        v <- reads[[i]]
+        hi <- v > threshold[candidates[i]]
+        if (sum(hi) < 2L || sum(!hi) < 2L) return(-Inf)
+        (mean(v[hi]) - mean(v[!hi])) / stats::sd(c(v[hi] - mean(v[hi]), v[!hi] - mean(v[!hi])))
+      }, numeric(1))
+      for (i in utils::head(order(clean, decreasing = TRUE), 5L)) {
+        j <- candidates[i]
+        halves <- which(near[j, ] <= 1L)
+        if (!is.null(partner)) halves <- intersect(halves, 3L - partner$half)
+        for (half in halves) {
+          frame <- repair_uuid_row(reads[[i]], threshold[j], half, accept, partner)
+          if (!is.null(frame)) {
+            return(list(frame = frame, n_bits = n, pitch = step[j],
+                        left = left + dl[j], right = right + dr[j]))
+          }
+        }
+      }
+    }
+  }
   NULL
+}
+
+# Soft-decision repair of one UUID row. A row that fails its checks has
+# usually lost a few bits to compression, and those are among the bits read
+# least confidently. CRCs are linear, so flipping a bit changes each check by
+# a fixed amount (its "column"); a set of flips repairs the row exactly when
+# the XOR of their columns cancels the row's check mismatch (its syndrome).
+# That lets thousands of candidate repairs be tested with a few integer XORs.
+#
+# When the other half of the UUID is already known (`partner`), the syndrome
+# spans 48 check bits: this row's own check, its pair check, and the
+# partner's pair check, both over the whole UUID. Repairs of up to 3 bits
+# among the 24 weakest and 4 among the 14 weakest (about 3300 candidates)
+# then leave a chance of about 1 in 10^11 of accepting a wrong row. Without a
+# partner only the 16-bit own check is available, so the search is kept
+# small (up to 2 of the 16 weakest bits); a row repaired that way is still
+# only half a UUID, which must then pair through the 48-bit checks. Text
+# frames have no partner to confirm them and are never repaired.
+repair_uuid_row <- function(v, threshold, half, accept = NULL, partner = NULL) {
+  n <- length(v)
+  bits <- as.integer(v > threshold)
+  # Syncs and header are known: restore them; only payload and checks flip.
+  bits[sync_index(n)] <- sync_bits
+  bits[17:24] <- int_to_bits(header_uuid[half], 8L)
+  payload_at <- 25:88
+  free <- 25:120
+
+  syndrome <- function(b) {
+    part <- packBits(as.integer(b[payload_at]), "raw")
+    own <- bitwXor(uuid_own_check(half, part), bits_to_int(b[89:104]))
+    if (is.null(partner)) return(own)
+    uuid <- if (half == 1L) c(part, partner$bytes) else c(partner$bytes, part)
+    c(own,
+      bitwXor(uuid_pair_check(half, uuid), bits_to_int(b[105:120])),
+      bitwXor(uuid_pair_check(partner$half, uuid), partner$pair))
+  }
+  target <- syndrome(bits)
+  if (all(target == 0L)) return(NULL)
+
+  margin <- abs(v[free] - threshold)
+  order_free <- free[order(margin)]
+  plan <- if (is.null(partner)) list(c(16L, 2L)) else list(c(24L, 3L), c(14L, 4L))
+  pool <- order_free[seq_len(min(max(vapply(plan, `[`, 1L, 1L)), length(order_free)))]
+  columns <- vapply(pool, function(p) {
+    flipped <- bits
+    flipped[p] <- 1L - flipped[p]
+    bitwXor(syndrome(flipped), target)
+  }, integer(length(target)))
+  columns <- matrix(columns, nrow = length(target))
+  # A column equal to the target fixes the row on its own; sets of columns
+  # XOR to the target likewise.
+  cost <- abs(v[pool] - threshold)
+  best <- NULL
+  for (step in plan) {
+    m <- min(step[1], length(pool))
+    for (k in seq_len(min(step[2], m))) {
+      sets <- utils::combn(m, k)
+      acc <- matrix(0L, nrow(columns), ncol(sets))
+      for (i in seq_len(k)) {
+        acc <- matrix(bitwXor(acc, columns[, sets[i, ], drop = FALSE]), nrow(columns))
+      }
+      hits <- which(colSums(acc == rep(target, ncol(sets))) == nrow(columns))
+      for (h in hits) {
+        c_h <- sum(cost[sets[, h]])
+        if (is.null(best) || c_h < best$cost) best <- list(cost = c_h, flip = pool[sets[, h]])
+      }
+    }
+  }
+  if (is.null(best)) return(NULL)
+  bits[best$flip] <- 1L - bits[best$flip]
+  frame <- parse_frame(bits)
+  if (is.null(frame) || frame$kind != "uuid" || frame$half != half) return(NULL)
+  if (!is.null(accept) && !accept(frame)) return(NULL)
+  frame
 }
 
 # Header bytes a frame of n bits could carry.

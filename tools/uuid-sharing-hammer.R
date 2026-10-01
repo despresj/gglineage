@@ -195,8 +195,10 @@ hop_weights <- c(chrome = 3, crop = 2, platform = 4, halve = 1, phone = 1)
 # screenshot) needs about 480. Report against both a strict promise (chart
 # >= 480 px, quality >= 50) and the raw outcome.
 promised <- function(st) {
-  chart_w <- st$box[["x1"]] - st$box[["x0"]]
-  chart_w >= 480 && st$q >= 50
+  # Detail lost while the chart was small never comes back when a later
+  # screenshot shows it larger, so the narrowest the chart has been is what
+  # counts, not its current width.
+  st$min_w >= 480 && st$q >= 50
 }
 
 # Charts are rendered up front, in this process: macOS kills forked workers
@@ -221,7 +223,8 @@ run_trial <- function(i, made) {
   id <- made$id
   dir <- made$dir
   src <- made$src
-  st <- list(box = c(x0 = 0, y0 = 0, x1 = img_width(src), y1 = img_height(src)), q = 100)
+  st <- list(box = c(x0 = 0, y0 = 0, x1 = img_width(src), y1 = img_height(src)), q = 100,
+             min_w = img_width(src))
   n_hops <- sample(1:5, 1, prob = c(0.2, 0.25, 0.25, 0.15, 0.15))
   # Every chain starts with someone screenshotting the chart.
   chain <- c(sample(c("chrome", "phone"), 1, prob = c(4, 1)),
@@ -238,6 +241,7 @@ run_trial <- function(i, made) {
       break
     }
     st <- step$st
+    st$min_w <- min(st$min_w, st$box[["x1"]] - st$box[["x0"]])
     t0 <- Sys.time()
     got <- tryCatch(extract_watermark(nxt), error = function(e) paste("ERROR:", conditionMessage(e)))
     secs <- as.numeric(Sys.time() - t0, units = "secs")
@@ -259,19 +263,40 @@ run_trial <- function(i, made) {
   res
 }
 
+report_only <- "--report-only" %in% args
 started <- Sys.time()
-cat(sprintf("Rendering %d charts ...\n", n_trials))
-made <- lapply(seq_len(n_trials), render_trial)
-cat(sprintf("Running %d trials on %d cores (seed %d) ...\n", n_trials, cores, seed))
-results <- parallel::mclapply(seq_len(n_trials), function(i) {
-  tryCatch(run_trial(i, made[[i]]), error = function(e) {
-    data.frame(trial = i, plot = NA, id = NA, hop = NA, step = NA, label = conditionMessage(e),
-               chart_px = NA, q = NA, promised = NA, status = "TRIAL-ERROR", secs = NA, got = "")
+if (report_only) {
+  res <- utils::read.csv("tools/uuid-sharing-results.csv", stringsAsFactors = FALSE)
+  n_trials <- length(unique(res$trial))
+} else {
+  cat(sprintf("Rendering %d charts ...\n", n_trials))
+  made <- lapply(seq_len(n_trials), function(i) {
+    if ("--resume" %in% args && file.exists(file.path(out_root, "parts", sprintf("%d.csv", i)))) NULL
+    else render_trial(i)
   })
-}, mc.cores = cores, mc.preschedule = FALSE)
-res <- do.call(rbind, results)
+  cat(sprintf("Running %d trials on %d cores (seed %d) ...\n", n_trials, cores, seed))
+  # Each trial's rows are appended to a per-trial file as soon as it finishes,
+  # so a run that is interrupted keeps everything it measured; --resume skips
+  # trials already on disk.
+  parts <- file.path(out_root, "parts")
+  dir.create(parts, showWarnings = FALSE)
+  if (!"--resume" %in% args) unlink(list.files(parts, full.names = TRUE))
+  todo <- setdiff(seq_len(n_trials),
+                  as.integer(sub("\\.csv$", "", list.files(parts, pattern = "\\.csv$"))))
+  invisible(parallel::mclapply(todo, function(i) {
+    rows <- tryCatch(run_trial(i, made[[i]]), error = function(e) {
+      data.frame(trial = i, plot = NA, id = NA, hop = NA, step = NA, label = conditionMessage(e),
+                 chart_px = NA, q = NA, promised = NA, status = "TRIAL-ERROR", secs = NA, got = "")
+    })
+    utils::write.csv(rows, file.path(parts, sprintf("%d.csv", i)), row.names = FALSE)
+    NULL
+  }, mc.cores = cores, mc.preschedule = FALSE))
+  res <- do.call(rbind, lapply(list.files(parts, pattern = "\\.csv$", full.names = TRUE),
+                               utils::read.csv, stringsAsFactors = FALSE))
+  res <- res[order(res$trial, res$hop), ]
+  utils::write.csv(res, "tools/uuid-sharing-results.csv", row.names = FALSE)
+}
 minutes <- as.numeric(Sys.time() - started, units = "mins")
-utils::write.csv(res, "tools/uuid-sharing-results.csv", row.names = FALSE)
 
 # ---- report ----------------------------------------------------------------
 
@@ -296,8 +321,9 @@ by_width <- do.call(rbind, lapply(list(c(0, 300), c(300, 400), c(400, 480), c(48
              exact = if (nrow(d)) pct(d$status == "exact") else "-",
              wrong = sum(d$status == "WRONG"))
 }))
-by_step <- do.call(rbind, lapply(split(decoded, decoded$label), function(d) {
-  data.frame(hop = d$label[1], decodes = nrow(d), exact = pct(d$status == "exact"),
+decoded$kind <- sub(" \\(\\+.*\\)$", "", sub(" on [a-z_]+$", "", decoded$label))
+by_step <- do.call(rbind, lapply(split(decoded, decoded$kind), function(d) {
+  data.frame(hop = d$kind[1], decodes = nrow(d), exact = pct(d$status == "exact"),
              promised_null = sum(d$promised %in% TRUE & d$status == "NULL"))
 }))
 by_step <- by_step[order(-by_step$decodes), ]
@@ -306,14 +332,16 @@ fails <- prom[prom$status != "exact", ]
 md <- c(
   "# UUID durability: screenshots passed around",
   "",
-  sprintf("Generated by `tools/uuid-sharing-hammer.R` on %s in %.1f min (%d trials, seed %d, %d cores).",
-          format(Sys.Date()), minutes, n_trials, seed, cores),
+  if (report_only) sprintf("Generated by `tools/uuid-sharing-hammer.R` on %s from saved results (%d trials, seed %d).",
+                         format(Sys.Date()), n_trials, seed) else
+    sprintf("Generated by `tools/uuid-sharing-hammer.R` on %s in %.1f min (%d trials, seed %d, %d cores).",
+            format(Sys.Date()), minutes, n_trials, seed, cores),
   "",
   sprintf("**%s: %d decodes after every hop of %d chains. %d exact, %d NULL, %d WRONG, %d decoder errors.**",
           if (n_wrong + n_err == 0) "PASS" else "FAIL", nrow(decoded), length(unique(decoded$trial)),
           sum(decoded$status == "exact"), sum(decoded$status == "NULL"), n_wrong, n_err),
   "",
-  sprintf("Within the documented limits (chart at least 480 px wide, every JPEG at quality 50 or better): **%d of %d exact (%s)**.",
+  sprintf("Within the documented limits (chart never narrower than 480 px along the chain, every JPEG at quality 50 or better): **%d of %d exact (%s)**.",
           sum(prom$status == "exact"), nrow(prom), if (nrow(prom)) pct(prom$status == "exact") else "-"),
   sprintf("End of chain, all trials: %d of %d exact (%s).", sum(final$status == "exact"), nrow(final), pct(final$status == "exact")),
   sprintf("Pipeline or trial errors (tools failing, not the decoder): %d.",
