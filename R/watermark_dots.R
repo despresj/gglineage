@@ -46,8 +46,10 @@
 #' @param colour Dot colour. Use a light colour on dark plot backgrounds.
 #' @param alpha Dot opacity. Lower is less visible but less robust to heavy
 #'   compression.
-#' @param size Maximum dot diameter in mm. Dots shrink automatically when the
-#'   plot is too narrow to fit them at this size.
+#' @param size Maximum dot diameter in mm. Dots are drawn at 0.8 of their
+#'   spacing, up to this size, so on a typical 7-inch figure the spacing sets
+#'   the size; the cap matters on wide figures, whose dots would otherwise be
+#'   too small to survive being shown small and recompressed.
 #'
 #' @return A list of ggplot2 components, to be added to a plot with `+`.
 #' @seealso [add_watermark()] for a pipe-friendly version,
@@ -69,7 +71,7 @@
 #'   watermark_dots("6BA7B810-9DAD-11D1-80B4-00C04FD430C8")
 #' ggsave(file, p2, width = 6, height = 4, dpi = 150)
 #' extract_watermark(file)
-watermark_dots <- function(id, colour = "grey30", alpha = 0.15, size = 1.2) {
+watermark_dots <- function(id, colour = "grey30", alpha = 0.15, size = 2) {
   check_mark_style(colour, alpha, size)
   rows <- encode_rows(id)
   spec <- list(

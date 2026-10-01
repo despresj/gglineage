@@ -485,3 +485,77 @@ test_that("random sharing chains never yield a wrong UUID, even far past the lim
                 label = sprintf("trial %d decoded %s", trial, format(got)))
   }
 })
+
+# ---- repair -----------------------------------------------------------------
+
+# Erase chosen dots (1 bits) from one row of a lossless UUID chart: precise,
+# known bit damage for testing repair_uuid_row().
+erase_dots <- function(img, found, row_y, bits_to_erase, keep = 0) {
+  n <- found$n_bits
+  xs <- bit_positions(found$left, found$right, n)
+  half_w <- max(2, ceiling(found$pitch * 0.5))
+  for (b in bits_to_erase) {
+    cols <- max(1, round(xs[b]) - half_w):min(dim(img)[2], round(xs[b]) + half_w)
+    # The reported row is one the dots were read on, not their centre:
+    # cover a full dot either way, short of the other row (~13 px away).
+    rows <- max(1, row_y - 7L):min(dim(img)[1], row_y + 7L)
+    # keep = 0 erases the dot; keep = 0.45 leaves it faint and ambiguous.
+    img[rows, cols, ] <- 1 - keep * (1 - img[rows, cols, ])
+  }
+  img
+}
+
+test_that("a UUID row with a few lost or faded dots is repaired exactly", {
+  skip_if_no_raster()
+  skip_on_cran()
+  set.seed(31)
+  id <- wm_uuid()
+  img <- render_plot(base_plot() + watermark_dots(id), width = 7, height = 5, dpi = 150)
+  found <- find_watermark(as_gray(img))
+  expect_identical(found$id, id)
+  rows <- encode_rows(id)
+  # Damage the partner row (the one found second), in its payload and checks.
+  partner_half <- found$frame$half
+  victim <- rows[[3L - partner_half]]
+  ones <- which(victim == 1L)
+  ones <- ones[ones >= 25L & ones <= 120L]
+  # Erased dots read as confident zeros (a mark painted over them): up to
+  # two anywhere are repaired.
+  for (k in 1:2) {
+    for (trial in 1:3) {
+      damaged <- erase_dots(img, found, found$partner_row, sample(ones, k))
+      expect_identical(extract_watermark(damaged), id,
+                       label = sprintf("%d erased dots, trial %d", k, trial))
+    }
+  }
+  # Faded dots read ambiguously, as compression damage does: up to four.
+  for (k in 3:4) {
+    for (trial in 1:3) {
+      damaged <- erase_dots(img, found, found$partner_row, sample(ones, k), keep = 0.45)
+      expect_identical(extract_watermark(damaged), id,
+                       label = sprintf("%d faded dots, trial %d", k, trial))
+    }
+  }
+})
+
+test_that("heavily damaged UUID rows give NULL, never a wrong UUID", {
+  skip_if_no_raster()
+  skip_on_cran()
+  set.seed(32)
+  id <- wm_uuid()
+  img <- render_plot(base_plot() + watermark_dots(id), width = 7, height = 5, dpi = 150)
+  found <- find_watermark(as_gray(img))
+  rows <- encode_rows(id)
+  for (trial in 1:10) {
+    damaged <- img
+    for (which_row in c("row", "partner_row")) {
+      half <- if (which_row == "row") found$frame$half else 3L - found$frame$half
+      ones <- which(rows[[half]] == 1L)
+      ones <- ones[ones >= 25L & ones <= 120L]
+      damaged <- erase_dots(damaged, found, found[[which_row]], sample(ones, sample(4:12, 1)))
+    }
+    got <- extract_watermark(damaged)
+    expect_true(is.null(got) || identical(got, id),
+                label = sprintf("trial %d decoded %s", trial, format(got)))
+  }
+})

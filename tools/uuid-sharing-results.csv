@@ -1,0 +1,1122 @@
+"trial","plot","id","hop","step","label","chart_px","q","promised","status","secs","got"
+1,"dates","01a0f536-cfb7-73b0-8355-faabf61313db",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",6.91,NA
+1,"dates","01a0f536-cfb7-73b0-8355-faabf61313db",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",2.07,NA
+2,"facets","5174cb6b-58f6-4236-90b5-405583167364",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",3.58,NA
+2,"facets","5174cb6b-58f6-4236-90b5-405583167364",2,"platform","Discord (fit 1280, WebP 75)",480,75,TRUE,"exact",1.22,NA
+3,"dates","01a0f536-d143-7e7d-9279-95b2e0a4ca5a",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",9.36,NA
+3,"dates","01a0f536-d143-7e7d-9279-95b2e0a4ca5a",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",4.1,NA
+3,"dates","01a0f536-d143-7e7d-9279-95b2e0a4ca5a",3,"chrome","Chrome 640px @3x on light_grey",1500,75,TRUE,"exact",8.26,NA
+3,"dates","01a0f536-d143-7e7d-9279-95b2e0a4ca5a",4,"platform","X (fit 1200, JPEG ~85)",469,75,FALSE,"exact",1.32,NA
+4,"big","01a0f536-d1a5-71ff-9ad4-ee9e3194b635",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.38,NA
+4,"big","01a0f536-d1a5-71ff-9ad4-ee9e3194b635",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",4.34,NA
+4,"big","01a0f536-d1a5-71ff-9ad4-ee9e3194b635",3,"platform","iMessage (HEIC)",900,80,TRUE,"exact",3.62,NA
+4,"big","01a0f536-d1a5-71ff-9ad4-ee9e3194b635",4,"platform","Slack (fit 1600, JPEG ~88)",900,80,TRUE,"exact",2.96,NA
+4,"big","01a0f536-d1a5-71ff-9ad4-ee9e3194b635",5,"platform","email (fit 1024, sips JPEG 75)",787,75,TRUE,"exact",2.45,NA
+5,"dark","eb64f064-532c-4e5f-819d-c5dc3adec4da",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",5.37,NA
+5,"dark","eb64f064-532c-4e5f-819d-c5dc3adec4da",2,"chrome","Chrome 1000px @1x on white",500,100,TRUE,"exact",1.88,NA
+5,"dark","eb64f064-532c-4e5f-819d-c5dc3adec4da",3,"platform","Slack (fit 1600, JPEG ~88)",500,88,TRUE,"exact",2.2,NA
+6,"wide","01a0f536-d3fa-7501-9f7e-714328d03aa2",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",5.57,NA
+6,"wide","01a0f536-d3fa-7501-9f7e-714328d03aa2",2,"crop","crop to chart (+22..29 px)",1280,100,TRUE,"exact",4.85,NA
+6,"wide","01a0f536-d3fa-7501-9f7e-714328d03aa2",3,"chrome","Chrome 640px @1x on slack_dark",612,100,TRUE,"exact",2.73,NA
+7,"wide","01a0f536-d449-775f-974f-6415b953b48f",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",0.41,NA
+8,"dark","f23e07f8-6954-443c-9206-7904624b258c",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.06,NA
+8,"dark","f23e07f8-6954-443c-9206-7904624b258c",2,"platform","Slack (fit 1600, JPEG ~88)",600,88,TRUE,"exact",2.42,NA
+8,"dark","f23e07f8-6954-443c-9206-7904624b258c",3,"crop","crop to chart (+3..18 px)",600,88,TRUE,"exact",2.35,NA
+9,"big","01a0f536-d4fe-7702-a886-6464b5f8be56",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.49,NA
+9,"big","01a0f536-d4fe-7702-a886-6464b5f8be56",2,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",3.71,NA
+10,"legend_caption","01a0f536-d764-7382-844e-931103d91ba3",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.47,NA
+10,"legend_caption","01a0f536-d764-7382-844e-931103d91ba3",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",4.21,NA
+10,"legend_caption","01a0f536-d764-7382-844e-931103d91ba3",3,"halve","retina image halved (pasted into a doc)",512,70,TRUE,"exact",1.57,NA
+10,"legend_caption","01a0f536-d764-7382-844e-931103d91ba3",4,"phone","phone screenshot (390pt @3x, github_dark)",900,70,TRUE,"exact",3.28,NA
+10,"legend_caption","01a0f536-d764-7382-844e-931103d91ba3",5,"platform","X (fit 1200, JPEG ~85)",900,70,TRUE,"exact",4.81,NA
+11,"bars","01a0f536-d7eb-728d-ab79-4a7e0436bb65",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",3.21,NA
+11,"bars","01a0f536-d7eb-728d-ab79-4a7e0436bb65",2,"crop","crop to chart (+8..18 px)",720,100,TRUE,"exact",3.55,NA
+12,"facets","b08abc7f-1254-45a2-95ef-186291731198",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.2,NA
+12,"facets","b08abc7f-1254-45a2-95ef-186291731198",2,"chrome","Chrome 480px @1x on white",421,100,FALSE,"exact",1.64,NA
+12,"facets","b08abc7f-1254-45a2-95ef-186291731198",3,"platform","WhatsApp (fit 1600, JPEG ~70)",421,70,FALSE,"NULL",2.82,NA
+12,"facets","b08abc7f-1254-45a2-95ef-186291731198",4,"crop","crop to chart (+1..26 px)",421,70,FALSE,"NULL",0.92,NA
+12,"facets","b08abc7f-1254-45a2-95ef-186291731198",5,"crop","crop to chart (+0..11 px)",421,70,FALSE,"NULL",0.62,NA
+13,"wide","01a0f536-d914-7389-b1b3-b3218fd3ef17",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",2.9,NA
+13,"wide","01a0f536-d914-7389-b1b3-b3218fd3ef17",2,"chrome","Chrome 640px @2x on github_dark",480,100,TRUE,"exact",2.47,NA
+13,"wide","01a0f536-d914-7389-b1b3-b3218fd3ef17",3,"platform","email (fit 1024, sips JPEG 75)",192,75,FALSE,"NULL",0.49,NA
+14,"legend_caption","01a0f536-d95f-7c67-a9a2-709bdce51ef1",1,"chrome","Chrome 360px @3x on slack_dark",1080,100,TRUE,"exact",5.9,NA
+14,"legend_caption","01a0f536-d95f-7c67-a9a2-709bdce51ef1",2,"crop","crop to chart (+9..21 px)",1080,100,TRUE,"exact",3.58,NA
+14,"legend_caption","01a0f536-d95f-7c67-a9a2-709bdce51ef1",3,"platform","Discord (fit 1280, WebP 75)",1080,75,TRUE,"exact",4.61,NA
+15,"small","01a0f536-d9bd-75ce-bcdf-888b05c28bb6",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",3.42,NA
+15,"small","01a0f536-d9bd-75ce-bcdf-888b05c28bb6",2,"platform","iMessage (HEIC)",720,80,TRUE,"exact",2.88,NA
+15,"small","01a0f536-d9bd-75ce-bcdf-888b05c28bb6",3,"chrome","Chrome 1000px @3x on light_grey",844,80,TRUE,"exact",4.7,NA
+15,"small","01a0f536-d9bd-75ce-bcdf-888b05c28bb6",4,"chrome","Chrome 800px @2x on slack_dark",352,80,FALSE,"exact",1.96,NA
+16,"small","01a0f536-d9ec-75f5-9c1b-7561b4f5e774",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.17,NA
+16,"small","01a0f536-d9ec-75f5-9c1b-7561b4f5e774",2,"chrome","Chrome 800px @1x on white",702,100,TRUE,"exact",2.5,NA
+16,"small","01a0f536-d9ec-75f5-9c1b-7561b4f5e774",3,"phone","phone screenshot (390pt @3x, white)",562,100,TRUE,"exact",3.01,NA
+17,"facets","04fd1988-3752-4cd0-a524-50bef2fe64a1",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",5.17,NA
+17,"facets","04fd1988-3752-4cd0-a524-50bef2fe64a1",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",2.65,NA
+17,"facets","04fd1988-3752-4cd0-a524-50bef2fe64a1",3,"platform","X (fit 1200, JPEG ~85)",512,85,TRUE,"exact",2.29,NA
+17,"facets","04fd1988-3752-4cd0-a524-50bef2fe64a1",4,"crop","crop to chart (+0..30 px)",512,85,TRUE,"exact",1.56,NA
+17,"facets","04fd1988-3752-4cd0-a524-50bef2fe64a1",5,"crop","crop to chart (+12..30 px)",512,85,TRUE,"exact",1.54,NA
+18,"scatter","5c2e0cea-017e-4191-9e47-65950970ccca",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",8.68,NA
+18,"scatter","5c2e0cea-017e-4191-9e47-65950970ccca",2,"crop","crop to chart (+7..19 px)",2000,100,TRUE,"exact",7.79,NA
+18,"scatter","5c2e0cea-017e-4191-9e47-65950970ccca",3,"phone","phone screenshot (390pt @3x, white)",1012,100,TRUE,"exact",7.09,NA
+19,"dates","01a0f536-dab3-7b93-90a6-c55e3721bcc4",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.65,NA
+19,"dates","01a0f536-dab3-7b93-90a6-c55e3721bcc4",2,"chrome","Chrome 640px @2x on github_dark",1122,100,TRUE,"exact",5.67,NA
+20,"legend_caption","4f9ab857-7638-4977-bd55-5f4902e5125d",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",5.99,NA
+21,"bars","e8940898-7442-4b83-a263-36307147582f",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",4.19,NA
+21,"bars","e8940898-7442-4b83-a263-36307147582f",2,"chrome","Chrome 640px @2x on slack_dark",360,100,FALSE,"exact",1.49,NA
+22,"dates","90b78ea5-0f5b-48ff-9f94-34986a2f4ca1",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",8.26,NA
+22,"dates","90b78ea5-0f5b-48ff-9f94-34986a2f4ca1",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1250,70,TRUE,"exact",7.53,NA
+22,"dates","90b78ea5-0f5b-48ff-9f94-34986a2f4ca1",3,"chrome","Chrome 360px @2x on white",562,70,TRUE,"exact",2.72,NA
+23,"dark","01a0f536-dbed-7cba-9fee-766ca085f862",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",5.62,NA
+23,"dark","01a0f536-dbed-7cba-9fee-766ca085f862",2,"phone","phone screenshot (390pt @3x, github_dark)",513,100,TRUE,"exact",0.61,NA
+23,"dark","01a0f536-dbed-7cba-9fee-766ca085f862",3,"crop","crop to chart (+0..13 px)",513,100,TRUE,"exact",1.67,NA
+24,"small","95c1f8b9-05a3-49d4-9acf-e9b5660bff4e",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4,NA
+24,"small","95c1f8b9-05a3-49d4-9acf-e9b5660bff4e",2,"chrome","Chrome 360px @3x on slack_dark",405,100,FALSE,"exact",1.52,NA
+24,"small","95c1f8b9-05a3-49d4-9acf-e9b5660bff4e",3,"platform","X (fit 1200, JPEG ~85)",127,85,FALSE,"NULL",0.67,NA
+25,"legend_caption","73d2773c-3412-4c3b-96e3-4e4a33634ec1",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",10.17,NA
+26,"dark","01a0f536-dcb2-7df5-8172-f2b76f4bdf16",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",5.54,NA
+26,"dark","01a0f536-dcb2-7df5-8172-f2b76f4bdf16",2,"platform","iMessage (HEIC)",1026,80,TRUE,"exact",4.74,NA
+27,"dark","82bb220c-3f6a-4d00-ac09-778b0de062e8",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",5.32,NA
+27,"dark","82bb220c-3f6a-4d00-ac09-778b0de062e8",2,"platform","Slack (fit 1600, JPEG ~88)",600,88,TRUE,"exact",1.23,NA
+28,"scatter","43953011-97ef-45a8-ac2e-268584c409ff",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.17,NA
+29,"bars","1f4b47f4-5282-4a6f-8166-f79578e35358",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.98,NA
+29,"bars","1f4b47f4-5282-4a6f-8166-f79578e35358",2,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",5.49,NA
+30,"dark","cba1dffe-9851-4ee2-a57e-103629d17aee",1,"chrome","Chrome 480px @1x on light_grey",480,100,TRUE,"exact",9.94,NA
+30,"dark","cba1dffe-9851-4ee2-a57e-103629d17aee",2,"phone","phone screenshot (390pt @3x, white)",385,100,FALSE,"exact",2.17,NA
+30,"dark","cba1dffe-9851-4ee2-a57e-103629d17aee",3,"platform","email (fit 1024, sips JPEG 75)",337,75,FALSE,"exact",3.47,NA
+30,"dark","cba1dffe-9851-4ee2-a57e-103629d17aee",4,"platform","X (fit 1200, JPEG ~85)",337,75,FALSE,"NULL",4.33,NA
+31,"wide","c92e0ea9-bbe2-480e-955f-87fc024abe3d",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",0.56,NA
+31,"wide","c92e0ea9-bbe2-480e-955f-87fc024abe3d",2,"chrome","Chrome 360px @2x on white",202,100,FALSE,"NULL",1.14,NA
+32,"bars","8a6355e6-c9f0-4c40-a31c-bf7da8b85ed1",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.99,NA
+32,"bars","8a6355e6-c9f0-4c40-a31c-bf7da8b85ed1",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",4.96,NA
+33,"small","4b6d7f23-4cf8-467a-afa4-2efe9e6ef5d6",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",6.07,NA
+34,"dark","89c894f7-017c-4c50-bec4-ed67fd95ad06",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",5.32,NA
+34,"dark","89c894f7-017c-4c50-bec4-ed67fd95ad06",2,"halve","retina image halved (pasted into a doc)",500,100,TRUE,"exact",3.24,NA
+35,"wide","01a0f536-df2c-785c-8e55-deb56606fd97",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",7.64,NA
+35,"wide","01a0f536-df2c-785c-8e55-deb56606fd97",2,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",1.18,NA
+36,"wide","1e96b57e-7efb-4644-a704-1f7f62044a91",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",6.19,NA
+36,"wide","1e96b57e-7efb-4644-a704-1f7f62044a91",2,"platform","Slack (fit 1600, JPEG ~88)",800,88,TRUE,"exact",4.37,NA
+36,"wide","1e96b57e-7efb-4644-a704-1f7f62044a91",3,"chrome","Chrome 640px @2x on white",640,88,TRUE,"exact",0.15,NA
+37,"big","5c853171-25d6-4fe4-aed7-268f7b3a244e",1,"chrome","Chrome 360px @3x on light_grey",1080,100,TRUE,"exact",3.48,NA
+37,"big","5c853171-25d6-4fe4-aed7-268f7b3a244e",2,"chrome","Chrome 640px @3x on github_dark",540,100,TRUE,"exact",1.86,NA
+38,"dark","01a0f536-e281-7328-bb63-daf9a4ae89f1",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",10.07,NA
+38,"dark","01a0f536-e281-7328-bb63-daf9a4ae89f1",2,"crop","crop to chart (+14..30 px)",2000,100,TRUE,"exact",7.54,NA
+39,"big","1e064dff-79c6-4e37-b923-12b6a1f0c978",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",6.43,NA
+39,"big","1e064dff-79c6-4e37-b923-12b6a1f0c978",2,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",2.38,NA
+39,"big","1e064dff-79c6-4e37-b923-12b6a1f0c978",3,"platform","WhatsApp (fit 1600, JPEG ~70)",640,70,TRUE,"exact",1.35,NA
+39,"big","1e064dff-79c6-4e37-b923-12b6a1f0c978",4,"crop","crop to chart (+2..29 px)",640,70,TRUE,"exact",2.14,NA
+39,"big","1e064dff-79c6-4e37-b923-12b6a1f0c978",5,"halve","retina image halved (pasted into a doc)",320,70,FALSE,"exact",1.66,NA
+40,"scatter","01a0f536-e4d2-755e-a0d5-80faf76c02de",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",4.45,NA
+40,"scatter","01a0f536-e4d2-755e-a0d5-80faf76c02de",2,"crop","crop to chart (+3..29 px)",960,100,TRUE,"exact",3.23,NA
+40,"scatter","01a0f536-e4d2-755e-a0d5-80faf76c02de",3,"platform","Teams preview (fit 800, JPEG ~75)",784,75,TRUE,"exact",2.81,NA
+41,"wide","01a0f536-e509-7ba8-8a61-040356de984e",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.68,NA
+41,"wide","01a0f536-e509-7ba8-8a61-040356de984e",2,"platform","WhatsApp (fit 1600, JPEG ~70)",450,70,FALSE,"NULL",2.35,NA
+41,"wide","01a0f536-e509-7ba8-8a61-040356de984e",3,"platform","Slack (fit 1600, JPEG ~88)",450,70,FALSE,"NULL",1.71,NA
+41,"wide","01a0f536-e509-7ba8-8a61-040356de984e",4,"crop","crop to chart (+9..18 px)",450,70,FALSE,"NULL",1.41,NA
+42,"wide","2fe255a4-1a0b-4b95-94db-546d8360dc76",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.69,NA
+42,"wide","2fe255a4-1a0b-4b95-94db-546d8360dc76",2,"chrome","Chrome 480px @2x on slack_dark",842,100,TRUE,"exact",2.53,NA
+42,"wide","2fe255a4-1a0b-4b95-94db-546d8360dc76",3,"phone","phone screenshot (390pt @3x, white)",337,100,FALSE,"exact",3.55,NA
+42,"wide","2fe255a4-1a0b-4b95-94db-546d8360dc76",4,"platform","iMessage (HEIC)",337,80,FALSE,"exact",0.5,NA
+43,"scatter","01a0f536-e59b-7e0e-9a74-b1ec2b75eb44",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",3.42,NA
+43,"scatter","01a0f536-e59b-7e0e-9a74-b1ec2b75eb44",2,"halve","retina image halved (pasted into a doc)",360,100,FALSE,"exact",1.38,NA
+43,"scatter","01a0f536-e59b-7e0e-9a74-b1ec2b75eb44",3,"platform","iMessage (HEIC)",360,80,FALSE,"exact",0.72,NA
+43,"scatter","01a0f536-e59b-7e0e-9a74-b1ec2b75eb44",4,"halve","retina image halved (pasted into a doc)",180,80,FALSE,"NULL",0.38,NA
+44,"legend_caption","aeb89b52-b404-40dd-9bd0-ad43a3c77238",1,"chrome","Chrome 480px @3x on light_grey",1440,100,TRUE,"exact",5.59,NA
+44,"legend_caption","aeb89b52-b404-40dd-9bd0-ad43a3c77238",2,"crop","crop to chart (+5..25 px)",1440,100,TRUE,"exact",6.93,NA
+44,"legend_caption","aeb89b52-b404-40dd-9bd0-ad43a3c77238",3,"platform","Discord (fit 1280, WebP 75)",1249,75,TRUE,"exact",4.6,NA
+44,"legend_caption","aeb89b52-b404-40dd-9bd0-ad43a3c77238",4,"crop","crop to chart (+2..23 px)",1249,75,TRUE,"exact",4.1,NA
+45,"small","3c3008b4-3b5c-4957-8a9b-e670ad453cc0",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",6.11,NA
+45,"small","3c3008b4-3b5c-4957-8a9b-e670ad453cc0",2,"platform","Teams preview (fit 800, JPEG ~75)",400,75,FALSE,"NULL",1.97,NA
+45,"small","3c3008b4-3b5c-4957-8a9b-e670ad453cc0",3,"halve","retina image halved (pasted into a doc)",200,75,FALSE,"NULL",0.61,NA
+45,"small","3c3008b4-3b5c-4957-8a9b-e670ad453cc0",4,"platform","Slack (fit 1600, JPEG ~88)",200,75,FALSE,"NULL",0.31,NA
+45,"small","3c3008b4-3b5c-4957-8a9b-e670ad453cc0",5,"chrome","Chrome 360px @2x on github_dark",360,75,FALSE,"NULL",1.53,NA
+46,"wide","01a0f536-e696-7a0d-b665-b6ab060068d6",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",4.75,NA
+46,"wide","01a0f536-e696-7a0d-b665-b6ab060068d6",2,"chrome","Chrome 480px @3x on light_grey",720,100,TRUE,"exact",2.79,NA
+46,"wide","01a0f536-e696-7a0d-b665-b6ab060068d6",3,"chrome","Chrome 800px @2x on white",300,100,FALSE,"exact",0.52,NA
+47,"big","01a0f536-e6d7-7564-8390-f681b7d1bc3b",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",4.92,NA
+47,"big","01a0f536-e6d7-7564-8390-f681b7d1bc3b",2,"chrome","Chrome 360px @3x on github_dark",540,100,TRUE,"exact",3.53,NA
+48,"bars","01a0f536-e91a-7c3d-9590-c47bcb577e4d",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",6.14,NA
+48,"bars","01a0f536-e91a-7c3d-9590-c47bcb577e4d",2,"crop","crop to chart (+3..29 px)",1280,100,TRUE,"exact",4.41,NA
+48,"bars","01a0f536-e91a-7c3d-9590-c47bcb577e4d",3,"halve","retina image halved (pasted into a doc)",639,100,TRUE,"exact",3.26,NA
+48,"bars","01a0f536-e91a-7c3d-9590-c47bcb577e4d",4,"chrome","Chrome 800px @3x on light_grey",2338,100,TRUE,"exact",16.75,NA
+48,"bars","01a0f536-e91a-7c3d-9590-c47bcb577e4d",5,"crop","crop to chart (+12..29 px)",2338,100,TRUE,"exact",14.98,NA
+49,"dark","01a0f536-e970-7316-8054-5bb9be727db4",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.31,NA
+49,"dark","01a0f536-e970-7316-8054-5bb9be727db4",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",4.08,NA
+50,"wide","01a0f536-e9b3-7055-b8db-d3e8a9dd37ff",1,"chrome","Chrome 800px @3x on github_dark",2400,100,TRUE,"exact",10.63,NA
+51,"scatter","01a0f536-ea20-70dd-90c0-bb9b2f1237ca",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.17,NA
+51,"scatter","01a0f536-ea20-70dd-90c0-bb9b2f1237ca",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.54,NA
+52,"small","7fb50496-b1a9-466e-8833-c018f399fd48",1,"chrome","Chrome 800px @3x on white",2400,100,TRUE,"exact",14.21,NA
+52,"small","7fb50496-b1a9-466e-8833-c018f399fd48",2,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",2.55,NA
+52,"small","7fb50496-b1a9-466e-8833-c018f399fd48",3,"phone","phone screenshot (390pt @3x, white)",641,75,TRUE,"exact",2.35,NA
+52,"small","7fb50496-b1a9-466e-8833-c018f399fd48",4,"platform","Discord (fit 1280, WebP 75)",641,75,TRUE,"exact",2.91,NA
+53,"scatter","01a0f536-eabe-7da6-8442-94dcabaf0f8e",1,"chrome","Chrome 360px @3x on slack_dark",1080,100,TRUE,"exact",6.84,NA
+53,"scatter","01a0f536-eabe-7da6-8442-94dcabaf0f8e",2,"chrome","Chrome 1000px @3x on white",844,100,TRUE,"exact",4.47,NA
+53,"scatter","01a0f536-eabe-7da6-8442-94dcabaf0f8e",3,"crop","crop to chart (+13..25 px)",844,100,TRUE,"exact",4.03,NA
+53,"scatter","01a0f536-eabe-7da6-8442-94dcabaf0f8e",4,"halve","retina image halved (pasted into a doc)",422,100,FALSE,"exact",1.14,NA
+54,"bars","f32a58e2-bb75-4752-80ea-678afd6de8bd",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",3.43,NA
+54,"bars","f32a58e2-bb75-4752-80ea-678afd6de8bd",2,"phone","phone screenshot (390pt @3x, white)",289,100,FALSE,"exact",0.73,NA
+54,"bars","f32a58e2-bb75-4752-80ea-678afd6de8bd",3,"chrome","Chrome 480px @2x on white",237,100,FALSE,"NULL",2.96,NA
+54,"bars","f32a58e2-bb75-4752-80ea-678afd6de8bd",4,"chrome","Chrome 1000px @2x on light_grey",185,100,FALSE,"NULL",3.07,NA
+54,"bars","f32a58e2-bb75-4752-80ea-678afd6de8bd",5,"halve","retina image halved (pasted into a doc)",92,100,FALSE,"NULL",1.78,NA
+55,"scatter","01a0f536-eb67-7969-b36a-9d1a62a2010b",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",9.04,NA
+55,"scatter","01a0f536-eb67-7969-b36a-9d1a62a2010b",2,"chrome","Chrome 360px @3x on slack_dark",844,100,TRUE,"exact",3.13,NA
+55,"scatter","01a0f536-eb67-7969-b36a-9d1a62a2010b",3,"crop","crop to chart (+0..16 px)",844,100,TRUE,"exact",2.68,NA
+56,"dates","e688feb8-6ebb-4183-80f5-77cebe5fdcf7",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",7.05,NA
+57,"small","01a0f536-ebe9-72b5-ae7e-97e0c3f8cb6a",1,"chrome","Chrome 1000px @1x on white",1000,100,TRUE,"exact",4.64,NA
+58,"facets","f41db5bf-5d67-4a58-9d33-7ae4b5e4706a",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",10.68,NA
+58,"facets","f41db5bf-5d67-4a58-9d33-7ae4b5e4706a",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",3.7,NA
+58,"facets","f41db5bf-5d67-4a58-9d33-7ae4b5e4706a",3,"crop","crop to chart (+3..28 px)",750,85,TRUE,"exact",3.09,NA
+59,"wide","bc525187-caa3-4a3e-986f-74e6918d48eb",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.78,NA
+60,"facets","01a0f536-ecf7-7f8d-9e98-1ee7ea69cbd3",1,"chrome","Chrome 640px @3x on slack_dark",1920,100,TRUE,"exact",8.15,NA
+60,"facets","01a0f536-ecf7-7f8d-9e98-1ee7ea69cbd3",2,"chrome","Chrome 640px @2x on white",640,100,TRUE,"exact",0.57,NA
+60,"facets","01a0f536-ecf7-7f8d-9e98-1ee7ea69cbd3",3,"chrome","Chrome 1000px @2x on white",500,100,TRUE,"exact",2.58,NA
+61,"bars","01a0f536-eda4-7a0d-85c6-755730a99bc8",1,"chrome","Chrome 480px @1x on slack_dark",480,100,TRUE,"exact",2.7,NA
+61,"bars","01a0f536-eda4-7a0d-85c6-755730a99bc8",2,"chrome","Chrome 800px @2x on github_dark",600,100,TRUE,"exact",4.08,NA
+61,"bars","01a0f536-eda4-7a0d-85c6-755730a99bc8",3,"crop","crop to chart (+5..24 px)",600,100,TRUE,"exact",3.38,NA
+62,"legend_caption","01a0f536-ee11-7e1e-b4fb-c1939047c4f4",1,"chrome","Chrome 800px @3x on white",2400,100,TRUE,"exact",10.64,NA
+62,"legend_caption","01a0f536-ee11-7e1e-b4fb-c1939047c4f4",2,"crop","crop to chart (+8..26 px)",2400,100,TRUE,"exact",9.4,NA
+62,"legend_caption","01a0f536-ee11-7e1e-b4fb-c1939047c4f4",3,"chrome","Chrome 800px @1x on github_dark",784,100,TRUE,"exact",3.41,NA
+63,"wide","01a0f536-ee62-74bc-8b37-06e4631bdde6",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",7.93,NA
+64,"scatter","01a0f536-eeac-7a3f-b480-c74da5a4e89e",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",7.86,NA
+64,"scatter","01a0f536-eeac-7a3f-b480-c74da5a4e89e",2,"platform","Slack (fit 1600, JPEG ~88)",1250,88,TRUE,"exact",5.18,NA
+64,"scatter","01a0f536-eeac-7a3f-b480-c74da5a4e89e",3,"phone","phone screenshot (390pt @3x, github_dark)",802,88,TRUE,"exact",2.91,NA
+64,"scatter","01a0f536-eeac-7a3f-b480-c74da5a4e89e",4,"platform","X (fit 1200, JPEG ~85)",802,85,TRUE,"exact",2.32,NA
+65,"small","01a0f536-eee1-76e4-8a24-8d3fc6996b14",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",6.48,NA
+65,"small","01a0f536-eee1-76e4-8a24-8d3fc6996b14",2,"platform","Slack (fit 1600, JPEG ~88)",800,88,TRUE,"exact",2.71,NA
+65,"small","01a0f536-eee1-76e4-8a24-8d3fc6996b14",3,"platform","iMessage (HEIC)",800,80,TRUE,"exact",4.01,NA
+66,"bars","01a0f536-ef0f-75e4-9ce5-b47e720801ad",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",3.16,NA
+66,"bars","01a0f536-ef0f-75e4-9ce5-b47e720801ad",2,"crop","crop to chart (+8..25 px)",720,100,TRUE,"exact",2.02,NA
+67,"bars","01a0f536-ef6a-7c66-ad98-8b8205c02662",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",7.29,NA
+67,"bars","01a0f536-ef6a-7c66-ad98-8b8205c02662",2,"chrome","Chrome 1000px @2x on light_grey",1562,100,TRUE,"exact",6.04,NA
+67,"bars","01a0f536-ef6a-7c66-ad98-8b8205c02662",3,"chrome","Chrome 640px @2x on light_grey",781,100,TRUE,"exact",2.43,NA
+68,"wide","4f4578cc-e377-4622-a3b5-7e7b5d3f1e5b",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",5.82,NA
+68,"wide","4f4578cc-e377-4622-a3b5-7e7b5d3f1e5b",2,"halve","retina image halved (pasted into a doc)",640,100,TRUE,"exact",2.31,NA
+69,"bars","1638a967-93bd-408e-a0b7-987b20dc6ed8",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",3.16,NA
+69,"bars","1638a967-93bd-408e-a0b7-987b20dc6ed8",2,"platform","WhatsApp (fit 1600, JPEG ~70)",450,70,FALSE,"NULL",2.64,NA
+69,"bars","1638a967-93bd-408e-a0b7-987b20dc6ed8",3,"platform","iMessage (HEIC)",450,70,FALSE,"NULL",1.73,NA
+69,"bars","1638a967-93bd-408e-a0b7-987b20dc6ed8",4,"platform","X (fit 1200, JPEG ~85)",338,70,FALSE,"NULL",0.72,NA
+69,"bars","1638a967-93bd-408e-a0b7-987b20dc6ed8",5,"crop","crop to chart (+13..29 px)",338,70,FALSE,"NULL",1.39,NA
+70,"facets","01a0f536-f0ca-7e30-9203-9e3f3a221698",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",3.47,NA
+70,"facets","01a0f536-f0ca-7e30-9203-9e3f3a221698",2,"platform","email (fit 1024, sips JPEG 75)",384,75,FALSE,"exact",1.02,NA
+70,"facets","01a0f536-f0ca-7e30-9203-9e3f3a221698",3,"platform","X (fit 1200, JPEG ~85)",384,75,FALSE,"exact",2.66,NA
+71,"big","d1a3d691-5c2f-4e8c-b0ba-5389ec503ed1",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",6.29,NA
+71,"big","d1a3d691-5c2f-4e8c-b0ba-5389ec503ed1",2,"chrome","Chrome 800px @1x on slack_dark",625,100,TRUE,"exact",1.38,NA
+71,"big","d1a3d691-5c2f-4e8c-b0ba-5389ec503ed1",3,"platform","WhatsApp (fit 1600, JPEG ~70)",625,70,TRUE,"exact",1.66,NA
+72,"scatter","01a0f536-f39f-76ff-b497-dda89bab31c2",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3,NA
+72,"scatter","01a0f536-f39f-76ff-b497-dda89bab31c2",2,"platform","Teams preview (fit 800, JPEG ~75)",300,75,FALSE,"NULL",0.81,NA
+72,"scatter","01a0f536-f39f-76ff-b497-dda89bab31c2",3,"platform","Teams preview (fit 800, JPEG ~75)",300,75,FALSE,"NULL",1.66,NA
+72,"scatter","01a0f536-f39f-76ff-b497-dda89bab31c2",4,"crop","crop to chart (+0..15 px)",300,75,FALSE,"NULL",0.39,NA
+72,"scatter","01a0f536-f39f-76ff-b497-dda89bab31c2",5,"crop","crop to chart (+5..26 px)",300,75,FALSE,"NULL",0.36,NA
+73,"wide","01a0f536-f3d6-7740-96ec-e9d90c118a8a",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",6.51,NA
+73,"wide","01a0f536-f3d6-7740-96ec-e9d90c118a8a",2,"halve","retina image halved (pasted into a doc)",800,100,TRUE,"exact",2.54,NA
+73,"wide","01a0f536-f3d6-7740-96ec-e9d90c118a8a",3,"platform","Discord (fit 1280, WebP 75)",800,75,TRUE,"exact",1.88,NA
+74,"small","7a166347-46e1-4f0e-a743-df9a61e9ceab",1,"chrome","Chrome 1000px @3x on white",3000,100,TRUE,"exact",13.58,NA
+74,"small","7a166347-46e1-4f0e-a743-df9a61e9ceab",2,"phone","phone screenshot (390pt @3x, white)",802,100,TRUE,"exact",3.82,NA
+74,"small","7a166347-46e1-4f0e-a743-df9a61e9ceab",3,"chrome","Chrome 480px @3x on github_dark",987,100,TRUE,"exact",4.63,NA
+75,"small","01a0f536-f465-7667-b933-5205660f2669",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.95,NA
+76,"big","01a0f536-f492-7c66-90b2-cebec4b7f5ef",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",3.85,NA
+77,"facets","01a0f536-f68c-72ee-b93e-81d72a414d6a",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",5.7,NA
+77,"facets","01a0f536-f68c-72ee-b93e-81d72a414d6a",2,"chrome","Chrome 1000px @1x on white",375,100,FALSE,"exact",0.97,NA
+78,"scatter","01a0f536-f6f8-720b-abe0-16ad1d20ad10",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3.24,NA
+78,"scatter","01a0f536-f6f8-720b-abe0-16ad1d20ad10",2,"platform","Slack (fit 1600, JPEG ~88)",600,88,TRUE,"exact",1.56,NA
+78,"scatter","01a0f536-f6f8-720b-abe0-16ad1d20ad10",3,"crop","crop to chart (+5..30 px)",600,88,TRUE,"exact",1.47,NA
+78,"scatter","01a0f536-f6f8-720b-abe0-16ad1d20ad10",4,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",7.36,NA
+79,"small","ecbfedcd-afc2-481c-a0ab-858da79bc234",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",8.85,NA
+79,"small","ecbfedcd-afc2-481c-a0ab-858da79bc234",2,"chrome","Chrome 800px @3x on white",1200,100,TRUE,"exact",5.93,NA
+79,"small","ecbfedcd-afc2-481c-a0ab-858da79bc234",3,"platform","Slack (fit 1600, JPEG ~88)",500,88,TRUE,"exact",2.39,NA
+79,"small","ecbfedcd-afc2-481c-a0ab-858da79bc234",4,"platform","Slack (fit 1600, JPEG ~88)",500,88,TRUE,"exact",1.84,NA
+79,"small","ecbfedcd-afc2-481c-a0ab-858da79bc234",5,"phone","phone screenshot (390pt @3x, github_dark)",321,88,FALSE,"exact",2.96,NA
+80,"facets","01a0f536-f759-757d-9315-bd3759c024af",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",5.62,NA
+80,"facets","01a0f536-f759-757d-9315-bd3759c024af",2,"halve","retina image halved (pasted into a doc)",720,100,TRUE,"exact",0.32,NA
+81,"small","01a0f536-f7bf-78b2-a3d6-9ae6f2687178",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",4.88,NA
+81,"small","01a0f536-f7bf-78b2-a3d6-9ae6f2687178",2,"chrome","Chrome 640px @2x on light_grey",480,100,TRUE,"exact",2.57,NA
+82,"big","63ebd4cf-1e42-431b-81cb-603f782972b6",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.47,NA
+82,"big","63ebd4cf-1e42-431b-81cb-603f782972b6",2,"halve","retina image halved (pasted into a doc)",1000,100,TRUE,"exact",3.64,NA
+82,"big","63ebd4cf-1e42-431b-81cb-603f782972b6",3,"platform","WhatsApp (fit 1600, JPEG ~70)",1000,70,TRUE,"exact",3.19,NA
+83,"big","9e8a66d0-4e14-4807-8afd-4c47d7666f2f",1,"chrome","Chrome 360px @3x on github_dark",1080,100,TRUE,"exact",3.52,NA
+83,"big","9e8a66d0-4e14-4807-8afd-4c47d7666f2f",2,"chrome","Chrome 1000px @2x on white",562,100,TRUE,"exact",2.22,NA
+83,"big","9e8a66d0-4e14-4807-8afd-4c47d7666f2f",3,"crop","crop to chart (+4..26 px)",562,100,TRUE,"exact",1.58,NA
+84,"small","f609180f-4f61-4059-963b-d02eaf25a65e",1,"chrome","Chrome 360px @3x on white",1080,100,TRUE,"exact",4.45,NA
+84,"small","f609180f-4f61-4059-963b-d02eaf25a65e",2,"phone","phone screenshot (390pt @3x, white)",289,100,FALSE,"exact",1.46,NA
+85,"big","01a0f536-fce0-7749-9718-92a10651f02f",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.39,NA
+85,"big","01a0f536-fce0-7749-9718-92a10651f02f",2,"chrome","Chrome 1000px @1x on white",625,100,TRUE,"exact",2.65,NA
+85,"big","01a0f536-fce0-7749-9718-92a10651f02f",3,"platform","Discord (fit 1280, WebP 75)",625,75,TRUE,"exact",1.31,NA
+86,"dark","a2873e01-0782-40d7-aa28-1b609beb3442",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3.95,NA
+87,"scatter","01a0f536-ff34-7446-beb8-f928b05e0480",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",4.13,NA
+87,"scatter","01a0f536-ff34-7446-beb8-f928b05e0480",2,"platform","Teams preview (fit 800, JPEG ~75)",625,75,TRUE,"exact",2.06,NA
+87,"scatter","01a0f536-ff34-7446-beb8-f928b05e0480",3,"halve","retina image halved (pasted into a doc)",312,75,FALSE,"exact",0.69,NA
+87,"scatter","01a0f536-ff34-7446-beb8-f928b05e0480",4,"platform","Teams preview (fit 800, JPEG ~75)",312,75,FALSE,"NULL",0.92,NA
+88,"big","48b81354-f82d-49e2-af3d-45a0662eca65",1,"chrome","Chrome 640px @1x on light_grey",640,100,TRUE,"exact",1.68,NA
+88,"big","48b81354-f82d-49e2-af3d-45a0662eca65",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",1.32,NA
+88,"big","48b81354-f82d-49e2-af3d-45a0662eca65",3,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",1.2,NA
+89,"big","b384c617-ab6d-4f74-8763-56bd4c9f6422",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",3.8,NA
+89,"big","b384c617-ab6d-4f74-8763-56bd4c9f6422",2,"phone","phone screenshot (390pt @3x, github_dark)",513,100,TRUE,"exact",1.17,NA
+89,"big","b384c617-ab6d-4f74-8763-56bd4c9f6422",3,"crop","crop to chart (+1..29 px)",513,100,TRUE,"exact",0.75,NA
+89,"big","b384c617-ab6d-4f74-8763-56bd4c9f6422",4,"crop","crop to chart (+0..25 px)",513,100,TRUE,"exact",0.71,NA
+89,"big","b384c617-ab6d-4f74-8763-56bd4c9f6422",5,"platform","WhatsApp (fit 1600, JPEG ~70)",513,70,TRUE,"exact",4.09,NA
+90,"dark","01a0f537-03a9-719c-ab05-699aa04875a3",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.83,NA
+90,"dark","01a0f537-03a9-719c-ab05-699aa04875a3",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",2.27,NA
+91,"bars","7da77b24-3229-4c11-892f-c7cb90c88b1d",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3.72,NA
+91,"bars","7da77b24-3229-4c11-892f-c7cb90c88b1d",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",7.86,NA
+92,"facets","01a0f537-048e-749b-8031-e11372e9e47d",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.27,NA
+92,"facets","01a0f537-048e-749b-8031-e11372e9e47d",2,"chrome","Chrome 480px @2x on github_dark",842,100,TRUE,"exact",3,NA
+92,"facets","01a0f537-048e-749b-8031-e11372e9e47d",3,"phone","phone screenshot (390pt @3x, github_dark)",337,100,FALSE,"exact",1.54,NA
+92,"facets","01a0f537-048e-749b-8031-e11372e9e47d",4,"crop","crop to chart (+0..28 px)",337,100,FALSE,"exact",1.18,NA
+92,"facets","01a0f537-048e-749b-8031-e11372e9e47d",5,"chrome","Chrome 480px @2x on light_grey",850,100,FALSE,"exact",2.96,NA
+93,"legend_caption","64c17b44-890a-4c4e-a2e3-7097b8972c1e",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",0.69,NA
+93,"legend_caption","64c17b44-890a-4c4e-a2e3-7097b8972c1e",2,"crop","crop to chart (+2..16 px)",720,100,TRUE,"exact",2.58,NA
+94,"small","01a0f537-053d-78dd-9cfc-0b5ed48e4132",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.59,NA
+94,"small","01a0f537-053d-78dd-9cfc-0b5ed48e4132",2,"crop","crop to chart (+7..18 px)",1026,100,TRUE,"exact",3.49,NA
+94,"small","01a0f537-053d-78dd-9cfc-0b5ed48e4132",3,"chrome","Chrome 480px @2x on github_dark",936,100,TRUE,"exact",4.11,NA
+95,"small","01a0f537-0568-7db8-a044-871646942157",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",7.98,NA
+95,"small","01a0f537-0568-7db8-a044-871646942157",2,"chrome","Chrome 800px @1x on slack_dark",500,100,TRUE,"exact",1.67,NA
+96,"legend_caption","01a0f537-059a-74c6-ac62-3e794aaaf0a4",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",10.18,NA
+96,"legend_caption","01a0f537-059a-74c6-ac62-3e794aaaf0a4",2,"phone","phone screenshot (390pt @3x, white)",641,100,TRUE,"exact",1.88,NA
+96,"legend_caption","01a0f537-059a-74c6-ac62-3e794aaaf0a4",3,"platform","iMessage (HEIC)",641,80,TRUE,"exact",1.41,NA
+96,"legend_caption","01a0f537-059a-74c6-ac62-3e794aaaf0a4",4,"platform","iMessage (HEIC)",641,80,TRUE,"exact",3.09,NA
+96,"legend_caption","01a0f537-059a-74c6-ac62-3e794aaaf0a4",5,"halve","retina image halved (pasted into a doc)",320,80,FALSE,"exact",0.8,NA
+97,"dark","01a0f537-05f9-7d84-80e5-3c89cb537800",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",6.18,NA
+98,"dates","ed98cee4-af77-477c-a6c5-8a8cda3e4b1a",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.36,NA
+98,"dates","ed98cee4-af77-477c-a6c5-8a8cda3e4b1a",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",4.02,NA
+98,"dates","ed98cee4-af77-477c-a6c5-8a8cda3e4b1a",3,"crop","crop to chart (+6..22 px)",600,70,TRUE,"exact",8.78,NA
+99,"small","92d10c70-35a2-4f5d-8742-b5fb74c6dc6e",1,"chrome","Chrome 1000px @1x on github_dark",1000,100,TRUE,"exact",4.46,NA
+99,"small","92d10c70-35a2-4f5d-8742-b5fb74c6dc6e",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",2.58,NA
+99,"small","92d10c70-35a2-4f5d-8742-b5fb74c6dc6e",3,"chrome","Chrome 360px @3x on github_dark",844,75,TRUE,"exact",3.97,NA
+100,"dark","8b82d7fb-cc3d-4a76-827f-d0a3d0c823bd",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.2,NA
+100,"dark","8b82d7fb-cc3d-4a76-827f-d0a3d0c823bd",2,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",2.17,NA
+101,"wide","01a0f537-0761-7ca9-97d2-6276fe056427",1,"chrome","Chrome 360px @3x on white",1080,100,TRUE,"exact",3.41,NA
+101,"wide","01a0f537-0761-7ca9-97d2-6276fe056427",2,"crop","crop to chart (+1..14 px)",1080,100,TRUE,"exact",3.39,NA
+102,"small","01a0f537-07b7-702a-bd96-828ebad506d4",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",6.09,NA
+102,"small","01a0f537-07b7-702a-bd96-828ebad506d4",2,"chrome","Chrome 640px @2x on slack_dark",640,100,TRUE,"exact",2.69,NA
+102,"small","01a0f537-07b7-702a-bd96-828ebad506d4",3,"chrome","Chrome 480px @1x on github_dark",120,100,FALSE,"NULL",1.23,NA
+102,"small","01a0f537-07b7-702a-bd96-828ebad506d4",4,"halve","retina image halved (pasted into a doc)",60,100,FALSE,"NULL",0.24,NA
+102,"small","01a0f537-07b7-702a-bd96-828ebad506d4",5,"platform","X (fit 1200, JPEG ~85)",60,85,FALSE,"NULL",0.23,NA
+103,"scatter","d16be4d8-0622-45f4-a1b0-b92cbe1e2a2e",1,"chrome","Chrome 360px @3x on slack_dark",1080,100,TRUE,"exact",3.77,NA
+103,"scatter","d16be4d8-0622-45f4-a1b0-b92cbe1e2a2e",2,"platform","email (fit 1024, sips JPEG 75)",288,75,FALSE,"exact",0.65,NA
+104,"scatter","e3e89fa5-82ad-469b-9ed9-bbacebc0e816",1,"chrome","Chrome 640px @1x on slack_dark",640,100,TRUE,"exact",2.36,NA
+105,"facets","01a0f537-084e-78b3-8391-0ddb3374ae23",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",5.73,NA
+105,"facets","01a0f537-084e-78b3-8391-0ddb3374ae23",2,"phone","phone screenshot (390pt @3x, white)",513,100,TRUE,"exact",1.54,NA
+106,"dates","01a0f537-08c6-771a-83b0-e7d69772fb96",1,"chrome","Chrome 1000px @3x on github_dark",3000,100,TRUE,"exact",13.13,NA
+106,"dates","01a0f537-08c6-771a-83b0-e7d69772fb96",2,"platform","Slack (fit 1600, JPEG ~88)",1250,88,TRUE,"exact",3.39,NA
+106,"dates","01a0f537-08c6-771a-83b0-e7d69772fb96",3,"platform","X (fit 1200, JPEG ~85)",938,85,TRUE,"exact",3.92,NA
+106,"dates","01a0f537-08c6-771a-83b0-e7d69772fb96",4,"halve","retina image halved (pasted into a doc)",469,85,FALSE,"exact",0.99,NA
+106,"dates","01a0f537-08c6-771a-83b0-e7d69772fb96",5,"platform","X (fit 1200, JPEG ~85)",469,85,FALSE,"exact",2,NA
+107,"wide","01a0f537-0930-76eb-9e9b-15e27c1eb152",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",2.83,NA
+107,"wide","01a0f537-0930-76eb-9e9b-15e27c1eb152",2,"platform","Teams preview (fit 800, JPEG ~75)",702,75,TRUE,"exact",2.55,NA
+107,"wide","01a0f537-0930-76eb-9e9b-15e27c1eb152",3,"platform","iMessage (HEIC)",702,75,TRUE,"exact",2.53,NA
+108,"bars","01a0f537-0991-7a34-b38d-ff5e919d5aaf",1,"chrome","Chrome 360px @3x on light_grey",1080,100,TRUE,"exact",4.86,NA
+108,"bars","01a0f537-0991-7a34-b38d-ff5e919d5aaf",2,"platform","X (fit 1200, JPEG ~85)",338,85,FALSE,"NULL",10.91,NA
+108,"bars","01a0f537-0991-7a34-b38d-ff5e919d5aaf",3,"platform","email (fit 1024, sips JPEG 75)",288,75,FALSE,"NULL",7.7,NA
+108,"bars","01a0f537-0991-7a34-b38d-ff5e919d5aaf",4,"halve","retina image halved (pasted into a doc)",144,75,FALSE,"NULL",0.22,NA
+108,"bars","01a0f537-0991-7a34-b38d-ff5e919d5aaf",5,"chrome","Chrome 480px @1x on white",135,75,FALSE,"NULL",1.51,NA
+109,"legend_caption","01a0f537-09f8-7df4-aa0b-49a223e809b8",1,"chrome","Chrome 640px @3x on light_grey",1920,100,TRUE,"exact",8.57,NA
+109,"legend_caption","01a0f537-09f8-7df4-aa0b-49a223e809b8",2,"halve","retina image halved (pasted into a doc)",960,100,TRUE,"exact",3.77,NA
+110,"bars","01a0f537-0a4a-7ce2-9544-6b452f0c153a",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.38,NA
+111,"big","c4ada476-cdf1-4e0e-8124-f87c8119958a",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",0.98,NA
+111,"big","c4ada476-cdf1-4e0e-8124-f87c8119958a",2,"crop","crop to chart (+5..26 px)",720,100,TRUE,"exact",2.15,NA
+112,"dark","01a0f537-0cd2-78e0-a7d5-4e8e28a3be6a",1,"chrome","Chrome 800px @1x on slack_dark",800,100,TRUE,"exact",2.59,NA
+112,"dark","01a0f537-0cd2-78e0-a7d5-4e8e28a3be6a",2,"crop","crop to chart (+2..18 px)",800,100,TRUE,"exact",1.73,NA
+113,"big","46a07133-e81a-48ef-802e-83ae8d27ac02",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.33,NA
+113,"big","46a07133-e81a-48ef-802e-83ae8d27ac02",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.75,NA
+113,"big","46a07133-e81a-48ef-802e-83ae8d27ac02",3,"chrome","Chrome 800px @1x on light_grey",702,100,TRUE,"exact",2.15,NA
+114,"facets","01a0f537-0f7e-7180-9b23-800f9ec5b223",1,"chrome","Chrome 360px @1x on github_dark",360,100,FALSE,"exact",2.66,NA
+114,"facets","01a0f537-0f7e-7180-9b23-800f9ec5b223",2,"halve","retina image halved (pasted into a doc)",180,100,FALSE,"NULL",0.47,NA
+114,"facets","01a0f537-0f7e-7180-9b23-800f9ec5b223",3,"platform","email (fit 1024, sips JPEG 75)",180,75,FALSE,"NULL",0.44,NA
+115,"dark","01a0f537-104c-78ef-b4b7-a49e8165b9e9",1,"chrome","Chrome 1000px @3x on slack_dark",3000,100,TRUE,"exact",11.86,NA
+115,"dark","01a0f537-104c-78ef-b4b7-a49e8165b9e9",2,"chrome","Chrome 640px @2x on github_dark",1000,100,TRUE,"exact",3.35,NA
+115,"dark","01a0f537-104c-78ef-b4b7-a49e8165b9e9",3,"crop","crop to chart (+4..23 px)",1000,100,TRUE,"exact",3.87,NA
+115,"dark","01a0f537-104c-78ef-b4b7-a49e8165b9e9",4,"chrome","Chrome 640px @2x on light_grey",1256,100,TRUE,"exact",3.86,NA
+116,"facets","01a0f537-10de-7bcf-98e7-5e8794806957",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",2.42,NA
+116,"facets","01a0f537-10de-7bcf-98e7-5e8794806957",2,"crop","crop to chart (+4..23 px)",640,100,TRUE,"exact",2.7,NA
+116,"facets","01a0f537-10de-7bcf-98e7-5e8794806957",3,"phone","phone screenshot (390pt @3x, white)",960,100,TRUE,"exact",4.31,NA
+116,"facets","01a0f537-10de-7bcf-98e7-5e8794806957",4,"halve","retina image halved (pasted into a doc)",479,100,FALSE,"exact",1.92,NA
+116,"facets","01a0f537-10de-7bcf-98e7-5e8794806957",5,"platform","Slack (fit 1600, JPEG ~88)",479,88,FALSE,"exact",1.66,NA
+117,"dark","d490c53f-a633-49cf-b252-f9bb84e895a4",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",1.89,NA
+117,"dark","d490c53f-a633-49cf-b252-f9bb84e895a4",2,"crop","crop to chart (+4..26 px)",720,100,TRUE,"exact",2.02,NA
+117,"dark","d490c53f-a633-49cf-b252-f9bb84e895a4",3,"phone","phone screenshot (390pt @3x, white)",984,100,TRUE,"exact",3.75,NA
+117,"dark","d490c53f-a633-49cf-b252-f9bb84e895a4",4,"chrome","Chrome 1000px @2x on white",1681,100,TRUE,"exact",7.77,NA
+117,"dark","d490c53f-a633-49cf-b252-f9bb84e895a4",5,"chrome","Chrome 640px @2x on slack_dark",841,100,TRUE,"exact",2.02,NA
+118,"wide","01a0f537-1218-7f7e-bc97-90b965de2eec",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.58,NA
+118,"wide","01a0f537-1218-7f7e-bc97-90b965de2eec",2,"crop","crop to chart (+3..28 px)",1026,100,TRUE,"exact",3.23,NA
+118,"wide","01a0f537-1218-7f7e-bc97-90b965de2eec",3,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",4.21,NA
+118,"wide","01a0f537-1218-7f7e-bc97-90b965de2eec",4,"platform","Teams preview (fit 800, JPEG ~75)",776,75,TRUE,"exact",3.72,NA
+119,"dates","01a0f537-1282-77b0-8fc6-9fef5e8f0078",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",0.57,NA
+119,"dates","01a0f537-1282-77b0-8fc6-9fef5e8f0078",2,"chrome","Chrome 360px @3x on white",304,100,FALSE,"NULL",2.41,NA
+120,"big","01a0f537-12e7-7616-b695-63c2ff1749df",1,"chrome","Chrome 360px @1x on github_dark",360,100,FALSE,"exact",0.95,NA
+120,"big","01a0f537-12e7-7616-b695-63c2ff1749df",2,"crop","crop to chart (+6..29 px)",360,100,FALSE,"exact",0.58,NA
+120,"big","01a0f537-12e7-7616-b695-63c2ff1749df",3,"chrome","Chrome 1000px @2x on light_grey",1900,100,FALSE,"exact",7.45,NA
+120,"big","01a0f537-12e7-7616-b695-63c2ff1749df",4,"platform","X (fit 1200, JPEG ~85)",891,85,FALSE,"exact",3.97,NA
+120,"big","01a0f537-12e7-7616-b695-63c2ff1749df",5,"crop","crop to chart (+2..23 px)",891,85,FALSE,"exact",4.24,NA
+121,"legend_caption","2ac2cfb6-bd9e-4514-a9f9-1c6b95912793",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.38,NA
+121,"legend_caption","2ac2cfb6-bd9e-4514-a9f9-1c6b95912793",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",2.49,NA
+121,"legend_caption","2ac2cfb6-bd9e-4514-a9f9-1c6b95912793",3,"platform","WhatsApp (fit 1600, JPEG ~70)",898,70,TRUE,"exact",3.77,NA
+122,"small","8ffe9ecd-3c80-4db5-b9f4-36d310e3e363",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",6.46,NA
+122,"small","8ffe9ecd-3c80-4db5-b9f4-36d310e3e363",2,"chrome","Chrome 480px @3x on light_grey",540,100,TRUE,"exact",1.02,NA
+122,"small","8ffe9ecd-3c80-4db5-b9f4-36d310e3e363",3,"platform","Discord (fit 1280, WebP 75)",180,75,FALSE,"NULL",0.94,NA
+122,"small","8ffe9ecd-3c80-4db5-b9f4-36d310e3e363",4,"halve","retina image halved (pasted into a doc)",90,75,FALSE,"NULL",0.41,NA
+122,"small","8ffe9ecd-3c80-4db5-b9f4-36d310e3e363",5,"phone","phone screenshot (390pt @3x, white)",144,75,FALSE,"NULL",1.22,NA
+123,"scatter","313ac2de-5779-4f85-a870-c27f2280dd76",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",4.91,NA
+123,"scatter","313ac2de-5779-4f85-a870-c27f2280dd76",2,"chrome","Chrome 480px @1x on slack_dark",240,100,FALSE,"exact",0.54,NA
+123,"scatter","313ac2de-5779-4f85-a870-c27f2280dd76",3,"crop","crop to chart (+0..17 px)",240,100,FALSE,"exact",0.38,NA
+124,"wide","da9b38b4-232e-4c63-96aa-15149b232c2b",1,"chrome","Chrome 360px @1x on light_grey",360,100,FALSE,"exact",0.61,NA
+125,"legend_caption","01a0f537-1614-79e4-8ac0-dc3a796adee3",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",3.11,NA
+125,"legend_caption","01a0f537-1614-79e4-8ac0-dc3a796adee3",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",3.24,NA
+125,"legend_caption","01a0f537-1614-79e4-8ac0-dc3a796adee3",3,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",2.21,NA
+126,"small","01a0f537-166f-7004-afab-de8d4f8f56b4",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",3.2,NA
+126,"small","01a0f537-166f-7004-afab-de8d4f8f56b4",2,"crop","crop to chart (+1..27 px)",640,100,TRUE,"exact",2.68,NA
+126,"small","01a0f537-166f-7004-afab-de8d4f8f56b4",3,"halve","retina image halved (pasted into a doc)",320,100,FALSE,"exact",1.28,NA
+126,"small","01a0f537-166f-7004-afab-de8d4f8f56b4",4,"halve","retina image halved (pasted into a doc)",161,100,FALSE,"NULL",0.12,NA
+126,"small","01a0f537-166f-7004-afab-de8d4f8f56b4",5,"platform","X (fit 1200, JPEG ~85)",161,85,FALSE,"NULL",0.15,NA
+127,"big","01a0f537-16a4-7179-ab9e-c1fba510ccf9",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",2.36,NA
+127,"big","01a0f537-16a4-7179-ab9e-c1fba510ccf9",2,"platform","X (fit 1200, JPEG ~85)",938,85,TRUE,"exact",3.64,NA
+127,"big","01a0f537-16a4-7179-ab9e-c1fba510ccf9",3,"platform","WhatsApp (fit 1600, JPEG ~70)",938,70,TRUE,"exact",3.62,NA
+128,"wide","38359ac0-8eff-44b2-b631-962f4449c53a",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",2.56,NA
+128,"wide","38359ac0-8eff-44b2-b631-962f4449c53a",2,"chrome","Chrome 1000px @2x on slack_dark",562,100,TRUE,"exact",2.23,NA
+128,"wide","38359ac0-8eff-44b2-b631-962f4449c53a",3,"chrome","Chrome 360px @2x on slack_dark",158,100,FALSE,"NULL",1.11,NA
+129,"facets","8fc58c54-55e6-4b12-9b49-aa085c233d1c",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",2.91,NA
+129,"facets","8fc58c54-55e6-4b12-9b49-aa085c233d1c",2,"halve","retina image halved (pasted into a doc)",480,100,TRUE,"exact",2.34,NA
+130,"wide","01a0f537-1a53-7434-ade6-ad34968baa66",1,"chrome","Chrome 800px @1x on slack_dark",800,100,TRUE,"exact",2.86,NA
+131,"small","4c24178b-f546-487a-b2b8-c5d7b20ba73d",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",3.61,NA
+131,"small","4c24178b-f546-487a-b2b8-c5d7b20ba73d",2,"halve","retina image halved (pasted into a doc)",360,100,FALSE,"exact",1.1,NA
+132,"wide","01a0f537-1b19-7886-bf9b-5f73faf54cdb",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",6.55,NA
+132,"wide","01a0f537-1b19-7886-bf9b-5f73faf54cdb",2,"halve","retina image halved (pasted into a doc)",720,100,TRUE,"exact",2.23,NA
+132,"wide","01a0f537-1b19-7886-bf9b-5f73faf54cdb",3,"platform","Discord (fit 1280, WebP 75)",480,75,TRUE,"exact",1.2,NA
+132,"wide","01a0f537-1b19-7886-bf9b-5f73faf54cdb",4,"platform","iMessage (HEIC)",480,75,TRUE,"exact",1.25,NA
+133,"dates","ea0aeeda-f7db-45d3-9759-0a4a0740eac0",1,"chrome","Chrome 800px @1x on white",800,100,TRUE,"exact",2.95,NA
+133,"dates","ea0aeeda-f7db-45d3-9759-0a4a0740eac0",2,"crop","crop to chart (+4..26 px)",800,100,TRUE,"exact",2.09,NA
+134,"small","01a0f537-1c17-7713-b4a8-da48bb5ae29e",1,"chrome","Chrome 480px @3x on light_grey",1440,100,TRUE,"exact",6.6,NA
+134,"small","01a0f537-1c17-7713-b4a8-da48bb5ae29e",2,"halve","retina image halved (pasted into a doc)",720,100,TRUE,"exact",2.01,NA
+134,"small","01a0f537-1c17-7713-b4a8-da48bb5ae29e",3,"chrome","Chrome 640px @2x on github_dark",480,100,TRUE,"exact",2.15,NA
+135,"big","f7309f3b-52c6-47d5-be2e-883230f94ca3",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",0.51,NA
+136,"small","01a0f537-1f09-743a-8cfe-0e74b05df6fb",1,"chrome","Chrome 800px @1x on white",800,100,TRUE,"exact",3.01,NA
+136,"small","01a0f537-1f09-743a-8cfe-0e74b05df6fb",2,"crop","crop to chart (+0..20 px)",800,100,TRUE,"exact",2.54,NA
+136,"small","01a0f537-1f09-743a-8cfe-0e74b05df6fb",3,"chrome","Chrome 480px @3x on white",1408,100,TRUE,"exact",6.44,NA
+137,"dark","bd85cdfe-43fc-4366-880a-45bea4694b85",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.16,NA
+137,"dark","bd85cdfe-43fc-4366-880a-45bea4694b85",2,"crop","crop to chart (+7..23 px)",1026,100,TRUE,"exact",4.25,NA
+137,"dark","bd85cdfe-43fc-4366-880a-45bea4694b85",3,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",3,NA
+137,"dark","bd85cdfe-43fc-4366-880a-45bea4694b85",4,"chrome","Chrome 1000px @1x on github_dark",960,88,TRUE,"exact",1.99,NA
+137,"dark","bd85cdfe-43fc-4366-880a-45bea4694b85",5,"crop","crop to chart (+11..26 px)",960,88,TRUE,"exact",3.91,NA
+138,"scatter","b26105fc-ee64-4e6e-a937-64fa820ef6e9",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.72,NA
+138,"scatter","b26105fc-ee64-4e6e-a937-64fa820ef6e9",2,"chrome","Chrome 640px @1x on light_grey",561,100,TRUE,"exact",2.38,NA
+138,"scatter","b26105fc-ee64-4e6e-a937-64fa820ef6e9",3,"crop","crop to chart (+1..19 px)",561,100,TRUE,"exact",1.85,NA
+138,"scatter","b26105fc-ee64-4e6e-a937-64fa820ef6e9",4,"chrome","Chrome 800px @1x on github_dark",786,100,TRUE,"exact",3.12,NA
+138,"scatter","b26105fc-ee64-4e6e-a937-64fa820ef6e9",5,"halve","retina image halved (pasted into a doc)",393,100,FALSE,"exact",2.11,NA
+139,"bars","01a0f537-2025-74e4-847c-80ccb6990b89",1,"chrome","Chrome 1000px @1x on light_grey",1000,100,TRUE,"exact",3.15,NA
+139,"bars","01a0f537-2025-74e4-847c-80ccb6990b89",2,"platform","email (fit 1024, sips JPEG 75)",800,75,TRUE,"exact",3.13,NA
+139,"bars","01a0f537-2025-74e4-847c-80ccb6990b89",3,"chrome","Chrome 480px @1x on white",375,75,FALSE,"exact",0.73,NA
+139,"bars","01a0f537-2025-74e4-847c-80ccb6990b89",4,"platform","Slack (fit 1600, JPEG ~88)",375,75,FALSE,"exact",0.68,NA
+139,"bars","01a0f537-2025-74e4-847c-80ccb6990b89",5,"chrome","Chrome 360px @2x on light_grey",211,75,FALSE,"NULL",2.17,NA
+140,"bars","8a8139c3-6641-41b9-b6fd-34b1df1a354c",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",6.92,NA
+141,"dates","01a0f537-21be-7aaf-a4a1-a27ac0806220",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",3.47,NA
+141,"dates","01a0f537-21be-7aaf-a4a1-a27ac0806220",2,"platform","email (fit 1024, sips JPEG 75)",384,75,FALSE,"exact",1.59,NA
+141,"dates","01a0f537-21be-7aaf-a4a1-a27ac0806220",3,"crop","crop to chart (+15..25 px)",384,75,FALSE,"exact",2,NA
+141,"dates","01a0f537-21be-7aaf-a4a1-a27ac0806220",4,"platform","email (fit 1024, sips JPEG 75)",384,75,FALSE,"exact",1.29,NA
+142,"scatter","01a0f537-2232-7ece-a666-46e32619b6ec",1,"chrome","Chrome 640px @1x on github_dark",640,100,TRUE,"exact",3.46,NA
+142,"scatter","01a0f537-2232-7ece-a666-46e32619b6ec",2,"platform","iMessage (HEIC)",640,80,TRUE,"exact",1.96,NA
+143,"wide","01a0f537-22a1-7f95-93ec-88aaa5c84b00",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",6.56,NA
+144,"dark","01a0f537-232b-7767-9c7a-098100005ee7",1,"chrome","Chrome 1000px @3x on light_grey",3000,100,TRUE,"exact",11.53,NA
+144,"dark","01a0f537-232b-7767-9c7a-098100005ee7",2,"chrome","Chrome 1000px @3x on light_grey",2344,100,TRUE,"exact",8.2,NA
+144,"dark","01a0f537-232b-7767-9c7a-098100005ee7",3,"chrome","Chrome 360px @1x on white",220,100,FALSE,"NULL",0.69,NA
+144,"dark","01a0f537-232b-7767-9c7a-098100005ee7",4,"crop","crop to chart (+4..13 px)",220,100,FALSE,"exact",0.67,NA
+144,"dark","01a0f537-232b-7767-9c7a-098100005ee7",5,"platform","X (fit 1200, JPEG ~85)",220,85,FALSE,"NULL",0.19,NA
+145,"dates","01a0f537-2383-76c9-8445-4a2f6f0f6e6b",1,"chrome","Chrome 800px @1x on slack_dark",800,100,TRUE,"exact",2.27,NA
+145,"dates","01a0f537-2383-76c9-8445-4a2f6f0f6e6b",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",2.47,NA
+146,"facets","76ce9e66-5b4e-483d-9fca-b4905677e58a",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",5.22,NA
+147,"big","40bcaf26-021c-41c1-9230-86a54b6e8ff7",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.56,NA
+147,"big","40bcaf26-021c-41c1-9230-86a54b6e8ff7",2,"chrome","Chrome 800px @3x on github_dark",2105,100,TRUE,"exact",8.39,NA
+147,"big","40bcaf26-021c-41c1-9230-86a54b6e8ff7",3,"crop","crop to chart (+3..27 px)",2105,100,TRUE,"exact",6.33,NA
+147,"big","40bcaf26-021c-41c1-9230-86a54b6e8ff7",4,"chrome","Chrome 1000px @1x on light_grey",985,100,TRUE,"exact",2.81,NA
+147,"big","40bcaf26-021c-41c1-9230-86a54b6e8ff7",5,"phone","phone screenshot (390pt @3x, github_dark)",789,100,TRUE,"exact",2.32,NA
+148,"bars","99c2f8d7-b3ea-4bed-ad0d-a7035982afae",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",4.08,NA
+149,"dark","d4a16a02-c56e-493c-a3e7-a2b35aed618e",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",5.6,NA
+149,"dark","d4a16a02-c56e-493c-a3e7-a2b35aed618e",2,"chrome","Chrome 640px @1x on light_grey",320,100,FALSE,"exact",0.72,NA
+150,"facets","01a0f537-275b-7460-bd0b-962427f1b81d",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.44,NA
+150,"facets","01a0f537-275b-7460-bd0b-962427f1b81d",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",3.38,NA
+151,"small","11326a9d-c601-4d1e-a890-fa8944e2dec4",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.39,NA
+151,"small","11326a9d-c601-4d1e-a890-fa8944e2dec4",2,"crop","crop to chart (+15..24 px)",960,100,TRUE,"exact",3.36,NA
+151,"small","11326a9d-c601-4d1e-a890-fa8944e2dec4",3,"platform","Discord (fit 1280, WebP 75)",960,75,TRUE,"exact",3.72,NA
+152,"legend_caption","6eb04eb0-6a09-4507-a589-49bfb778845a",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.21,NA
+153,"dark","01a0f537-2861-7e83-a2ae-ade074e11269",1,"chrome","Chrome 800px @3x on slack_dark",2400,100,TRUE,"exact",9.62,NA
+153,"dark","01a0f537-2861-7e83-a2ae-ade074e11269",2,"chrome","Chrome 360px @2x on slack_dark",450,100,FALSE,"exact",1.04,NA
+153,"dark","01a0f537-2861-7e83-a2ae-ade074e11269",3,"chrome","Chrome 1000px @2x on slack_dark",352,100,FALSE,"exact",0.74,NA
+154,"legend_caption","01a0f537-28b4-7c91-80c6-d3ca855c4b52",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",8.25,NA
+154,"legend_caption","01a0f537-28b4-7c91-80c6-d3ca855c4b52",2,"platform","iMessage (HEIC)",2000,80,TRUE,"exact",6.98,NA
+154,"legend_caption","01a0f537-28b4-7c91-80c6-d3ca855c4b52",3,"chrome","Chrome 640px @2x on slack_dark",1000,80,TRUE,"exact",2.79,NA
+154,"legend_caption","01a0f537-28b4-7c91-80c6-d3ca855c4b52",4,"chrome","Chrome 360px @2x on slack_dark",281,80,FALSE,"exact",1.05,NA
+154,"legend_caption","01a0f537-28b4-7c91-80c6-d3ca855c4b52",5,"crop","crop to chart (+2..26 px)",281,80,FALSE,"exact",0.73,NA
+155,"big","63811261-5919-46a6-af93-31b6e7ec6228",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",2.82,NA
+155,"big","63811261-5919-46a6-af93-31b6e7ec6228",2,"platform","Discord (fit 1280, WebP 75)",1026,75,TRUE,"exact",3.57,NA
+155,"big","63811261-5919-46a6-af93-31b6e7ec6228",3,"platform","X (fit 1200, JPEG ~85)",1026,75,TRUE,"exact",3.64,NA
+156,"bars","a7deefb5-79b2-4165-bc17-c24f4a5e292f",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.1,NA
+156,"bars","a7deefb5-79b2-4165-bc17-c24f4a5e292f",2,"platform","Discord (fit 1280, WebP 75)",1026,75,TRUE,"exact",3.42,NA
+157,"dates","8a736969-b68a-41b7-9617-82dc976da365",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",2.72,NA
+157,"dates","8a736969-b68a-41b7-9617-82dc976da365",2,"platform","WhatsApp (fit 1600, JPEG ~70)",640,70,TRUE,"exact",2.49,NA
+157,"dates","8a736969-b68a-41b7-9617-82dc976da365",3,"platform","X (fit 1200, JPEG ~85)",600,70,TRUE,"NULL",14.84,NA
+157,"dates","8a736969-b68a-41b7-9617-82dc976da365",4,"platform","Teams preview (fit 800, JPEG ~75)",400,70,FALSE,"NULL",1.76,NA
+157,"dates","8a736969-b68a-41b7-9617-82dc976da365",5,"chrome","Chrome 1000px @2x on github_dark",1000,70,FALSE,"NULL",4.34,NA
+158,"bars","5eb57f66-54b6-4803-a6b6-a9c5e5a747e1",1,"chrome","Chrome 360px @1x on light_grey",360,100,FALSE,"exact",1.09,NA
+158,"bars","5eb57f66-54b6-4803-a6b6-a9c5e5a747e1",2,"halve","retina image halved (pasted into a doc)",180,100,FALSE,"NULL",0.47,NA
+158,"bars","5eb57f66-54b6-4803-a6b6-a9c5e5a747e1",3,"chrome","Chrome 360px @2x on slack_dark",202,100,FALSE,"NULL",1.4,NA
+159,"dark","01a0f537-2c2b-72fe-9dc7-35278601c494",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3.94,NA
+160,"scatter","91273be0-95f9-44b4-aeb8-1d417bd30e9f",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",2.98,NA
+160,"scatter","91273be0-95f9-44b4-aeb8-1d417bd30e9f",2,"crop","crop to chart (+2..29 px)",480,100,TRUE,"exact",3.53,NA
+160,"scatter","91273be0-95f9-44b4-aeb8-1d417bd30e9f",3,"crop","crop to chart (+13..27 px)",480,100,TRUE,"exact",1.86,NA
+161,"wide","01a0f537-2cc7-7102-b64c-8d83cd9771e0",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.47,NA
+161,"wide","01a0f537-2cc7-7102-b64c-8d83cd9771e0",2,"phone","phone screenshot (390pt @3x, github_dark)",289,100,FALSE,"exact",1.33,NA
+162,"dark","01a0f537-2d16-7087-a2d4-0eb21d84c72e",1,"chrome","Chrome 480px @1x on white",480,100,TRUE,"exact",1.53,NA
+162,"dark","01a0f537-2d16-7087-a2d4-0eb21d84c72e",2,"platform","Discord (fit 1280, WebP 75)",480,75,TRUE,"exact",0.87,NA
+162,"dark","01a0f537-2d16-7087-a2d4-0eb21d84c72e",3,"chrome","Chrome 1000px @3x on github_dark",1125,75,TRUE,"exact",12.91,NA
+162,"dark","01a0f537-2d16-7087-a2d4-0eb21d84c72e",4,"crop","crop to chart (+14..28 px)",1125,75,TRUE,"exact",0.87,NA
+162,"dark","01a0f537-2d16-7087-a2d4-0eb21d84c72e",5,"platform","X (fit 1200, JPEG ~85)",1125,75,TRUE,"exact",0.58,NA
+163,"small","3bd83913-59e9-48da-b3a6-a36195ac4c71",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",6.78,NA
+163,"small","3bd83913-59e9-48da-b3a6-a36195ac4c71",2,"platform","iMessage (HEIC)",1600,80,TRUE,"exact",6.62,NA
+164,"wide","01a0f537-2e12-76eb-8a7c-4e0d8fd6256e",1,"chrome","Chrome 800px @1x on github_dark",800,100,TRUE,"exact",2.07,NA
+165,"legend_caption","01a0f537-2e54-7696-8147-f5c2d46fc147",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.31,NA
+165,"legend_caption","01a0f537-2e54-7696-8147-f5c2d46fc147",2,"crop","crop to chart (+1..26 px)",1026,100,TRUE,"exact",2.67,NA
+166,"dark","01a0f537-2eb3-785f-aac0-ed3abc3598aa",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.77,NA
+166,"dark","01a0f537-2eb3-785f-aac0-ed3abc3598aa",2,"chrome","Chrome 360px @2x on light_grey",450,100,FALSE,"exact",2.02,NA
+167,"legend_caption","01a0f537-2f01-7c05-8f12-fccf15f4f4ec",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.01,NA
+167,"legend_caption","01a0f537-2f01-7c05-8f12-fccf15f4f4ec",2,"crop","crop to chart (+10..25 px)",1026,100,TRUE,"exact",4.72,NA
+167,"legend_caption","01a0f537-2f01-7c05-8f12-fccf15f4f4ec",3,"crop","crop to chart (+1..20 px)",1026,100,TRUE,"exact",3.51,NA
+168,"wide","d005984d-77ee-4384-8592-c1966787b18a",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",8.32,NA
+168,"wide","d005984d-77ee-4384-8592-c1966787b18a",2,"chrome","Chrome 480px @1x on slack_dark",300,100,FALSE,"exact",0.49,NA
+168,"wide","d005984d-77ee-4384-8592-c1966787b18a",3,"chrome","Chrome 360px @3x on white",253,100,FALSE,"NULL",1.32,NA
+168,"wide","d005984d-77ee-4384-8592-c1966787b18a",4,"chrome","Chrome 1000px @1x on github_dark",66,100,FALSE,"NULL",1.32,NA
+169,"big","01a0f537-2f94-7af1-960b-bf92218cceca",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",4.76,NA
+170,"dates","01a0f537-3187-778c-8c1e-084b8b3b9445",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",3.29,NA
+170,"dates","01a0f537-3187-778c-8c1e-084b8b3b9445",2,"chrome","Chrome 480px @2x on white",480,100,TRUE,"exact",2.13,NA
+171,"scatter","01a0f537-31cd-7d29-a345-a7b843bed0c1",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.67,NA
+172,"scatter","dae571b5-dcc3-4a84-9c10-3cc181e8d76e",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",9.26,NA
+172,"scatter","dae571b5-dcc3-4a84-9c10-3cc181e8d76e",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",2.82,NA
+172,"scatter","dae571b5-dcc3-4a84-9c10-3cc181e8d76e",3,"phone","phone screenshot (390pt @3x, github_dark)",802,75,TRUE,"exact",2.44,NA
+173,"dates","01a0f537-3238-7c4f-a1f9-8f6d41d33e41",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",8.34,NA
+173,"dates","01a0f537-3238-7c4f-a1f9-8f6d41d33e41",2,"chrome","Chrome 480px @2x on slack_dark",750,100,TRUE,"exact",2.3,NA
+174,"scatter","01a0f537-327d-7ead-abc3-4957a290e73d",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",3.76,NA
+175,"legend_caption","c0fc733b-f984-4d2c-9de0-6916226984d8",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.52,NA
+175,"legend_caption","c0fc733b-f984-4d2c-9de0-6916226984d8",2,"chrome","Chrome 800px @2x on light_grey",600,100,TRUE,"exact",1.83,NA
+175,"legend_caption","c0fc733b-f984-4d2c-9de0-6916226984d8",3,"crop","crop to chart (+0..29 px)",600,100,TRUE,"exact",2.96,NA
+175,"legend_caption","c0fc733b-f984-4d2c-9de0-6916226984d8",4,"platform","Teams preview (fit 800, JPEG ~75)",600,75,TRUE,"exact",0.85,NA
+175,"legend_caption","c0fc733b-f984-4d2c-9de0-6916226984d8",5,"chrome","Chrome 1000px @2x on slack_dark",1835,75,TRUE,"exact",15.87,NA
+176,"dark","44ecee3f-1fa4-4770-aa94-bd458c0ec999",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",2.82,NA
+176,"dark","44ecee3f-1fa4-4770-aa94-bd458c0ec999",2,"chrome","Chrome 640px @2x on light_grey",640,100,TRUE,"exact",3.67,NA
+176,"dark","44ecee3f-1fa4-4770-aa94-bd458c0ec999",3,"platform","Teams preview (fit 800, JPEG ~75)",200,75,FALSE,"NULL",0.65,NA
+176,"dark","44ecee3f-1fa4-4770-aa94-bd458c0ec999",4,"halve","retina image halved (pasted into a doc)",100,75,FALSE,"NULL",0.22,NA
+176,"dark","44ecee3f-1fa4-4770-aa94-bd458c0ec999",5,"platform","Slack (fit 1600, JPEG ~88)",100,75,FALSE,"NULL",0.19,NA
+177,"legend_caption","01a0f537-333e-718b-9f75-1b103a569589",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.34,NA
+177,"legend_caption","01a0f537-333e-718b-9f75-1b103a569589",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.71,NA
+178,"big","c006a128-3f15-48dc-8012-a8f246a587e6",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",6.26,NA
+178,"big","c006a128-3f15-48dc-8012-a8f246a587e6",2,"crop","crop to chart (+2..26 px)",2000,100,TRUE,"exact",6.05,NA
+179,"small","01a0f537-3577-7417-8ebe-aa7a556a17f7",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.75,NA
+179,"small","01a0f537-3577-7417-8ebe-aa7a556a17f7",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",3.3,NA
+180,"scatter","a1957b9f-5049-4e0b-b6da-b2dd68d0f1b3",1,"chrome","Chrome 480px @1x on slack_dark",480,100,TRUE,"exact",2.11,NA
+180,"scatter","a1957b9f-5049-4e0b-b6da-b2dd68d0f1b3",2,"halve","retina image halved (pasted into a doc)",240,100,FALSE,"exact",0.26,NA
+180,"scatter","a1957b9f-5049-4e0b-b6da-b2dd68d0f1b3",3,"platform","email (fit 1024, sips JPEG 75)",240,75,FALSE,"NULL",3.02,NA
+180,"scatter","a1957b9f-5049-4e0b-b6da-b2dd68d0f1b3",4,"halve","retina image halved (pasted into a doc)",120,75,FALSE,"NULL",0.16,NA
+180,"scatter","a1957b9f-5049-4e0b-b6da-b2dd68d0f1b3",5,"phone","phone screenshot (390pt @3x, github_dark)",385,75,FALSE,"NULL",2,NA
+181,"facets","bd6c391f-70ed-427c-91fb-91bd9497827b",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.28,NA
+181,"facets","bd6c391f-70ed-427c-91fb-91bd9497827b",2,"platform","Discord (fit 1280, WebP 75)",800,75,TRUE,"exact",2.36,NA
+182,"dates","fab91752-d149-45fa-b5cc-20940689caba",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.86,NA
+182,"dates","fab91752-d149-45fa-b5cc-20940689caba",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",2.77,NA
+182,"dates","fab91752-d149-45fa-b5cc-20940689caba",3,"platform","Teams preview (fit 800, JPEG ~75)",702,75,TRUE,"exact",2.15,NA
+183,"big","11b14d9c-37fc-40ce-adb5-0efc37195860",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",6.54,NA
+183,"big","11b14d9c-37fc-40ce-adb5-0efc37195860",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",10.57,NA
+183,"big","11b14d9c-37fc-40ce-adb5-0efc37195860",3,"platform","Teams preview (fit 800, JPEG ~75)",625,75,TRUE,"exact",0.94,NA
+183,"big","11b14d9c-37fc-40ce-adb5-0efc37195860",4,"chrome","Chrome 640px @1x on white",500,75,TRUE,"exact",3.71,NA
+183,"big","11b14d9c-37fc-40ce-adb5-0efc37195860",5,"chrome","Chrome 1000px @3x on white",1172,75,TRUE,"exact",14.02,NA
+184,"wide","7d34b175-873c-41eb-8c17-345dd25d022a",1,"chrome","Chrome 480px @3x on white",1440,100,TRUE,"exact",5.56,NA
+185,"dates","5b9b1f21-b156-4928-9ff1-ad90183d0f00",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",8.3,NA
+186,"facets","fa3187d9-a27f-4da3-8073-e1db603f0ab2",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",4.83,NA
+186,"facets","fa3187d9-a27f-4da3-8073-e1db603f0ab2",2,"halve","retina image halved (pasted into a doc)",640,100,TRUE,"exact",2.93,NA
+186,"facets","fa3187d9-a27f-4da3-8073-e1db603f0ab2",3,"chrome","Chrome 640px @2x on slack_dark",640,100,TRUE,"exact",2.42,NA
+187,"wide","01a0f537-3a9e-74ae-9853-c17649231a4e",1,"chrome","Chrome 360px @1x on light_grey",360,100,FALSE,"exact",0.62,NA
+187,"wide","01a0f537-3a9e-74ae-9853-c17649231a4e",2,"platform","iMessage (HEIC)",360,80,FALSE,"exact",1.24,NA
+188,"small","b53916d8-b7f1-4754-84a4-143392002ce4",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",0.57,NA
+188,"small","b53916d8-b7f1-4754-84a4-143392002ce4",2,"chrome","Chrome 480px @2x on white",270,100,FALSE,"exact",1.27,NA
+188,"small","b53916d8-b7f1-4754-84a4-143392002ce4",3,"platform","Teams preview (fit 800, JPEG ~75)",84,75,FALSE,"NULL",0.93,NA
+189,"big","01a0f537-3b1d-765a-a853-057262e837e9",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",7.59,NA
+189,"big","01a0f537-3b1d-765a-a853-057262e837e9",2,"halve","retina image halved (pasted into a doc)",1000,100,TRUE,"exact",3.72,NA
+189,"big","01a0f537-3b1d-765a-a853-057262e837e9",3,"platform","Teams preview (fit 800, JPEG ~75)",625,75,TRUE,"exact",1.6,NA
+189,"big","01a0f537-3b1d-765a-a853-057262e837e9",4,"chrome","Chrome 360px @2x on light_grey",562,75,TRUE,"exact",1.86,NA
+189,"big","01a0f537-3b1d-765a-a853-057262e837e9",5,"halve","retina image halved (pasted into a doc)",281,75,FALSE,"exact",0.32,NA
+190,"small","7b3f92b2-0696-41e5-98c9-2f108f1be932",1,"chrome","Chrome 480px @3x on white",1440,100,TRUE,"exact",7.55,NA
+190,"small","7b3f92b2-0696-41e5-98c9-2f108f1be932",2,"halve","retina image halved (pasted into a doc)",720,100,TRUE,"exact",2.49,NA
+190,"small","7b3f92b2-0696-41e5-98c9-2f108f1be932",3,"crop","crop to chart (+6..30 px)",720,100,TRUE,"exact",2.65,NA
+191,"wide","be381c54-e8dc-450e-8ab7-d002a6fcf233",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",7.25,NA
+191,"wide","be381c54-e8dc-450e-8ab7-d002a6fcf233",2,"chrome","Chrome 800px @2x on slack_dark",1250,100,TRUE,"exact",5.13,NA
+191,"wide","be381c54-e8dc-450e-8ab7-d002a6fcf233",3,"crop","crop to chart (+1..25 px)",1250,100,TRUE,"exact",4.67,NA
+191,"wide","be381c54-e8dc-450e-8ab7-d002a6fcf233",4,"chrome","Chrome 480px @2x on slack_dark",922,100,TRUE,"exact",3.95,NA
+192,"wide","01a0f537-3daa-72aa-9831-b6bb66d9cc4d",1,"chrome","Chrome 640px @3x on white",1920,100,TRUE,"exact",8.11,NA
+192,"wide","01a0f537-3daa-72aa-9831-b6bb66d9cc4d",2,"chrome","Chrome 1000px @1x on light_grey",500,100,TRUE,"exact",1.81,NA
+192,"wide","01a0f537-3daa-72aa-9831-b6bb66d9cc4d",3,"chrome","Chrome 800px @3x on slack_dark",938,100,TRUE,"exact",5.19,NA
+193,"bars","0780c925-a8ae-48dc-b1d4-26fa00b5c848",1,"chrome","Chrome 640px @1x on slack_dark",640,100,TRUE,"exact",3.11,NA
+194,"small","8751e47a-b541-4b8a-98f7-bdce29f3c5ae",1,"chrome","Chrome 480px @3x on light_grey",1440,100,TRUE,"exact",8.06,NA
+194,"small","8751e47a-b541-4b8a-98f7-bdce29f3c5ae",2,"chrome","Chrome 480px @3x on white",540,100,TRUE,"exact",2.37,NA
+194,"small","8751e47a-b541-4b8a-98f7-bdce29f3c5ae",3,"phone","phone screenshot (390pt @3x, white)",144,100,FALSE,"NULL",2.33,NA
+195,"big","beb2107e-fef3-4f37-b705-4a13f7a32ed2",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",2.29,NA
+196,"dark","01a0f537-4093-779a-a1e9-1e06eb4af69c",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",9.04,NA
+196,"dark","01a0f537-4093-779a-a1e9-1e06eb4af69c",2,"platform","Slack (fit 1600, JPEG ~88)",1000,88,TRUE,"exact",3.72,NA
+197,"dark","01a0f537-40d7-7ed9-9805-c288e23df583",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",5.75,NA
+198,"bars","adac64d6-b24a-4aa9-95b3-d7784ebf5243",1,"chrome","Chrome 480px @1x on light_grey",480,100,TRUE,"exact",3.8,NA
+198,"bars","adac64d6-b24a-4aa9-95b3-d7784ebf5243",2,"chrome","Chrome 640px @3x on slack_dark",720,100,TRUE,"exact",3.46,NA
+198,"bars","adac64d6-b24a-4aa9-95b3-d7784ebf5243",3,"chrome","Chrome 640px @1x on white",120,100,FALSE,"NULL",0.76,NA
+198,"bars","adac64d6-b24a-4aa9-95b3-d7784ebf5243",4,"platform","email (fit 1024, sips JPEG 75)",96,75,FALSE,"NULL",0.98,NA
+198,"bars","adac64d6-b24a-4aa9-95b3-d7784ebf5243",5,"phone","phone screenshot (390pt @3x, white)",96,75,FALSE,"NULL",1.54,NA
+199,"legend_caption","01a0f537-4175-7ab2-87da-dfc21dd53704",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",7.26,NA
+199,"legend_caption","01a0f537-4175-7ab2-87da-dfc21dd53704",2,"chrome","Chrome 360px @1x on light_grey",225,100,FALSE,"exact",0.72,NA
+199,"legend_caption","01a0f537-4175-7ab2-87da-dfc21dd53704",3,"crop","crop to chart (+0..24 px)",225,100,FALSE,"exact",0.43,NA
+200,"wide","01a0f537-41cc-7239-b8fd-62f235ee7d49",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",9.63,NA
+200,"wide","01a0f537-41cc-7239-b8fd-62f235ee7d49",2,"halve","retina image halved (pasted into a doc)",1000,100,TRUE,"exact",4.47,NA
+201,"facets","e47cdede-399c-4a24-b064-1b094f5c0a19",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",7.52,NA
+201,"facets","e47cdede-399c-4a24-b064-1b094f5c0a19",2,"platform","Slack (fit 1600, JPEG ~88)",1000,88,TRUE,"exact",4.24,NA
+201,"facets","e47cdede-399c-4a24-b064-1b094f5c0a19",3,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",2.66,NA
+202,"dark","01a0f537-4294-727f-9897-d51751807ab0",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",3.91,NA
+202,"dark","01a0f537-4294-727f-9897-d51751807ab0",2,"chrome","Chrome 640px @2x on github_dark",480,100,TRUE,"exact",2.38,NA
+203,"scatter","bcb5a669-0c11-4bb0-b094-e510a2ad40b8",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",7.01,NA
+203,"scatter","bcb5a669-0c11-4bb0-b094-e510a2ad40b8",2,"chrome","Chrome 800px @3x on white",900,100,TRUE,"exact",4.28,NA
+203,"scatter","bcb5a669-0c11-4bb0-b094-e510a2ad40b8",3,"chrome","Chrome 640px @1x on github_dark",150,100,FALSE,"NULL",0.69,NA
+203,"scatter","bcb5a669-0c11-4bb0-b094-e510a2ad40b8",4,"platform","Slack (fit 1600, JPEG ~88)",150,88,FALSE,"NULL",0.76,NA
+204,"wide","01a0f537-431d-7173-9498-b41e106cba1d",1,"chrome","Chrome 1000px @1x on white",1000,100,TRUE,"exact",4.2,NA
+204,"wide","01a0f537-431d-7173-9498-b41e106cba1d",2,"chrome","Chrome 1000px @2x on github_dark",1562,100,TRUE,"exact",6.27,NA
+204,"wide","01a0f537-431d-7173-9498-b41e106cba1d",3,"platform","Teams preview (fit 800, JPEG ~75)",488,75,TRUE,"exact",2.79,NA
+205,"big","01a0f537-4373-72ba-836c-69cf9daeb00d",1,"chrome","Chrome 360px @3x on github_dark",1080,100,TRUE,"exact",0.76,NA
+206,"small","9b5bf804-dff7-43d9-88b2-302d60c0450a",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",6.04,NA
+206,"small","9b5bf804-dff7-43d9-88b2-302d60c0450a",2,"platform","email (fit 1024, sips JPEG 75)",384,75,FALSE,"exact",0.81,NA
+207,"small","01a0f537-464b-741c-b442-239d2421b32d",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.31,NA
+207,"small","01a0f537-464b-741c-b442-239d2421b32d",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",3.38,NA
+207,"small","01a0f537-464b-741c-b442-239d2421b32d",3,"chrome","Chrome 1000px @3x on light_grey",2631,75,TRUE,"exact",12.62,NA
+207,"small","01a0f537-464b-741c-b442-239d2421b32d",4,"platform","Discord (fit 1280, WebP 75)",877,75,TRUE,"exact",3.99,NA
+207,"small","01a0f537-464b-741c-b442-239d2421b32d",5,"platform","WhatsApp (fit 1600, JPEG ~70)",877,70,TRUE,"exact",2.05,NA
+208,"bars","d8d55062-cde8-4376-ba91-e250298af370",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",3.21,NA
+208,"bars","d8d55062-cde8-4376-ba91-e250298af370",2,"chrome","Chrome 640px @2x on light_grey",1000,100,TRUE,"exact",5.78,NA
+208,"bars","d8d55062-cde8-4376-ba91-e250298af370",3,"chrome","Chrome 800px @1x on light_grey",312,100,FALSE,"exact",0.5,NA
+209,"legend_caption","01a0f537-4741-7d96-8e09-1fb3f7b5f103",1,"chrome","Chrome 1000px @1x on github_dark",1000,100,TRUE,"exact",4.25,NA
+209,"legend_caption","01a0f537-4741-7d96-8e09-1fb3f7b5f103",2,"halve","retina image halved (pasted into a doc)",500,100,TRUE,"exact",2.4,NA
+209,"legend_caption","01a0f537-4741-7d96-8e09-1fb3f7b5f103",3,"chrome","Chrome 800px @3x on slack_dark",1875,100,TRUE,"exact",11.71,NA
+209,"legend_caption","01a0f537-4741-7d96-8e09-1fb3f7b5f103",4,"crop","crop to chart (+7..22 px)",1875,100,TRUE,"exact",11.16,NA
+210,"facets","ea31d7be-d670-41fe-8598-7ff57cb1e140",1,"chrome","Chrome 800px @3x on github_dark",2400,100,TRUE,"exact",10,NA
+210,"facets","ea31d7be-d670-41fe-8598-7ff57cb1e140",2,"platform","Teams preview (fit 800, JPEG ~75)",500,75,TRUE,"exact",2.36,NA
+210,"facets","ea31d7be-d670-41fe-8598-7ff57cb1e140",3,"halve","retina image halved (pasted into a doc)",250,75,FALSE,"exact",0.98,NA
+210,"facets","ea31d7be-d670-41fe-8598-7ff57cb1e140",4,"chrome","Chrome 640px @2x on white",800,75,FALSE,"exact",3.87,NA
+210,"facets","ea31d7be-d670-41fe-8598-7ff57cb1e140",5,"crop","crop to chart (+4..26 px)",800,75,FALSE,"exact",5.02,NA
+211,"scatter","af9747d5-6a2e-457d-97ec-605ca133c032",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",5.54,NA
+211,"scatter","af9747d5-6a2e-457d-97ec-605ca133c032",2,"platform","Slack (fit 1600, JPEG ~88)",800,88,TRUE,"exact",2.91,NA
+212,"legend_caption","01a0f537-4842-7d90-a026-a177dd6857f4",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.16,NA
+213,"legend_caption","7697913f-0744-47e7-b899-adb33d77be24",1,"chrome","Chrome 800px @1x on white",800,100,TRUE,"exact",2.35,NA
+213,"legend_caption","7697913f-0744-47e7-b899-adb33d77be24",2,"chrome","Chrome 360px @2x on github_dark",450,100,FALSE,"exact",3.2,NA
+214,"big","f032c3e3-f381-49b6-b8bb-2778779a1519",1,"chrome","Chrome 360px @1x on light_grey",360,100,FALSE,"exact",0.74,NA
+214,"big","f032c3e3-f381-49b6-b8bb-2778779a1519",2,"chrome","Chrome 640px @2x on slack_dark",360,100,FALSE,"exact",1.07,NA
+214,"big","f032c3e3-f381-49b6-b8bb-2778779a1519",3,"platform","X (fit 1200, JPEG ~85)",169,85,FALSE,"NULL",1.28,NA
+214,"big","f032c3e3-f381-49b6-b8bb-2778779a1519",4,"platform","X (fit 1200, JPEG ~85)",169,85,FALSE,"NULL",0.92,NA
+214,"big","f032c3e3-f381-49b6-b8bb-2778779a1519",5,"phone","phone screenshot (390pt @3x, github_dark)",144,85,FALSE,"NULL",2.07,NA
+215,"facets","01a0f537-4af6-713b-9735-0b1340eb06fc",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",4.43,NA
+215,"facets","01a0f537-4af6-713b-9735-0b1340eb06fc",2,"platform","email (fit 1024, sips JPEG 75)",384,75,FALSE,"exact",1.03,NA
+215,"facets","01a0f537-4af6-713b-9735-0b1340eb06fc",3,"phone","phone screenshot (390pt @3x, white)",385,75,FALSE,"exact",1.35,NA
+215,"facets","01a0f537-4af6-713b-9735-0b1340eb06fc",4,"halve","retina image halved (pasted into a doc)",192,75,FALSE,"NULL",0.78,NA
+215,"facets","01a0f537-4af6-713b-9735-0b1340eb06fc",5,"platform","Discord (fit 1280, WebP 75)",192,75,FALSE,"NULL",0.52,NA
+216,"scatter","01a0f537-4b60-714b-a9d2-f5465a81c39d",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.81,NA
+216,"scatter","01a0f537-4b60-714b-a9d2-f5465a81c39d",2,"platform","Discord (fit 1280, WebP 75)",1026,75,TRUE,"exact",3.18,NA
+217,"legend_caption","01a0f537-4b97-7471-9ad2-9e43f6da48d2",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",7.93,NA
+218,"dark","c581daad-16c7-4784-b637-0b67de0b08ad",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",3.3,NA
+218,"dark","c581daad-16c7-4784-b637-0b67de0b08ad",2,"crop","crop to chart (+1..30 px)",960,100,TRUE,"exact",3.82,NA
+218,"dark","c581daad-16c7-4784-b637-0b67de0b08ad",3,"platform","iMessage (HEIC)",960,80,TRUE,"exact",2.68,NA
+219,"small","01a0f537-4c47-7059-bfb2-433fd51643a4",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",3.79,NA
+219,"small","01a0f537-4c47-7059-bfb2-433fd51643a4",2,"halve","retina image halved (pasted into a doc)",360,100,FALSE,"exact",1.37,NA
+219,"small","01a0f537-4c47-7059-bfb2-433fd51643a4",3,"platform","Slack (fit 1600, JPEG ~88)",360,88,FALSE,"exact",0.87,NA
+219,"small","01a0f537-4c47-7059-bfb2-433fd51643a4",4,"chrome","Chrome 480px @1x on slack_dark",135,88,FALSE,"NULL",1.05,NA
+219,"small","01a0f537-4c47-7059-bfb2-433fd51643a4",5,"phone","phone screenshot (390pt @3x, github_dark)",108,88,FALSE,"NULL",1.64,NA
+220,"dark","1b84135c-ab16-48b5-9a03-9c039d93ee90",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",3.75,NA
+220,"dark","1b84135c-ab16-48b5-9a03-9c039d93ee90",2,"crop","crop to chart (+8..19 px)",960,100,TRUE,"exact",3.09,NA
+220,"dark","1b84135c-ab16-48b5-9a03-9c039d93ee90",3,"crop","crop to chart (+2..30 px)",960,100,TRUE,"exact",2.93,NA
+220,"dark","1b84135c-ab16-48b5-9a03-9c039d93ee90",4,"chrome","Chrome 360px @2x on slack_dark",700,100,TRUE,"exact",2.32,NA
+220,"dark","1b84135c-ab16-48b5-9a03-9c039d93ee90",5,"phone","phone screenshot (390pt @3x, white)",281,100,FALSE,"exact",1.31,NA
+221,"wide","01a0f537-4cfd-71b7-9fe9-929487a81ab7",1,"chrome","Chrome 640px @3x on light_grey",1920,100,TRUE,"exact",7.79,NA
+221,"wide","01a0f537-4cfd-71b7-9fe9-929487a81ab7",2,"platform","WhatsApp (fit 1600, JPEG ~70)",800,70,TRUE,"exact",2.81,NA
+221,"wide","01a0f537-4cfd-71b7-9fe9-929487a81ab7",3,"phone","phone screenshot (390pt @3x, github_dark)",513,70,TRUE,"exact",1.6,NA
+221,"wide","01a0f537-4cfd-71b7-9fe9-929487a81ab7",4,"phone","phone screenshot (390pt @3x, github_dark)",450,70,FALSE,"exact",1.25,NA
+221,"wide","01a0f537-4cfd-71b7-9fe9-929487a81ab7",5,"phone","phone screenshot (390pt @3x, white)",394,70,FALSE,"exact",0.76,NA
+222,"legend_caption","01a0f537-4d4b-79fe-ad1a-547a2db8a6d0",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.37,NA
+222,"legend_caption","01a0f537-4d4b-79fe-ad1a-547a2db8a6d0",2,"halve","retina image halved (pasted into a doc)",360,100,FALSE,"exact",1.23,NA
+222,"legend_caption","01a0f537-4d4b-79fe-ad1a-547a2db8a6d0",3,"halve","retina image halved (pasted into a doc)",180,100,FALSE,"NULL",0.82,NA
+223,"small","01a0f537-4da4-79d2-95b6-d3e4a4b85ddc",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",6.79,NA
+223,"small","01a0f537-4da4-79d2-95b6-d3e4a4b85ddc",2,"crop","crop to chart (+4..29 px)",1280,100,TRUE,"exact",6.32,NA
+224,"big","01a0f537-4de0-727b-8433-24d69a640271",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.61,NA
+225,"legend_caption","86358d65-ab8f-4fd6-a513-4349584d61f9",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",6.37,NA
+225,"legend_caption","86358d65-ab8f-4fd6-a513-4349584d61f9",2,"crop","crop to chart (+4..27 px)",1280,100,TRUE,"exact",4.22,NA
+225,"legend_caption","86358d65-ab8f-4fd6-a513-4349584d61f9",3,"phone","phone screenshot (390pt @3x, github_dark)",1002,100,TRUE,"exact",3.14,NA
+225,"legend_caption","86358d65-ab8f-4fd6-a513-4349584d61f9",4,"chrome","Chrome 640px @3x on light_grey",1644,100,TRUE,"exact",7.16,NA
+225,"legend_caption","86358d65-ab8f-4fd6-a513-4349584d61f9",5,"platform","email (fit 1024, sips JPEG 75)",438,75,FALSE,"exact",0.93,NA
+226,"bars","01a0f537-5169-78a6-9232-c29925d984e4",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",7.17,NA
+226,"bars","01a0f537-5169-78a6-9232-c29925d984e4",2,"crop","crop to chart (+11..28 px)",1600,100,TRUE,"exact",5.27,NA
+227,"bars","aa1162c3-f49c-4a66-bdb2-ec9cfcb28da9",1,"chrome","Chrome 800px @1x on light_grey",800,100,TRUE,"exact",2.59,NA
+227,"bars","aa1162c3-f49c-4a66-bdb2-ec9cfcb28da9",2,"platform","Teams preview (fit 800, JPEG ~75)",500,75,TRUE,"exact",1.84,NA
+227,"bars","aa1162c3-f49c-4a66-bdb2-ec9cfcb28da9",3,"halve","retina image halved (pasted into a doc)",250,75,FALSE,"exact",1.08,NA
+227,"bars","aa1162c3-f49c-4a66-bdb2-ec9cfcb28da9",4,"chrome","Chrome 480px @1x on slack_dark",300,75,FALSE,"NULL",4.94,NA
+228,"dates","39c77484-0528-4db5-a68d-e96716807b4a",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",2.62,NA
+228,"dates","39c77484-0528-4db5-a68d-e96716807b4a",2,"crop","crop to chart (+11..29 px)",720,100,TRUE,"exact",2.72,NA
+228,"dates","39c77484-0528-4db5-a68d-e96716807b4a",3,"platform","X (fit 1200, JPEG ~85)",720,85,TRUE,"exact",1.45,NA
+228,"dates","39c77484-0528-4db5-a68d-e96716807b4a",4,"chrome","Chrome 1000px @2x on light_grey",1870,85,TRUE,"exact",5.96,NA
+228,"dates","39c77484-0528-4db5-a68d-e96716807b4a",5,"chrome","Chrome 1000px @2x on github_dark",1461,85,TRUE,"exact",4.95,NA
+229,"wide","01a0f537-52c3-7a35-a78d-9b3274db48e4",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",4.66,NA
+229,"wide","01a0f537-52c3-7a35-a78d-9b3274db48e4",2,"platform","Slack (fit 1600, JPEG ~88)",800,88,TRUE,"exact",3.94,NA
+229,"wide","01a0f537-52c3-7a35-a78d-9b3274db48e4",3,"halve","retina image halved (pasted into a doc)",400,88,FALSE,"exact",0.3,NA
+229,"wide","01a0f537-52c3-7a35-a78d-9b3274db48e4",4,"platform","email (fit 1024, sips JPEG 75)",400,75,FALSE,"exact",0.63,NA
+229,"wide","01a0f537-52c3-7a35-a78d-9b3274db48e4",5,"platform","Slack (fit 1600, JPEG ~88)",400,75,FALSE,"exact",0.25,NA
+230,"dates","f74f11b3-e9ee-4057-ad7e-000a6f889f62",1,"chrome","Chrome 800px @2x on slack_dark",1600,100,TRUE,"exact",5.79,NA
+230,"dates","f74f11b3-e9ee-4057-ad7e-000a6f889f62",2,"platform","Discord (fit 1280, WebP 75)",800,75,TRUE,"exact",2.22,NA
+231,"dates","01a0f537-5359-7c9b-a526-e669aace8ec3",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.62,NA
+231,"dates","01a0f537-5359-7c9b-a526-e669aace8ec3",2,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",2.13,NA
+232,"facets","01a0f537-53c5-745b-987e-5e574523ed9d",1,"chrome","Chrome 800px @2x on white",1600,100,TRUE,"exact",5.64,NA
+232,"facets","01a0f537-53c5-745b-987e-5e574523ed9d",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",1.75,NA
+232,"facets","01a0f537-53c5-745b-987e-5e574523ed9d",3,"chrome","Chrome 480px @3x on white",900,85,TRUE,"exact",3.24,NA
+232,"facets","01a0f537-53c5-745b-987e-5e574523ed9d",4,"crop","crop to chart (+1..25 px)",900,85,TRUE,"exact",3.48,NA
+233,"dates","01a0f537-5422-7d94-91e8-d0817089a862",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",8.06,NA
+233,"dates","01a0f537-5422-7d94-91e8-d0817089a862",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1250,70,TRUE,"exact",4.3,NA
+233,"dates","01a0f537-5422-7d94-91e8-d0817089a862",3,"platform","X (fit 1200, JPEG ~85)",938,70,TRUE,"exact",6.45,NA
+233,"dates","01a0f537-5422-7d94-91e8-d0817089a862",4,"phone","phone screenshot (390pt @3x, white)",802,70,TRUE,"exact",2.5,NA
+233,"dates","01a0f537-5422-7d94-91e8-d0817089a862",5,"chrome","Chrome 640px @1x on light_grey",438,70,FALSE,"exact",2.11,NA
+234,"wide","01a0f537-5467-7793-81f5-0c9d3db05390",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",6.62,NA
+235,"bars","9bd565e9-3222-4609-bc83-b402da14aa04",1,"chrome","Chrome 640px @1x on slack_dark",640,100,TRUE,"exact",3.04,NA
+235,"bars","9bd565e9-3222-4609-bc83-b402da14aa04",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",1.23,NA
+235,"bars","9bd565e9-3222-4609-bc83-b402da14aa04",3,"chrome","Chrome 1000px @2x on github_dark",1000,85,TRUE,"exact",1.56,NA
+235,"bars","9bd565e9-3222-4609-bc83-b402da14aa04",4,"chrome","Chrome 1000px @3x on github_dark",1172,85,TRUE,"exact",2.75,NA
+236,"dates","e32a2971-f5db-4177-a5fc-f325b82c4577",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",5.37,NA
+237,"legend_caption","01a0f537-55ed-7c45-a9a6-a899c3dbd06b",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",6.05,NA
+237,"legend_caption","01a0f537-55ed-7c45-a9a6-a899c3dbd06b",2,"platform","Teams preview (fit 800, JPEG ~75)",300,75,FALSE,"NULL",0.73,NA
+237,"legend_caption","01a0f537-55ed-7c45-a9a6-a899c3dbd06b",3,"platform","Discord (fit 1280, WebP 75)",300,75,FALSE,"NULL",1.79,NA
+238,"facets","302ce62c-adad-4466-b2eb-c281deda03ee",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",2.65,NA
+238,"facets","302ce62c-adad-4466-b2eb-c281deda03ee",2,"phone","phone screenshot (390pt @3x, white)",289,100,FALSE,"exact",0.98,NA
+238,"facets","302ce62c-adad-4466-b2eb-c281deda03ee",3,"phone","phone screenshot (390pt @3x, white)",253,100,FALSE,"exact",1.62,NA
+238,"facets","302ce62c-adad-4466-b2eb-c281deda03ee",4,"crop","crop to chart (+7..15 px)",253,100,FALSE,"exact",0.73,NA
+239,"scatter","7785a426-cbe9-48b7-b3d1-7638ef0bbaca",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.59,NA
+240,"facets","fa21a958-2049-4f45-b7a0-22643ec903a1",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",4.51,NA
+240,"facets","fa21a958-2049-4f45-b7a0-22643ec903a1",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",6.8,NA
+241,"small","01a0f537-5774-7e69-889a-54a93ea7d6fe",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.44,NA
+241,"small","01a0f537-5774-7e69-889a-54a93ea7d6fe",2,"chrome","Chrome 360px @2x on light_grey",270,100,FALSE,"NULL",1.87,NA
+242,"bars","2743e32f-98f0-4c7f-895b-8cccf043ae77",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",5.42,NA
+242,"bars","2743e32f-98f0-4c7f-895b-8cccf043ae77",2,"platform","iMessage (HEIC)",1440,80,TRUE,"exact",5.69,NA
+242,"bars","2743e32f-98f0-4c7f-895b-8cccf043ae77",3,"phone","phone screenshot (390pt @3x, github_dark)",385,80,FALSE,"exact",1.71,NA
+243,"facets","01a0f537-5806-76e4-a4e2-fd921f76cd0c",1,"chrome","Chrome 480px @1x on light_grey",480,100,TRUE,"exact",1.34,NA
+243,"facets","01a0f537-5806-76e4-a4e2-fd921f76cd0c",2,"platform","Discord (fit 1280, WebP 75)",480,75,TRUE,"exact",0.89,NA
+243,"facets","01a0f537-5806-76e4-a4e2-fd921f76cd0c",3,"chrome","Chrome 1000px @3x on slack_dark",1125,75,TRUE,"exact",3.77,NA
+243,"facets","01a0f537-5806-76e4-a4e2-fd921f76cd0c",4,"crop","crop to chart (+0..22 px)",1125,75,TRUE,"exact",5.02,NA
+243,"facets","01a0f537-5806-76e4-a4e2-fd921f76cd0c",5,"platform","Teams preview (fit 800, JPEG ~75)",783,75,TRUE,"exact",2.71,NA
+244,"dark","9d3f6ef6-56ca-480e-9ff7-cfa1e4bc8cca",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.42,NA
+244,"dark","9d3f6ef6-56ca-480e-9ff7-cfa1e4bc8cca",2,"chrome","Chrome 360px @1x on light_grey",316,100,FALSE,"exact",0.7,NA
+244,"dark","9d3f6ef6-56ca-480e-9ff7-cfa1e4bc8cca",3,"phone","phone screenshot (390pt @3x, white)",253,100,FALSE,"exact",2.44,NA
+244,"dark","9d3f6ef6-56ca-480e-9ff7-cfa1e4bc8cca",4,"chrome","Chrome 1000px @1x on light_grey",216,100,FALSE,"NULL",2.07,NA
+244,"dark","9d3f6ef6-56ca-480e-9ff7-cfa1e4bc8cca",5,"crop","crop to chart (+6..21 px)",216,100,FALSE,"exact",0.09,NA
+245,"bars","01a0f537-58db-7c93-ba87-c61cae3d7ce4",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.32,NA
+245,"bars","01a0f537-58db-7c93-ba87-c61cae3d7ce4",2,"chrome","Chrome 1000px @2x on light_grey",1754,100,TRUE,"exact",6.99,NA
+246,"dates","19dfaf2f-25ca-4a38-944c-e43878d2afc7",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.48,NA
+247,"dates","c8b793af-ee90-4711-82c3-3bbb9b0618bc",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.1,NA
+247,"dates","c8b793af-ee90-4711-82c3-3bbb9b0618bc",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",3.62,NA
+247,"dates","c8b793af-ee90-4711-82c3-3bbb9b0618bc",3,"platform","iMessage (HEIC)",1026,70,TRUE,"exact",2.13,NA
+247,"dates","c8b793af-ee90-4711-82c3-3bbb9b0618bc",4,"chrome","Chrome 640px @3x on github_dark",1684,70,TRUE,"exact",4.83,NA
+247,"dates","c8b793af-ee90-4711-82c3-3bbb9b0618bc",5,"phone","phone screenshot (390pt @3x, white)",450,70,FALSE,"exact",1.72,NA
+248,"legend_caption","9f7e3427-1ec2-4300-9a02-8a7e2408205c",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",8.09,NA
+248,"legend_caption","9f7e3427-1ec2-4300-9a02-8a7e2408205c",2,"platform","Slack (fit 1600, JPEG ~88)",1250,88,TRUE,"exact",5.32,NA
+248,"legend_caption","9f7e3427-1ec2-4300-9a02-8a7e2408205c",3,"crop","crop to chart (+7..25 px)",1250,88,TRUE,"exact",4.42,NA
+249,"legend_caption","5f1fd952-cd58-4166-b456-3b98acaa1b3f",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",7.29,NA
+250,"wide","0d74a75c-937a-481d-8061-8025869b53c9",1,"chrome","Chrome 640px @3x on slack_dark",1920,100,TRUE,"exact",7.19,NA
+251,"small","01a0f537-5af8-7816-a629-fa8b2f40abfe",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",9.17,NA
+251,"small","01a0f537-5af8-7816-a629-fa8b2f40abfe",2,"phone","phone screenshot (390pt @3x, white)",802,100,TRUE,"exact",4.88,NA
+251,"small","01a0f537-5af8-7816-a629-fa8b2f40abfe",3,"chrome","Chrome 360px @3x on light_grey",740,100,TRUE,"exact",4.99,NA
+252,"dark","01a0f537-5b29-7418-a6aa-17e5caf4325e",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.17,NA
+253,"small","0dd6140a-5765-4ce8-be2a-ada08df2ec71",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.57,NA
+253,"small","0dd6140a-5765-4ce8-be2a-ada08df2ec71",2,"crop","crop to chart (+16..24 px)",1026,100,TRUE,"exact",6,NA
+254,"big","01a0f537-5ba7-7f52-9aa2-f0343c057119",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",10.42,NA
+255,"small","3a95647a-593c-425d-bdf3-a6079693386f",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",4.12,NA
+255,"small","3a95647a-593c-425d-bdf3-a6079693386f",2,"crop","crop to chart (+5..23 px)",720,100,TRUE,"exact",2.63,NA
+255,"small","3a95647a-593c-425d-bdf3-a6079693386f",3,"chrome","Chrome 800px @2x on github_dark",1546,100,TRUE,"exact",7.6,NA
+256,"big","01a0f537-5dd4-74a1-bb4f-fa697d61d4f4",1,"chrome","Chrome 800px @1x on light_grey",800,100,TRUE,"exact",2.57,NA
+256,"big","01a0f537-5dd4-74a1-bb4f-fa697d61d4f4",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",3.02,NA
+256,"big","01a0f537-5dd4-74a1-bb4f-fa697d61d4f4",3,"chrome","Chrome 1000px @1x on white",625,85,TRUE,"exact",1.41,NA
+256,"big","01a0f537-5dd4-74a1-bb4f-fa697d61d4f4",4,"crop","crop to chart (+10..19 px)",625,85,TRUE,"exact",2.26,NA
+256,"big","01a0f537-5dd4-74a1-bb4f-fa697d61d4f4",5,"platform","Slack (fit 1600, JPEG ~88)",625,85,TRUE,"exact",1.17,NA
+257,"dark","314f0e14-c79b-4642-a8e5-6dc8e7c47d10",1,"chrome","Chrome 640px @3x on white",1920,100,TRUE,"exact",8.48,NA
+257,"dark","314f0e14-c79b-4642-a8e5-6dc8e7c47d10",2,"chrome","Chrome 800px @2x on github_dark",800,100,TRUE,"exact",3.53,NA
+258,"dark","01a0f537-6051-79a1-b5a6-a5674e326bed",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",8.05,NA
+258,"dark","01a0f537-6051-79a1-b5a6-a5674e326bed",2,"halve","retina image halved (pasted into a doc)",1000,100,TRUE,"exact",4.49,NA
+258,"dark","01a0f537-6051-79a1-b5a6-a5674e326bed",3,"phone","phone screenshot (390pt @3x, github_dark)",802,100,TRUE,"exact",3.25,NA
+259,"dark","b7489306-9b29-4ebb-9123-7a85748df863",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.96,NA
+260,"big","d1d177a6-e13c-4cf3-8252-49fe7efb26c4",1,"chrome","Chrome 1000px @1x on white",1000,100,TRUE,"exact",2.9,NA
+261,"small","01a0f537-6312-796c-8e80-3545bd8e17ca",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",5.26,NA
+261,"small","01a0f537-6312-796c-8e80-3545bd8e17ca",2,"chrome","Chrome 1000px @2x on light_grey",1754,100,TRUE,"exact",7.83,NA
+262,"scatter","01a0f537-6345-7de7-bffa-5ba31b85f45a",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",3.79,NA
+262,"scatter","01a0f537-6345-7de7-bffa-5ba31b85f45a",2,"platform","WhatsApp (fit 1600, JPEG ~70)",450,70,FALSE,"NULL",2.73,NA
+263,"wide","01a0f537-6391-7b9e-a26a-845c8502316b",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.53,NA
+263,"wide","01a0f537-6391-7b9e-a26a-845c8502316b",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",3.26,NA
+263,"wide","01a0f537-6391-7b9e-a26a-845c8502316b",3,"platform","email (fit 1024, sips JPEG 75)",787,75,TRUE,"exact",3.03,NA
+263,"wide","01a0f537-6391-7b9e-a26a-845c8502316b",4,"phone","phone screenshot (390pt @3x, github_dark)",789,75,TRUE,"exact",3.86,NA
+263,"wide","01a0f537-6391-7b9e-a26a-845c8502316b",5,"chrome","Chrome 1000px @3x on github_dark",2023,75,TRUE,"exact",11.3,NA
+264,"bars","b5d11e29-0b3d-47b7-bc7b-b22364989cab",1,"chrome","Chrome 360px @3x on light_grey",1080,100,TRUE,"exact",5.86,NA
+264,"bars","b5d11e29-0b3d-47b7-bc7b-b22364989cab",2,"platform","X (fit 1200, JPEG ~85)",338,85,FALSE,"exact",1.02,NA
+265,"small","79490bfc-6b34-4f78-9b71-71fa88bc0259",1,"chrome","Chrome 800px @1x on slack_dark",800,100,TRUE,"exact",3.52,NA
+265,"small","79490bfc-6b34-4f78-9b71-71fa88bc0259",2,"platform","WhatsApp (fit 1600, JPEG ~70)",800,70,TRUE,"exact",2.54,NA
+265,"small","79490bfc-6b34-4f78-9b71-71fa88bc0259",3,"platform","iMessage (HEIC)",800,70,TRUE,"exact",3.12,NA
+265,"small","79490bfc-6b34-4f78-9b71-71fa88bc0259",4,"chrome","Chrome 480px @2x on light_grey",600,70,TRUE,"exact",2.47,NA
+266,"wide","61db6c1f-867e-4b88-b947-78748be48b5c",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",7.65,NA
+266,"wide","61db6c1f-867e-4b88-b947-78748be48b5c",2,"chrome","Chrome 480px @2x on white",750,100,TRUE,"exact",2.83,NA
+267,"wide","ba6c1348-b295-4c5b-a064-588ea7affed6",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.1,NA
+267,"wide","ba6c1348-b295-4c5b-a064-588ea7affed6",2,"crop","crop to chart (+3..23 px)",1026,100,TRUE,"exact",3.32,NA
+268,"big","01a0f537-650d-7070-af82-c40e3c0ffe9c",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",7.13,NA
+268,"big","01a0f537-650d-7070-af82-c40e3c0ffe9c",2,"chrome","Chrome 1000px @1x on github_dark",375,100,FALSE,"exact",0.07,NA
+268,"big","01a0f537-650d-7070-af82-c40e3c0ffe9c",3,"platform","iMessage (HEIC)",375,80,FALSE,"exact",1.55,NA
+269,"scatter","62d4f69a-cbec-4dc9-bbc9-65cdf72c5560",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",9.44,NA
+269,"scatter","62d4f69a-cbec-4dc9-bbc9-65cdf72c5560",2,"chrome","Chrome 800px @2x on light_grey",1250,100,TRUE,"exact",4.52,NA
+269,"scatter","62d4f69a-cbec-4dc9-bbc9-65cdf72c5560",3,"platform","Teams preview (fit 800, JPEG ~75)",391,75,FALSE,"NULL",6.13,NA
+270,"legend_caption","21c8bf9c-aa79-4858-bf55-db5a57117aeb",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",8.2,NA
+270,"legend_caption","21c8bf9c-aa79-4858-bf55-db5a57117aeb",2,"crop","crop to chart (+15..21 px)",2000,100,TRUE,"exact",7.13,NA
+270,"legend_caption","21c8bf9c-aa79-4858-bf55-db5a57117aeb",3,"chrome","Chrome 480px @2x on slack_dark",943,100,TRUE,"exact",4.03,NA
+270,"legend_caption","21c8bf9c-aa79-4858-bf55-db5a57117aeb",4,"crop","crop to chart (+0..19 px)",943,100,TRUE,"exact",3.87,NA
+271,"dark","01a0f537-67d6-7bcc-b650-31f94ae96a83",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",6.19,NA
+272,"scatter","01a0f537-6813-762c-ba89-7c8ee6da9d70",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",3.24,NA
+272,"scatter","01a0f537-6813-762c-ba89-7c8ee6da9d70",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",6.11,NA
+272,"scatter","01a0f537-6813-762c-ba89-7c8ee6da9d70",3,"platform","X (fit 1200, JPEG ~85)",450,70,FALSE,"exact",0.5,NA
+272,"scatter","01a0f537-6813-762c-ba89-7c8ee6da9d70",4,"chrome","Chrome 480px @2x on light_grey",360,70,FALSE,"exact",1.89,NA
+272,"scatter","01a0f537-6813-762c-ba89-7c8ee6da9d70",5,"platform","Slack (fit 1600, JPEG ~88)",225,70,FALSE,"NULL",1.33,NA
+273,"facets","01a0f537-6845-75bc-b367-2bc89f29e4fa",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.29,NA
+273,"facets","01a0f537-6845-75bc-b367-2bc89f29e4fa",2,"chrome","Chrome 480px @2x on slack_dark",842,100,TRUE,"exact",3.31,NA
+273,"facets","01a0f537-6845-75bc-b367-2bc89f29e4fa",3,"platform","email (fit 1024, sips JPEG 75)",337,75,FALSE,"exact",1.63,NA
+273,"facets","01a0f537-6845-75bc-b367-2bc89f29e4fa",4,"platform","iMessage (HEIC)",337,75,FALSE,"exact",1.45,NA
+273,"facets","01a0f537-6845-75bc-b367-2bc89f29e4fa",5,"platform","Slack (fit 1600, JPEG ~88)",337,75,FALSE,"NULL",4.83,NA
+274,"bars","5b9b12af-5e40-4cbe-be44-87456747e650",1,"chrome","Chrome 640px @1x on light_grey",640,100,TRUE,"exact",2.44,NA
+274,"bars","5b9b12af-5e40-4cbe-be44-87456747e650",2,"phone","phone screenshot (390pt @3x, white)",513,100,TRUE,"exact",1.96,NA
+275,"dates","30346c30-49bc-4448-9487-056b944f4ef0",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.26,NA
+275,"dates","30346c30-49bc-4448-9487-056b944f4ef0",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",2.84,NA
+275,"dates","30346c30-49bc-4448-9487-056b944f4ef0",3,"crop","crop to chart (+4..18 px)",1026,70,TRUE,"exact",3.09,NA
+276,"bars","da2c3060-5191-4797-97c0-e6424e5debb4",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",4.96,NA
+276,"bars","da2c3060-5191-4797-97c0-e6424e5debb4",2,"platform","Discord (fit 1280, WebP 75)",640,75,TRUE,"exact",2.65,NA
+276,"bars","da2c3060-5191-4797-97c0-e6424e5debb4",3,"crop","crop to chart (+4..30 px)",640,75,TRUE,"exact",2.28,NA
+276,"bars","da2c3060-5191-4797-97c0-e6424e5debb4",4,"chrome","Chrome 480px @2x on white",887,75,TRUE,"exact",3.33,NA
+277,"wide","02703436-9965-4c13-9eea-b0da635c3d7c",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",2.99,NA
+278,"bars","01a0f537-69db-76d0-aaa7-16081a156dab",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.66,NA
+278,"bars","01a0f537-69db-76d0-aaa7-16081a156dab",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",2.95,NA
+278,"bars","01a0f537-69db-76d0-aaa7-16081a156dab",3,"platform","Slack (fit 1600, JPEG ~88)",898,75,TRUE,"exact",3.86,NA
+279,"dark","e50ab3b3-e53d-47d7-b669-529564246db4",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",6.04,NA
+279,"dark","e50ab3b3-e53d-47d7-b669-529564246db4",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",2.63,NA
+279,"dark","e50ab3b3-e53d-47d7-b669-529564246db4",3,"crop","crop to chart (+0..28 px)",600,70,TRUE,"exact",1.86,NA
+280,"wide","01a0f537-6a79-73cc-a401-386c5637449c",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",3.6,NA
+280,"wide","01a0f537-6a79-73cc-a401-386c5637449c",2,"platform","Teams preview (fit 800, JPEG ~75)",225,75,FALSE,"NULL",0.48,NA
+280,"wide","01a0f537-6a79-73cc-a401-386c5637449c",3,"phone","phone screenshot (390pt @3x, github_dark)",289,75,FALSE,"NULL",1.32,NA
+280,"wide","01a0f537-6a79-73cc-a401-386c5637449c",4,"chrome","Chrome 480px @3x on slack_dark",355,75,FALSE,"NULL",5.3,NA
+280,"wide","01a0f537-6a79-73cc-a401-386c5637449c",5,"phone","phone screenshot (390pt @3x, white)",95,75,FALSE,"NULL",1.65,NA
+281,"small","01a0f537-6abc-77e8-ae73-68459affe670",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.78,NA
+281,"small","01a0f537-6abc-77e8-ae73-68459affe670",2,"platform","email (fit 1024, sips JPEG 75)",898,75,TRUE,"exact",3.22,NA
+281,"small","01a0f537-6abc-77e8-ae73-68459affe670",3,"phone","phone screenshot (390pt @3x, white)",900,75,TRUE,"exact",6.08,NA
+281,"small","01a0f537-6abc-77e8-ae73-68459affe670",4,"chrome","Chrome 1000px @2x on light_grey",1538,75,TRUE,"exact",9.29,NA
+282,"scatter","01a0f537-6ae6-7904-944e-4471db0787cc",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.41,NA
+282,"scatter","01a0f537-6ae6-7904-944e-4471db0787cc",2,"chrome","Chrome 640px @2x on slack_dark",1122,100,TRUE,"exact",6,NA
+282,"scatter","01a0f537-6ae6-7904-944e-4471db0787cc",3,"phone","phone screenshot (390pt @3x, white)",450,100,FALSE,"exact",2.12,NA
+282,"scatter","01a0f537-6ae6-7904-944e-4471db0787cc",4,"chrome","Chrome 480px @2x on light_grey",369,100,FALSE,"exact",4.03,NA
+282,"scatter","01a0f537-6ae6-7904-944e-4471db0787cc",5,"chrome","Chrome 640px @3x on light_grey",277,100,FALSE,"NULL",3.99,NA
+283,"big","b500e795-5044-493c-ace9-1ce104bcd739",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",5.72,NA
+283,"big","b500e795-5044-493c-ace9-1ce104bcd739",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.32,NA
+284,"scatter","dd364281-1800-4a28-8e42-0a1081007795",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",6.56,NA
+284,"scatter","dd364281-1800-4a28-8e42-0a1081007795",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",5.06,NA
+284,"scatter","dd364281-1800-4a28-8e42-0a1081007795",3,"chrome","Chrome 1000px @2x on slack_dark",1754,70,TRUE,"exact",9.66,NA
+284,"scatter","dd364281-1800-4a28-8e42-0a1081007795",4,"phone","phone screenshot (390pt @3x, github_dark)",703,70,TRUE,"exact",3.2,NA
+285,"small","01a0f537-6d3e-7040-9bb3-f25aff1517c3",1,"chrome","Chrome 1000px @1x on light_grey",1000,100,TRUE,"exact",5.12,NA
+285,"small","01a0f537-6d3e-7040-9bb3-f25aff1517c3",2,"chrome","Chrome 480px @1x on light_grey",375,100,FALSE,"exact",1.13,NA
+285,"small","01a0f537-6d3e-7040-9bb3-f25aff1517c3",3,"halve","retina image halved (pasted into a doc)",188,100,FALSE,"NULL",0.31,NA
+285,"small","01a0f537-6d3e-7040-9bb3-f25aff1517c3",4,"platform","Discord (fit 1280, WebP 75)",188,75,FALSE,"NULL",0.33,NA
+286,"legend_caption","6f296df0-7462-4657-8254-aa7018ec7fb5",1,"chrome","Chrome 360px @2x on github_dark",720,100,TRUE,"exact",0.94,NA
+286,"legend_caption","6f296df0-7462-4657-8254-aa7018ec7fb5",2,"crop","crop to chart (+4..29 px)",720,100,TRUE,"exact",4.01,NA
+286,"legend_caption","6f296df0-7462-4657-8254-aa7018ec7fb5",3,"halve","retina image halved (pasted into a doc)",359,100,FALSE,"exact",0.87,NA
+287,"small","a3f6e599-028e-4504-8196-aaa7c11ff857",1,"chrome","Chrome 1000px @3x on white",3000,100,TRUE,"exact",14.29,NA
+288,"dates","01a0f537-6e8b-7c23-8f2c-94244ee583da",1,"chrome","Chrome 1000px @1x on github_dark",1000,100,TRUE,"exact",2.7,NA
+288,"dates","01a0f537-6e8b-7c23-8f2c-94244ee583da",2,"chrome","Chrome 1000px @2x on github_dark",1562,100,TRUE,"exact",7.03,NA
+288,"dates","01a0f537-6e8b-7c23-8f2c-94244ee583da",3,"platform","X (fit 1200, JPEG ~85)",732,85,TRUE,"exact",2.75,NA
+288,"dates","01a0f537-6e8b-7c23-8f2c-94244ee583da",4,"chrome","Chrome 640px @1x on slack_dark",391,85,FALSE,"exact",1.83,NA
+289,"small","ca15766c-7475-48de-bfa0-4855fe8ada3e",1,"chrome","Chrome 480px @3x on light_grey",1440,100,TRUE,"exact",8,NA
+289,"small","ca15766c-7475-48de-bfa0-4855fe8ada3e",2,"crop","crop to chart (+1..11 px)",1440,100,TRUE,"exact",6.02,NA
+290,"wide","821e9990-d7c5-4197-82be-76a9efd5f79a",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",3.84,NA
+290,"wide","821e9990-d7c5-4197-82be-76a9efd5f79a",2,"platform","Slack (fit 1600, JPEG ~88)",1000,88,TRUE,"exact",3.11,NA
+291,"bars","01a0f537-6fa4-7afa-8029-3d745003aaf5",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.1,NA
+291,"bars","01a0f537-6fa4-7afa-8029-3d745003aaf5",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",3.32,NA
+291,"bars","01a0f537-6fa4-7afa-8029-3d745003aaf5",3,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",1.61,NA
+291,"bars","01a0f537-6fa4-7afa-8029-3d745003aaf5",4,"platform","X (fit 1200, JPEG ~85)",512,75,TRUE,"exact",2.06,NA
+292,"big","43a44cc9-3ae8-4473-97a1-7371d9cc5797",1,"chrome","Chrome 360px @1x on light_grey",360,100,FALSE,"exact",0.76,NA
+292,"big","43a44cc9-3ae8-4473-97a1-7371d9cc5797",2,"halve","retina image halved (pasted into a doc)",180,100,FALSE,"NULL",0.33,NA
+293,"dates","01a0f537-7222-75a5-acc2-9089489fe7cd",1,"chrome","Chrome 480px @2x on light_grey",960,100,TRUE,"exact",4.33,NA
+293,"dates","01a0f537-7222-75a5-acc2-9089489fe7cd",2,"chrome","Chrome 800px @1x on light_grey",300,100,FALSE,"exact",0.44,NA
+293,"dates","01a0f537-7222-75a5-acc2-9089489fe7cd",3,"chrome","Chrome 640px @1x on slack_dark",150,100,FALSE,"NULL",0.85,NA
+293,"dates","01a0f537-7222-75a5-acc2-9089489fe7cd",4,"platform","iMessage (HEIC)",150,80,FALSE,"NULL",1.73,NA
+293,"dates","01a0f537-7222-75a5-acc2-9089489fe7cd",5,"chrome","Chrome 360px @3x on github_dark",127,80,FALSE,"NULL",4.05,NA
+294,"legend_caption","0f9da433-86bb-48fc-83a6-1de7a1b1c39c",1,"chrome","Chrome 640px @1x on slack_dark",640,100,TRUE,"exact",2.78,NA
+295,"bars","f54568c6-2e53-47b2-8d4e-337b37826d34",1,"chrome","Chrome 1000px @2x on github_dark",2000,100,TRUE,"exact",9.54,NA
+295,"bars","f54568c6-2e53-47b2-8d4e-337b37826d34",2,"chrome","Chrome 1000px @3x on light_grey",2344,100,TRUE,"exact",9.89,NA
+296,"legend_caption","01a0f537-7304-73b0-b1d0-cd7d17af5986",1,"chrome","Chrome 480px @2x on github_dark",960,100,TRUE,"exact",5,NA
+296,"legend_caption","01a0f537-7304-73b0-b1d0-cd7d17af5986",2,"crop","crop to chart (+2..16 px)",960,100,TRUE,"exact",5.27,NA
+296,"legend_caption","01a0f537-7304-73b0-b1d0-cd7d17af5986",3,"chrome","Chrome 480px @3x on slack_dark",1403,100,TRUE,"exact",5.91,NA
+297,"dates","14b55ebc-93d6-4f31-b94f-a3cea90b6d42",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",4.75,NA
+297,"dates","14b55ebc-93d6-4f31-b94f-a3cea90b6d42",2,"phone","phone screenshot (390pt @3x, white)",385,100,FALSE,"exact",1.29,NA
+297,"dates","14b55ebc-93d6-4f31-b94f-a3cea90b6d42",3,"crop","crop to chart (+2..13 px)",385,100,FALSE,"exact",2.09,NA
+297,"dates","14b55ebc-93d6-4f31-b94f-a3cea90b6d42",4,"chrome","Chrome 1000px @3x on github_dark",2937,100,FALSE,"exact",16.75,NA
+298,"scatter","29dc6277-eb8f-4e15-a2a5-0b6335331d08",1,"chrome","Chrome 800px @1x on light_grey",800,100,TRUE,"exact",2.65,NA
+298,"scatter","29dc6277-eb8f-4e15-a2a5-0b6335331d08",2,"crop","crop to chart (+2..6 px)",800,100,TRUE,"exact",3.3,NA
+298,"scatter","29dc6277-eb8f-4e15-a2a5-0b6335331d08",3,"chrome","Chrome 1000px @3x on white",2963,100,TRUE,"exact",12.68,NA
+298,"scatter","29dc6277-eb8f-4e15-a2a5-0b6335331d08",4,"platform","Slack (fit 1600, JPEG ~88)",1235,88,TRUE,"exact",4.12,NA
+299,"scatter","23dd71fd-3c8f-4e19-bf06-dab0daa4f104",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",8.84,NA
+300,"dates","01a0f537-73f7-7908-b909-faeb1e7c0547",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",5.05,NA
+300,"dates","01a0f537-73f7-7908-b909-faeb1e7c0547",2,"chrome","Chrome 1000px @2x on github_dark",1000,100,TRUE,"exact",3.62,NA
+300,"dates","01a0f537-73f7-7908-b909-faeb1e7c0547",3,"platform","Slack (fit 1600, JPEG ~88)",625,88,TRUE,"exact",1.4,NA
+301,"big","01a0f537-7438-7e9d-af61-95b207e7bb1a",1,"chrome","Chrome 480px @3x on white",1440,100,TRUE,"exact",4.83,NA
+302,"dates","01a0f537-76d6-7bd5-98cd-03ab099ed65c",1,"chrome","Chrome 1000px @2x on white",2000,100,TRUE,"exact",7.71,NA
+302,"dates","01a0f537-76d6-7bd5-98cd-03ab099ed65c",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1250,70,TRUE,"exact",2.15,NA
+302,"dates","01a0f537-76d6-7bd5-98cd-03ab099ed65c",3,"crop","crop to chart (+10..17 px)",1250,70,TRUE,"exact",4.42,NA
+302,"dates","01a0f537-76d6-7bd5-98cd-03ab099ed65c",4,"platform","email (fit 1024, sips JPEG 75)",1002,70,TRUE,"exact",4.6,NA
+302,"dates","01a0f537-76d6-7bd5-98cd-03ab099ed65c",5,"crop","crop to chart (+1..26 px)",1002,70,TRUE,"exact",3.51,NA
+303,"legend_caption","01a0f537-7739-743e-95cb-d74dee2b1b33",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",6.01,NA
+303,"legend_caption","01a0f537-7739-743e-95cb-d74dee2b1b33",2,"platform","Discord (fit 1280, WebP 75)",800,75,TRUE,"exact",1.74,NA
+304,"bars","3039bd56-eb18-4835-a39c-11bb278e148e",1,"chrome","Chrome 360px @3x on github_dark",1080,100,TRUE,"exact",4.12,NA
+304,"bars","3039bd56-eb18-4835-a39c-11bb278e148e",2,"platform","X (fit 1200, JPEG ~85)",338,85,FALSE,"exact",1.33,NA
+304,"bars","3039bd56-eb18-4835-a39c-11bb278e148e",3,"halve","retina image halved (pasted into a doc)",169,85,FALSE,"NULL",0.72,NA
+305,"bars","a4253061-15df-45d6-8460-84d0fe2616f8",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.91,NA
+306,"legend_caption","14304668-4bbd-492c-8d0b-02f60e7886a4",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.22,NA
+306,"legend_caption","14304668-4bbd-492c-8d0b-02f60e7886a4",2,"chrome","Chrome 640px @1x on slack_dark",180,100,FALSE,"NULL",1.75,NA
+306,"legend_caption","14304668-4bbd-492c-8d0b-02f60e7886a4",3,"chrome","Chrome 1000px @1x on slack_dark",141,100,FALSE,"NULL",1.39,NA
+306,"legend_caption","14304668-4bbd-492c-8d0b-02f60e7886a4",4,"platform","WhatsApp (fit 1600, JPEG ~70)",141,70,FALSE,"NULL",1.48,NA
+306,"legend_caption","14304668-4bbd-492c-8d0b-02f60e7886a4",5,"chrome","Chrome 1000px @3x on white",330,70,FALSE,"NULL",4.73,NA
+307,"wide","01a0f537-7902-7e10-aa83-c05bd37c6e57",1,"chrome","Chrome 480px @1x on white",480,100,TRUE,"exact",2.68,NA
+307,"wide","01a0f537-7902-7e10-aa83-c05bd37c6e57",2,"phone","phone screenshot (390pt @3x, white)",385,100,FALSE,"exact",1.68,NA
+307,"wide","01a0f537-7902-7e10-aa83-c05bd37c6e57",3,"crop","crop to chart (+11..28 px)",385,100,FALSE,"exact",1.23,NA
+307,"wide","01a0f537-7902-7e10-aa83-c05bd37c6e57",4,"platform","Slack (fit 1600, JPEG ~88)",385,88,FALSE,"exact",1.27,NA
+308,"dark","01a0f537-7977-7afe-a28b-1a4cb255916e",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",5.4,NA
+309,"bars","01a0f537-79e3-76f5-be2d-60d5540a12cf",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",5.34,NA
+309,"bars","01a0f537-79e3-76f5-be2d-60d5540a12cf",2,"platform","WhatsApp (fit 1600, JPEG ~70)",800,70,TRUE,"exact",3.84,NA
+309,"bars","01a0f537-79e3-76f5-be2d-60d5540a12cf",3,"platform","Teams preview (fit 800, JPEG ~75)",400,70,FALSE,"NULL",3.95,NA
+310,"facets","01a0f537-7a47-79df-8f7b-ffbaf3d665d1",1,"chrome","Chrome 360px @1x on github_dark",360,100,FALSE,"exact",1.68,NA
+310,"facets","01a0f537-7a47-79df-8f7b-ffbaf3d665d1",2,"crop","crop to chart (+4..23 px)",360,100,FALSE,"exact",1.41,NA
+310,"facets","01a0f537-7a47-79df-8f7b-ffbaf3d665d1",3,"platform","Teams preview (fit 800, JPEG ~75)",360,75,FALSE,"exact",1.82,NA
+310,"facets","01a0f537-7a47-79df-8f7b-ffbaf3d665d1",4,"platform","iMessage (HEIC)",360,75,FALSE,"NULL",0.8,NA
+310,"facets","01a0f537-7a47-79df-8f7b-ffbaf3d665d1",5,"platform","Discord (fit 1280, WebP 75)",360,75,FALSE,"NULL",0.44,NA
+311,"facets","01a0f537-7adc-720a-aed4-721aafcb53a5",1,"chrome","Chrome 360px @3x on github_dark",1080,100,TRUE,"exact",4.41,NA
+311,"facets","01a0f537-7adc-720a-aed4-721aafcb53a5",2,"chrome","Chrome 800px @2x on light_grey",450,100,FALSE,"exact",3.19,NA
+311,"facets","01a0f537-7adc-720a-aed4-721aafcb53a5",3,"platform","Teams preview (fit 800, JPEG ~75)",141,75,FALSE,"NULL",0.44,NA
+312,"bars","01a0f537-7b5b-7f49-88f3-2b5e9f6d06bb",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",4.9,NA
+312,"bars","01a0f537-7b5b-7f49-88f3-2b5e9f6d06bb",2,"halve","retina image halved (pasted into a doc)",640,100,TRUE,"exact",3.58,NA
+312,"bars","01a0f537-7b5b-7f49-88f3-2b5e9f6d06bb",3,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",1.39,NA
+312,"bars","01a0f537-7b5b-7f49-88f3-2b5e9f6d06bb",4,"crop","crop to chart (+4..30 px)",600,85,TRUE,"exact",1.9,NA
+312,"bars","01a0f537-7b5b-7f49-88f3-2b5e9f6d06bb",5,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",2.73,NA
+313,"legend_caption","2b7d053b-3b05-4af1-8b75-61ad801c3f56",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.09,NA
+314,"dark","19a011ee-1f7a-4c54-a3f6-3a4cbcdfb49c",1,"chrome","Chrome 480px @3x on github_dark",1440,100,TRUE,"exact",4.39,NA
+315,"legend_caption","01a0f537-7d51-70c1-b313-c1dedf76a8b0",1,"chrome","Chrome 480px @3x on light_grey",1440,100,TRUE,"exact",5.56,NA
+315,"legend_caption","01a0f537-7d51-70c1-b313-c1dedf76a8b0",2,"chrome","Chrome 360px @2x on github_dark",270,100,FALSE,"exact",1.64,NA
+316,"small","01a0f537-7dbf-713f-a6e8-c152d1b407f2",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.3,NA
+316,"small","01a0f537-7dbf-713f-a6e8-c152d1b407f2",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.55,NA
+317,"small","01a0f537-7dfb-7e62-856d-97f5c781b511",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",0.76,NA
+317,"small","01a0f537-7dfb-7e62-856d-97f5c781b511",2,"platform","Discord (fit 1280, WebP 75)",480,75,TRUE,"exact",0.31,NA
+317,"small","01a0f537-7dfb-7e62-856d-97f5c781b511",3,"chrome","Chrome 1000px @2x on github_dark",750,75,TRUE,"exact",2.06,NA
+318,"small","b5173d74-1023-47c4-8a79-e2b2aa705efa",1,"chrome","Chrome 480px @2x on slack_dark",960,100,TRUE,"exact",4.18,NA
+319,"dates","e4da43c4-4bc2-4ed2-8a83-21b1ac765ac3",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",6.58,NA
+320,"wide","afdcfaf5-0d46-4227-9c3a-0222a983c5c5",1,"chrome","Chrome 1000px @3x on github_dark",3000,100,TRUE,"exact",10.57,NA
+321,"dates","bf8873a2-2aaf-4464-a92c-d4ace310b0c0",1,"chrome","Chrome 640px @1x on white",640,100,TRUE,"exact",2.71,NA
+321,"dates","bf8873a2-2aaf-4464-a92c-d4ace310b0c0",2,"platform","Slack (fit 1600, JPEG ~88)",640,88,TRUE,"exact",1.72,NA
+322,"legend_caption","01a0f537-7ff4-766e-8955-178c9d03b661",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",6.61,NA
+323,"small","01a0f537-80fc-7275-ba99-56ef54faac1c",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.04,NA
+323,"small","01a0f537-80fc-7275-ba99-56ef54faac1c",2,"platform","X (fit 1200, JPEG ~85)",1026,85,TRUE,"exact",11.58,NA
+323,"small","01a0f537-80fc-7275-ba99-56ef54faac1c",3,"chrome","Chrome 800px @2x on light_grey",1403,85,TRUE,"exact",5.63,NA
+324,"scatter","01a0f537-8137-7303-ac8b-4c86f95658e0",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.2,NA
+324,"scatter","01a0f537-8137-7303-ac8b-4c86f95658e0",2,"crop","crop to chart (+3..23 px)",2000,100,TRUE,"exact",6.45,NA
+324,"scatter","01a0f537-8137-7303-ac8b-4c86f95658e0",3,"platform","Teams preview (fit 800, JPEG ~75)",795,75,TRUE,"exact",3.27,NA
+324,"scatter","01a0f537-8137-7303-ac8b-4c86f95658e0",4,"platform","email (fit 1024, sips JPEG 75)",795,75,TRUE,"exact",2.2,NA
+325,"wide","f08ffc6d-92f5-41bb-8274-adf3f58e012f",1,"chrome","Chrome 360px @1x on slack_dark",360,100,FALSE,"exact",1.49,NA
+326,"big","d869c86d-8009-44fe-9515-ad66c1e7ef21",1,"chrome","Chrome 800px @1x on white",800,100,TRUE,"exact",2.05,NA
+326,"big","d869c86d-8009-44fe-9515-ad66c1e7ef21",2,"phone","phone screenshot (390pt @3x, white)",641,100,TRUE,"exact",1.12,NA
+326,"big","d869c86d-8009-44fe-9515-ad66c1e7ef21",3,"phone","phone screenshot (390pt @3x, github_dark)",562,100,TRUE,"exact",1.59,NA
+326,"big","d869c86d-8009-44fe-9515-ad66c1e7ef21",4,"chrome","Chrome 800px @2x on white",769,100,TRUE,"exact",3.27,NA
+327,"big","01a0f537-842b-7866-82e7-2f900ce9c86f",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.04,NA
+327,"big","01a0f537-842b-7866-82e7-2f900ce9c86f",2,"platform","X (fit 1200, JPEG ~85)",1026,85,TRUE,"exact",3.07,NA
+327,"big","01a0f537-842b-7866-82e7-2f900ce9c86f",3,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",3.17,NA
+328,"small","01a0f537-866a-7886-97d8-990ee829e028",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.73,NA
+328,"small","01a0f537-866a-7886-97d8-990ee829e028",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",3.47,NA
+328,"small","01a0f537-866a-7886-97d8-990ee829e028",3,"halve","retina image halved (pasted into a doc)",449,100,FALSE,"exact",1.59,NA
+329,"scatter","01a0f537-869f-739f-b87a-d497887cbb37",1,"chrome","Chrome 640px @2x on github_dark",1280,100,TRUE,"exact",4.67,NA
+330,"big","bf448b9e-2085-4d7b-af81-0171885ab9ee",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.12,NA
+331,"dates","01a0f537-8a7a-7554-bccd-4381165dfb9b",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.91,NA
+331,"dates","01a0f537-8a7a-7554-bccd-4381165dfb9b",2,"chrome","Chrome 640px @3x on white",1684,100,TRUE,"exact",7.58,NA
+332,"wide","8564a388-0f70-4a0b-a9e9-a511acef8849",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.87,NA
+333,"bars","01a0f537-8c03-7a4e-9017-e14b156795d4",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.28,NA
+333,"bars","01a0f537-8c03-7a4e-9017-e14b156795d4",2,"phone","phone screenshot (390pt @3x, github_dark)",900,100,TRUE,"exact",3.34,NA
+333,"bars","01a0f537-8c03-7a4e-9017-e14b156795d4",3,"platform","Discord (fit 1280, WebP 75)",900,75,TRUE,"exact",2.65,NA
+334,"legend_caption","f961b6db-eeca-48bc-8a4f-b025484c77bb",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",1.3,NA
+334,"legend_caption","f961b6db-eeca-48bc-8a4f-b025484c77bb",2,"chrome","Chrome 360px @1x on light_grey",135,100,FALSE,"NULL",1.44,NA
+334,"legend_caption","f961b6db-eeca-48bc-8a4f-b025484c77bb",3,"platform","X (fit 1200, JPEG ~85)",127,85,FALSE,"NULL",0.69,NA
+334,"legend_caption","f961b6db-eeca-48bc-8a4f-b025484c77bb",4,"platform","iMessage (HEIC)",127,80,FALSE,"NULL",0.72,NA
+334,"legend_caption","f961b6db-eeca-48bc-8a4f-b025484c77bb",5,"platform","email (fit 1024, sips JPEG 75)",108,75,FALSE,"NULL",0.59,NA
+335,"dates","01a0f537-8cf7-7b37-9a8d-15611a360f44",1,"chrome","Chrome 1000px @1x on github_dark",1000,100,TRUE,"exact",3.19,NA
+335,"dates","01a0f537-8cf7-7b37-9a8d-15611a360f44",2,"chrome","Chrome 1000px @3x on slack_dark",2344,100,TRUE,"exact",8.26,NA
+336,"dates","9f970d41-d108-43f4-8839-eebe5e972ede",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.09,NA
+336,"dates","9f970d41-d108-43f4-8839-eebe5e972ede",2,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",2.99,NA
+336,"dates","9f970d41-d108-43f4-8839-eebe5e972ede",3,"platform","Discord (fit 1280, WebP 75)",1026,70,TRUE,"exact",3.02,NA
+336,"dates","9f970d41-d108-43f4-8839-eebe5e972ede",4,"platform","WhatsApp (fit 1600, JPEG ~70)",1026,70,TRUE,"exact",2.99,NA
+337,"legend_caption","01a0f537-8db4-7a8b-a20c-71d27fba6ec2",1,"chrome","Chrome 360px @1x on slack_dark",360,100,FALSE,"exact",1.19,NA
+338,"big","01a0f537-8e24-72c2-a1cf-b81a0632324a",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",0.48,NA
+338,"big","01a0f537-8e24-72c2-a1cf-b81a0632324a",2,"halve","retina image halved (pasted into a doc)",240,100,FALSE,"exact",0.09,NA
+338,"big","01a0f537-8e24-72c2-a1cf-b81a0632324a",3,"platform","X (fit 1200, JPEG ~85)",240,85,FALSE,"NULL",0.47,NA
+338,"big","01a0f537-8e24-72c2-a1cf-b81a0632324a",4,"platform","Teams preview (fit 800, JPEG ~75)",240,75,FALSE,"NULL",0.64,NA
+339,"legend_caption","09350256-6d8c-4d32-b3d0-d316730c541a",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",3.93,NA
+339,"legend_caption","09350256-6d8c-4d32-b3d0-d316730c541a",2,"platform","Slack (fit 1600, JPEG ~88)",600,88,TRUE,"exact",1.3,NA
+339,"legend_caption","09350256-6d8c-4d32-b3d0-d316730c541a",3,"crop","crop to chart (+6..22 px)",600,88,TRUE,"exact",1.69,NA
+339,"legend_caption","09350256-6d8c-4d32-b3d0-d316730c541a",4,"platform","Slack (fit 1600, JPEG ~88)",600,88,TRUE,"exact",2.19,NA
+339,"legend_caption","09350256-6d8c-4d32-b3d0-d316730c541a",5,"chrome","Chrome 640px @3x on github_dark",1831,88,TRUE,"exact",23.67,NA
+340,"small","b700ae82-2f0b-4c40-9b2c-0c515137a87e",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",4.77,NA
+341,"bars","105971f9-57c4-45c3-acb9-49e33b7ab62c",1,"chrome","Chrome 1000px @1x on white",1000,100,TRUE,"exact",2.67,NA
+341,"bars","105971f9-57c4-45c3-acb9-49e33b7ab62c",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",3.54,NA
+342,"big","c54c139b-a804-47ff-a858-79f436ef2d2b",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",1.02,NA
+342,"big","c54c139b-a804-47ff-a858-79f436ef2d2b",2,"crop","crop to chart (+5..28 px)",720,100,TRUE,"exact",2.55,NA
+342,"big","c54c139b-a804-47ff-a858-79f436ef2d2b",3,"chrome","Chrome 800px @2x on github_dark",1518,100,TRUE,"exact",5.59,NA
+342,"big","c54c139b-a804-47ff-a858-79f436ef2d2b",4,"chrome","Chrome 640px @2x on github_dark",759,100,TRUE,"exact",1.56,NA
+342,"big","c54c139b-a804-47ff-a858-79f436ef2d2b",5,"phone","phone screenshot (390pt @3x, github_dark)",304,100,FALSE,"exact",1.18,NA
+343,"small","841c09ae-9a76-4142-80d4-51e7f06ff971",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",9.21,NA
+343,"small","841c09ae-9a76-4142-80d4-51e7f06ff971",2,"chrome","Chrome 360px @1x on github_dark",281,100,FALSE,"exact",0.76,NA
+343,"small","841c09ae-9a76-4142-80d4-51e7f06ff971",3,"platform","email (fit 1024, sips JPEG 75)",225,75,FALSE,"exact",0.22,NA
+344,"dark","01a0f537-9422-7bba-b3fb-3ee387792300",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",3.69,NA
+344,"dark","01a0f537-9422-7bba-b3fb-3ee387792300",2,"crop","crop to chart (+2..20 px)",720,100,TRUE,"exact",1.84,NA
+344,"dark","01a0f537-9422-7bba-b3fb-3ee387792300",3,"chrome","Chrome 800px @3x on slack_dark",2367,100,TRUE,"exact",11.04,NA
+344,"dark","01a0f537-9422-7bba-b3fb-3ee387792300",4,"chrome","Chrome 1000px @2x on light_grey",1233,100,TRUE,"exact",4.36,NA
+344,"dark","01a0f537-9422-7bba-b3fb-3ee387792300",5,"platform","email (fit 1024, sips JPEG 75)",493,75,TRUE,"exact",1.36,NA
+345,"scatter","e3af6d10-5e38-4aa2-a74b-1132866a12db",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",2.69,NA
+345,"scatter","e3af6d10-5e38-4aa2-a74b-1132866a12db",2,"crop","crop to chart (+3..19 px)",720,100,TRUE,"exact",2.32,NA
+346,"small","01a0f537-9497-750f-8398-3cfd44aef3e3",1,"chrome","Chrome 480px @3x on slack_dark",1440,100,TRUE,"exact",7.41,NA
+346,"small","01a0f537-9497-750f-8398-3cfd44aef3e3",2,"chrome","Chrome 640px @2x on github_dark",480,100,TRUE,"exact",2.17,NA
+346,"small","01a0f537-9497-750f-8398-3cfd44aef3e3",3,"platform","WhatsApp (fit 1600, JPEG ~70)",300,70,FALSE,"NULL",0.82,NA
+347,"dates","01a0f537-94ca-75bd-b388-f38de56f6b25",1,"chrome","Chrome 360px @3x on slack_dark",1080,100,TRUE,"exact",3.95,NA
+347,"dates","01a0f537-94ca-75bd-b388-f38de56f6b25",2,"crop","crop to chart (+5..29 px)",1080,100,TRUE,"exact",3.24,NA
+347,"dates","01a0f537-94ca-75bd-b388-f38de56f6b25",3,"platform","X (fit 1200, JPEG ~85)",1080,85,TRUE,"exact",2.61,NA
+347,"dates","01a0f537-94ca-75bd-b388-f38de56f6b25",4,"platform","WhatsApp (fit 1600, JPEG ~70)",1080,70,TRUE,"exact",3.56,NA
+348,"facets","7b8d21f3-28f0-4f2f-8cea-253863efc8ad",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",5.05,NA
+348,"facets","7b8d21f3-28f0-4f2f-8cea-253863efc8ad",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",2.55,NA
+348,"facets","7b8d21f3-28f0-4f2f-8cea-253863efc8ad",3,"platform","iMessage (HEIC)",750,80,TRUE,"exact",1.68,NA
+348,"facets","7b8d21f3-28f0-4f2f-8cea-253863efc8ad",4,"chrome","Chrome 800px @2x on github_dark",1000,80,TRUE,"exact",4.37,NA
+348,"facets","7b8d21f3-28f0-4f2f-8cea-253863efc8ad",5,"platform","Discord (fit 1280, WebP 75)",500,75,TRUE,"exact",2.14,NA
+349,"big","6fa7bce5-8a6c-4086-9d4c-bb394af6f55f",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",6.55,NA
+349,"big","6fa7bce5-8a6c-4086-9d4c-bb394af6f55f",2,"phone","phone screenshot (390pt @3x, white)",802,100,TRUE,"exact",2.58,NA
+349,"big","6fa7bce5-8a6c-4086-9d4c-bb394af6f55f",3,"chrome","Chrome 360px @2x on white",493,100,TRUE,"exact",2.42,NA
+349,"big","6fa7bce5-8a6c-4086-9d4c-bb394af6f55f",4,"chrome","Chrome 640px @3x on slack_dark",370,100,FALSE,"exact",1.36,NA
+350,"facets","01a0f537-977e-7f98-8197-66b1d5be4f53",1,"chrome","Chrome 640px @2x on slack_dark",1280,100,TRUE,"exact",6.14,NA
+350,"facets","01a0f537-977e-7f98-8197-66b1d5be4f53",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",1.69,NA
+350,"facets","01a0f537-977e-7f98-8197-66b1d5be4f53",3,"chrome","Chrome 640px @1x on light_grey",320,85,FALSE,"exact",0.48,NA
+351,"bars","01a0f537-97f3-70af-95ae-24358d6b3a8d",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.58,NA
+351,"bars","01a0f537-97f3-70af-95ae-24358d6b3a8d",2,"chrome","Chrome 800px @3x on light_grey",2105,100,TRUE,"exact",9.95,NA
+351,"bars","01a0f537-97f3-70af-95ae-24358d6b3a8d",3,"chrome","Chrome 800px @3x on github_dark",1315,100,TRUE,"exact",5.76,NA
+352,"facets","01a0f537-9847-75af-b122-6264cbec13f5",1,"chrome","Chrome 360px @1x on white",360,100,FALSE,"exact",0.82,NA
+353,"scatter","01a0f537-98a6-7581-a8a5-488528fbae8a",1,"chrome","Chrome 360px @2x on light_grey",720,100,TRUE,"exact",1.98,NA
+354,"dates","01a0f537-98d9-75f9-b991-b887fc6579d2",1,"chrome","Chrome 640px @3x on slack_dark",1920,100,TRUE,"exact",8.38,NA
+354,"dates","01a0f537-98d9-75f9-b991-b887fc6579d2",2,"platform","X (fit 1200, JPEG ~85)",600,85,TRUE,"exact",2.54,NA
+354,"dates","01a0f537-98d9-75f9-b991-b887fc6579d2",3,"crop","crop to chart (+16..28 px)",600,85,TRUE,"exact",2.91,NA
+354,"dates","01a0f537-98d9-75f9-b991-b887fc6579d2",4,"chrome","Chrome 1000px @2x on light_grey",1858,85,TRUE,"exact",7.86,NA
+354,"dates","01a0f537-98d9-75f9-b991-b887fc6579d2",5,"chrome","Chrome 360px @2x on light_grey",522,85,TRUE,"exact",2.16,NA
+355,"bars","01a0f537-9920-7c85-9aac-58dbcbcfda5a",1,"chrome","Chrome 640px @2x on white",1280,100,TRUE,"exact",5.15,NA
+356,"legend_caption","a1200f98-9eb3-44cf-936a-7eb4c455b73f",1,"chrome","Chrome 1000px @1x on slack_dark",1000,100,TRUE,"exact",3.02,NA
+356,"legend_caption","a1200f98-9eb3-44cf-936a-7eb4c455b73f",2,"platform","Discord (fit 1280, WebP 75)",1000,75,TRUE,"exact",1.85,NA
+356,"legend_caption","a1200f98-9eb3-44cf-936a-7eb4c455b73f",3,"crop","crop to chart (+1..28 px)",1000,75,TRUE,"exact",3.09,NA
+357,"facets","16d8fe7e-4e78-422c-a0f2-cff3e4b622c5",1,"chrome","Chrome 800px @2x on github_dark",1600,100,TRUE,"exact",5.47,NA
+357,"facets","16d8fe7e-4e78-422c-a0f2-cff3e4b622c5",2,"phone","phone screenshot (390pt @3x, github_dark)",641,100,TRUE,"exact",2.16,NA
+357,"facets","16d8fe7e-4e78-422c-a0f2-cff3e4b622c5",3,"crop","crop to chart (+9..22 px)",641,100,TRUE,"exact",2.36,NA
+357,"facets","16d8fe7e-4e78-422c-a0f2-cff3e4b622c5",4,"crop","crop to chart (+1..20 px)",641,100,TRUE,"exact",1.59,NA
+358,"scatter","01a0f537-9a1d-7acf-abe7-6067ee17c236",1,"chrome","Chrome 360px @1x on github_dark",360,100,FALSE,"exact",1.41,NA
+358,"scatter","01a0f537-9a1d-7acf-abe7-6067ee17c236",2,"platform","WhatsApp (fit 1600, JPEG ~70)",360,70,FALSE,"NULL",1.87,NA
+358,"scatter","01a0f537-9a1d-7acf-abe7-6067ee17c236",3,"halve","retina image halved (pasted into a doc)",180,70,FALSE,"NULL",0.28,NA
+359,"dates","01a0f537-9a50-70d2-a33a-99ab09cc00c7",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",4.01,NA
+359,"dates","01a0f537-9a50-70d2-a33a-99ab09cc00c7",2,"chrome","Chrome 1000px @2x on white",1754,100,TRUE,"exact",6.21,NA
+360,"scatter","01a0f537-9a94-7549-8eac-1bc6f5b8251e",1,"chrome","Chrome 1000px @2x on slack_dark",2000,100,TRUE,"exact",6.97,NA
+360,"scatter","01a0f537-9a94-7549-8eac-1bc6f5b8251e",2,"crop","crop to chart (+4..28 px)",2000,100,TRUE,"exact",6.81,NA
+361,"big","9c1810f8-e6b6-41a6-b544-0cc685151f12",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.42,NA
+361,"big","9c1810f8-e6b6-41a6-b544-0cc685151f12",2,"platform","Slack (fit 1600, JPEG ~88)",1026,88,TRUE,"exact",2.63,NA
+361,"big","9c1810f8-e6b6-41a6-b544-0cc685151f12",3,"halve","retina image halved (pasted into a doc)",512,88,TRUE,"exact",2.35,NA
+361,"big","9c1810f8-e6b6-41a6-b544-0cc685151f12",4,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",1.65,NA
+362,"big","6aad95c4-3207-4939-820b-0d3a10878d10",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",1.65,NA
+362,"big","6aad95c4-3207-4939-820b-0d3a10878d10",2,"platform","Teams preview (fit 800, JPEG ~75)",225,75,FALSE,"NULL",0.68,NA
+363,"wide","01a0f537-9f83-737c-bec2-f47ff09cb311",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.83,NA
+363,"wide","01a0f537-9f83-737c-bec2-f47ff09cb311",2,"phone","phone screenshot (390pt @3x, white)",900,100,TRUE,"exact",3.04,NA
+363,"wide","01a0f537-9f83-737c-bec2-f47ff09cb311",3,"phone","phone screenshot (390pt @3x, github_dark)",789,100,TRUE,"exact",2.91,NA
+364,"bars","01a0f537-9fd8-7614-b235-ce341961c330",1,"chrome","Chrome 360px @2x on slack_dark",720,100,TRUE,"exact",2.7,NA
+364,"bars","01a0f537-9fd8-7614-b235-ce341961c330",2,"halve","retina image halved (pasted into a doc)",360,100,FALSE,"exact",1.85,NA
+364,"bars","01a0f537-9fd8-7614-b235-ce341961c330",3,"crop","crop to chart (+1..25 px)",360,100,FALSE,"exact",1.09,NA
+365,"legend_caption","01a0f537-a032-70d5-aa18-a1b83c5859a7",1,"chrome","Chrome 640px @2x on light_grey",1280,100,TRUE,"exact",6.34,NA
+365,"legend_caption","01a0f537-a032-70d5-aa18-a1b83c5859a7",2,"crop","crop to chart (+6..30 px)",1280,100,TRUE,"exact",4.83,NA
+366,"scatter","01a0f537-a084-7755-a14e-b8e564c73be7",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.98,NA
+366,"scatter","01a0f537-a084-7755-a14e-b8e564c73be7",2,"chrome","Chrome 480px @2x on slack_dark",842,100,TRUE,"exact",3.37,NA
+366,"scatter","01a0f537-a084-7755-a14e-b8e564c73be7",3,"chrome","Chrome 1000px @1x on github_dark",329,100,FALSE,"exact",1.86,NA
+367,"big","01a0f537-a0bc-7c15-97fc-34a7d32a43fc",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",1.94,NA
+367,"big","01a0f537-a0bc-7c15-97fc-34a7d32a43fc",2,"platform","Teams preview (fit 800, JPEG ~75)",225,75,FALSE,"NULL",0.79,NA
+367,"big","01a0f537-a0bc-7c15-97fc-34a7d32a43fc",3,"halve","retina image halved (pasted into a doc)",112,75,FALSE,"NULL",0.3,NA
+368,"small","b93c8ef3-6dc9-4571-9c23-b9ebe81bb5d8",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.03,NA
+368,"small","b93c8ef3-6dc9-4571-9c23-b9ebe81bb5d8",2,"chrome","Chrome 360px @2x on light_grey",631,100,TRUE,"exact",2.93,NA
+369,"facets","02afc847-34d4-4f94-a491-6af317a331ad",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.97,NA
+369,"facets","02afc847-34d4-4f94-a491-6af317a331ad",2,"chrome","Chrome 360px @2x on slack_dark",631,100,TRUE,"exact",3.39,NA
+370,"wide","01a0f537-a358-7044-ba2a-fc96f26dd5cc",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.4,NA
+371,"small","01a0f537-a39f-7b05-b6c4-664c93f0e8f5",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",7.38,NA
+371,"small","01a0f537-a39f-7b05-b6c4-664c93f0e8f5",2,"crop","crop to chart (+1..18 px)",1600,100,TRUE,"exact",7.03,NA
+372,"facets","01a0f537-a3d9-70cc-90bc-758cab95f680",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",9.18,NA
+373,"dates","01a0f537-a43d-7ab3-bee0-8fe7aadfa973",1,"chrome","Chrome 480px @1x on github_dark",480,100,TRUE,"exact",0.85,NA
+373,"dates","01a0f537-a43d-7ab3-bee0-8fe7aadfa973",2,"platform","Teams preview (fit 800, JPEG ~75)",300,75,FALSE,"NULL",0.74,NA
+373,"dates","01a0f537-a43d-7ab3-bee0-8fe7aadfa973",3,"platform","iMessage (HEIC)",300,75,FALSE,"NULL",1.28,NA
+373,"dates","01a0f537-a43d-7ab3-bee0-8fe7aadfa973",4,"chrome","Chrome 1000px @3x on white",1125,75,FALSE,"NULL",5.21,NA
+374,"dark","01a0f537-a485-711a-aaf0-9943da2e4960",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",5.63,NA
+374,"dark","01a0f537-a485-711a-aaf0-9943da2e4960",2,"chrome","Chrome 800px @3x on slack_dark",1500,100,TRUE,"exact",6.29,NA
+375,"small","01a0f537-a4cb-7e0a-ac51-c8e677cdf81b",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",3.5,NA
+375,"small","01a0f537-a4cb-7e0a-ac51-c8e677cdf81b",2,"platform","Teams preview (fit 800, JPEG ~75)",300,75,FALSE,"NULL",0.57,NA
+376,"legend_caption","01a0f537-a512-7fef-9a98-153dfe5c4c03",1,"chrome","Chrome 1000px @3x on slack_dark",3000,100,TRUE,"exact",12.39,NA
+376,"legend_caption","01a0f537-a512-7fef-9a98-153dfe5c4c03",2,"platform","Slack (fit 1600, JPEG ~88)",1250,88,TRUE,"exact",3.73,NA
+376,"legend_caption","01a0f537-a512-7fef-9a98-153dfe5c4c03",3,"platform","X (fit 1200, JPEG ~85)",938,85,TRUE,"exact",3.28,NA
+377,"big","dc4097b6-e7e0-459b-9323-2eb1db435eb7",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",6.98,NA
+377,"big","dc4097b6-e7e0-459b-9323-2eb1db435eb7",2,"phone","phone screenshot (390pt @3x, white)",641,100,TRUE,"exact",2.21,NA
+378,"bars","01a0f537-a7a6-75bf-a21e-9772a14b28a5",1,"chrome","Chrome 1000px @1x on white",1000,100,TRUE,"exact",3.3,NA
+378,"bars","01a0f537-a7a6-75bf-a21e-9772a14b28a5",2,"platform","Teams preview (fit 800, JPEG ~75)",625,75,TRUE,"exact",2.05,NA
+379,"dark","01a0f537-a80d-7502-a8d5-ff4dfbfac9c3",1,"chrome","Chrome 800px @1x on white",800,100,TRUE,"exact",2.6,NA
+379,"dark","01a0f537-a80d-7502-a8d5-ff4dfbfac9c3",2,"crop","crop to chart (+1..24 px)",800,100,TRUE,"exact",1.88,NA
+380,"scatter","4f9f92c6-e8ea-4ff9-bcb7-22901afcbb0b",1,"chrome","Chrome 360px @3x on white",1080,100,TRUE,"exact",3.93,NA
+381,"scatter","7488b779-36c8-42a7-9eed-11791e5699dc",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",4.09,NA
+381,"scatter","7488b779-36c8-42a7-9eed-11791e5699dc",2,"platform","WhatsApp (fit 1600, JPEG ~70)",600,70,TRUE,"exact",5.77,NA
+382,"wide","01a0f537-a8c3-7917-b355-1dcab18f1464",1,"phone","phone screenshot (390pt @3x, white)",1026,100,TRUE,"exact",3.26,NA
+383,"wide","01a0f537-a90d-7e7a-9582-74f46e46199b",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",6.29,NA
+383,"wide","01a0f537-a90d-7e7a-9582-74f46e46199b",2,"platform","email (fit 1024, sips JPEG 75)",800,75,TRUE,"exact",3.21,NA
+383,"wide","01a0f537-a90d-7e7a-9582-74f46e46199b",3,"crop","crop to chart (+0..27 px)",800,75,TRUE,"exact",2.16,NA
+383,"wide","01a0f537-a90d-7e7a-9582-74f46e46199b",4,"platform","iMessage (HEIC)",800,75,TRUE,"exact",2.65,NA
+384,"legend_caption","3d546fbc-9958-4a41-9855-4639450b3e86",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",3.38,NA
+384,"legend_caption","3d546fbc-9958-4a41-9855-4639450b3e86",2,"platform","iMessage (HEIC)",960,80,TRUE,"exact",3.91,NA
+385,"dark","01a0f537-a9b0-7270-b6fb-5829a52f2942",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",5.73,NA
+385,"dark","01a0f537-a9b0-7270-b6fb-5829a52f2942",2,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",1.22,NA
+385,"dark","01a0f537-a9b0-7270-b6fb-5829a52f2942",3,"platform","email (fit 1024, sips JPEG 75)",512,75,TRUE,"exact",0.83,NA
+386,"bars","01a0f537-a9f6-7caa-b045-4ccdc4632041",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",4.05,NA
+386,"bars","01a0f537-a9f6-7caa-b045-4ccdc4632041",2,"halve","retina image halved (pasted into a doc)",512,100,TRUE,"exact",1.62,NA
+387,"dark","01a0f537-aa56-70f5-ad3a-10492b4f4cb5",1,"chrome","Chrome 360px @3x on light_grey",1080,100,TRUE,"exact",3.92,NA
+387,"dark","01a0f537-aa56-70f5-ad3a-10492b4f4cb5",2,"platform","Teams preview (fit 800, JPEG ~75)",225,75,FALSE,"NULL",0.94,NA
+387,"dark","01a0f537-aa56-70f5-ad3a-10492b4f4cb5",3,"phone","phone screenshot (390pt @3x, white)",289,75,FALSE,"NULL",1.91,NA
+387,"dark","01a0f537-aa56-70f5-ad3a-10492b4f4cb5",4,"chrome","Chrome 800px @2x on light_grey",395,75,FALSE,"NULL",2.89,NA
+387,"dark","01a0f537-aa56-70f5-ad3a-10492b4f4cb5",5,"crop","crop to chart (+11..30 px)",395,75,FALSE,"NULL",0.37,NA
+388,"dates","a2254d78-2a33-441c-b702-dc3f4e54ccd1",1,"chrome","Chrome 640px @3x on github_dark",1920,100,TRUE,"exact",7.47,NA
+389,"bars","9d448c95-b4fe-42f7-a67a-07952f467e7d",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.37,NA
+389,"bars","9d448c95-b4fe-42f7-a67a-07952f467e7d",2,"crop","crop to chart (+5..30 px)",2000,100,TRUE,"exact",6.88,NA
+389,"bars","9d448c95-b4fe-42f7-a67a-07952f467e7d",3,"phone","phone screenshot (390pt @3x, github_dark)",1008,100,TRUE,"exact",2.71,NA
+390,"scatter","01a0f537-ab42-75da-bb15-5dd186176eb5",1,"chrome","Chrome 800px @1x on light_grey",800,100,TRUE,"exact",2.69,NA
+390,"scatter","01a0f537-ab42-75da-bb15-5dd186176eb5",2,"platform","X (fit 1200, JPEG ~85)",750,85,TRUE,"exact",2.87,NA
+390,"scatter","01a0f537-ab42-75da-bb15-5dd186176eb5",3,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",1.81,NA
+391,"legend_caption","01a0f537-ab7d-777c-a32a-8f14a9552ce9",1,"chrome","Chrome 800px @2x on light_grey",1600,100,TRUE,"exact",5.24,NA
+391,"legend_caption","01a0f537-ab7d-777c-a32a-8f14a9552ce9",2,"platform","email (fit 1024, sips JPEG 75)",640,75,TRUE,"exact",2.63,NA
+391,"legend_caption","01a0f537-ab7d-777c-a32a-8f14a9552ce9",3,"platform","Teams preview (fit 800, JPEG ~75)",500,75,TRUE,"exact",1.63,NA
+392,"dates","74654bb6-0325-4e2d-90d4-f2093fc66d7e",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",3.02,NA
+392,"dates","74654bb6-0325-4e2d-90d4-f2093fc66d7e",2,"platform","Discord (fit 1280, WebP 75)",1026,75,TRUE,"exact",2.61,NA
+393,"scatter","01a0f537-ac63-7b26-8406-0c6fa88232b7",1,"chrome","Chrome 800px @3x on light_grey",2400,100,TRUE,"exact",8.89,NA
+393,"scatter","01a0f537-ac63-7b26-8406-0c6fa88232b7",2,"chrome","Chrome 640px @2x on slack_dark",800,100,TRUE,"exact",2.14,NA
+393,"scatter","01a0f537-ac63-7b26-8406-0c6fa88232b7",3,"platform","X (fit 1200, JPEG ~85)",375,85,FALSE,"exact",1.47,NA
+393,"scatter","01a0f537-ac63-7b26-8406-0c6fa88232b7",4,"platform","email (fit 1024, sips JPEG 75)",320,75,FALSE,"exact",0.74,NA
+394,"legend_caption","01a0f537-ac95-79c9-9729-9e8a5d6574ab",1,"chrome","Chrome 480px @1x on white",480,100,TRUE,"exact",1.27,NA
+394,"legend_caption","01a0f537-ac95-79c9-9729-9e8a5d6574ab",2,"platform","Slack (fit 1600, JPEG ~88)",480,88,TRUE,"exact",1.5,NA
+395,"small","b41cdab7-6e7b-4a07-8d79-141fc659ae21",1,"chrome","Chrome 800px @3x on slack_dark",2400,100,TRUE,"exact",10.67,NA
+395,"small","b41cdab7-6e7b-4a07-8d79-141fc659ae21",2,"chrome","Chrome 800px @2x on github_dark",1000,100,TRUE,"exact",2.36,NA
+395,"small","b41cdab7-6e7b-4a07-8d79-141fc659ae21",3,"phone","phone screenshot (390pt @3x, github_dark)",401,100,FALSE,"exact",1.32,NA
+395,"small","b41cdab7-6e7b-4a07-8d79-141fc659ae21",4,"platform","Slack (fit 1600, JPEG ~88)",401,88,FALSE,"exact",0.99,NA
+396,"dates","01a0f537-ad0a-7e49-999b-f225b1055822",1,"chrome","Chrome 1000px @2x on light_grey",2000,100,TRUE,"exact",7.7,NA
+397,"facets","01a0f537-ad4a-7a81-9196-9f0db5dc1071",1,"chrome","Chrome 640px @1x on slack_dark",640,100,TRUE,"exact",2.57,NA
+397,"facets","01a0f537-ad4a-7a81-9196-9f0db5dc1071",2,"platform","Teams preview (fit 800, JPEG ~75)",400,75,FALSE,"NULL",2.58,NA
+397,"facets","01a0f537-ad4a-7a81-9196-9f0db5dc1071",3,"chrome","Chrome 360px @1x on slack_dark",180,75,FALSE,"NULL",0.59,NA
+397,"facets","01a0f537-ad4a-7a81-9196-9f0db5dc1071",4,"platform","email (fit 1024, sips JPEG 75)",144,75,FALSE,"NULL",0.57,NA
+397,"facets","01a0f537-ad4a-7a81-9196-9f0db5dc1071",5,"platform","Discord (fit 1280, WebP 75)",144,75,FALSE,"NULL",1.36,NA
+398,"bars","01a0f537-adb2-7e6e-b6d3-a9e4fd55032e",1,"chrome","Chrome 360px @2x on white",720,100,TRUE,"exact",3.06,NA
+399,"facets","01a0f537-ae07-7492-a0d6-ff2d1e366f1b",1,"phone","phone screenshot (390pt @3x, github_dark)",1026,100,TRUE,"exact",2.93,NA
+399,"facets","01a0f537-ae07-7492-a0d6-ff2d1e366f1b",2,"crop","crop to chart (+14..18 px)",1026,100,TRUE,"exact",2.02,NA
+399,"facets","01a0f537-ae07-7492-a0d6-ff2d1e366f1b",3,"platform","X (fit 1200, JPEG ~85)",1026,85,TRUE,"exact",1.87,NA
+399,"facets","01a0f537-ae07-7492-a0d6-ff2d1e366f1b",4,"crop","crop to chart (+11..28 px)",1026,85,TRUE,"exact",1.7,NA
+400,"wide","01a0f537-ae67-7b08-8268-d6ab83cf3604",1,"chrome","Chrome 480px @2x on white",960,100,TRUE,"exact",2.38,NA

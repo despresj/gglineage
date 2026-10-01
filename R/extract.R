@@ -87,8 +87,10 @@ find_watermark <- function(gray) {
     }
     # The same row is usually read several times (a dot spans several pixel
     # rows); look for its partner once.
+    # The window size is part of the key: a half that could not be paired
+    # with the full-image window may pair with the narrow one.
     key <- paste(found$frame$half, paste(found$frame$bytes, collapse = ""),
-                 found$frame$pair)
+                 found$frame$pair, found$zoom %||% 1)
     if (key %in% failed) return(NULL)
     result <- pair_uuid(gray, found)
     if (is.null(result)) failed <<- c(failed, key)
@@ -132,7 +134,7 @@ find_watermark <- function(gray) {
     for (r in rev(seq_len(n))) {
       found <- read_row(gray[r, ], zoom = zoom)
       if (!is.null(found)) {
-        result <- accept(c(found, row = r, rows_averaged = 1L))
+        result <- accept(c(found, row = r, rows_averaged = 1L, zoom = zoom))
         if (!is.null(result)) return(result)
       }
     }
@@ -160,7 +162,9 @@ pair_uuid <- function(gray, found) {
 find_partner <- function(gray, found) {
   n <- nrow(gray)
   w <- ncol(gray)
-  k <- background_window(w)
+  # Measure the partner's background the same way the found row's was: a
+  # chart found by the narrow-window pass needs the narrow window here too.
+  k <- background_window(w / (found$zoom %||% 1))
   want <- 3L - found$frame$half
   reach <- ceiling(16 * found$pitch) + 3
   # Row 1 is drawn below row 2, and images are never flipped.
@@ -543,9 +547,10 @@ decode_geometry <- function(signal, left, right, n, accept = NULL, partner = NUL
 #
 # When the other half of the UUID is already known (`partner`), the syndrome
 # spans 48 check bits: this row's own check, its pair check, and the
-# partner's pair check, both over the whole UUID. Repairs of up to 3 bits
-# among the 24 weakest and 4 among the 14 weakest (about 3300 candidates)
-# then leave a chance of about 1 in 10^11 of accepting a wrong row. Without a
+# partner's pair check, both over the whole UUID. Repairs of any 1 or 2 bits,
+# up to 3 among the 24 weakest and 4 among the 14 weakest (about 7900
+# candidates) then leave a chance of about 3 in 10^11 of accepting a wrong
+# row. Without a
 # partner only the 16-bit own check is available, so the search is kept
 # small (up to 2 of the 16 weakest bits); a row repaired that way is still
 # only half a UUID, which must then pair through the 48-bit checks. Text
@@ -573,7 +578,12 @@ repair_uuid_row <- function(v, threshold, half, accept = NULL, partner = NULL) {
 
   margin <- abs(v[free] - threshold)
   order_free <- free[order(margin)]
-  plan <- if (is.null(partner)) list(c(16L, 2L)) else list(c(24L, 3L), c(14L, 4L))
+  # With a partner (48 check bits): any 1 or 2 bits anywhere in the row,
+  # even ones read confidently (a mark painted over a dot), plus up to 3 of
+  # the 24 and 4 of the 14 least confident (compression damage); about 7900
+  # candidates in all.
+  plan <- if (is.null(partner)) list(c(16L, 2L)) else
+    list(c(length(free), 2L), c(24L, 3L), c(14L, 4L))
   pool <- order_free[seq_len(min(max(vapply(plan, `[`, 1L, 1L)), length(order_free)))]
   columns <- vapply(pool, function(p) {
     flipped <- bits

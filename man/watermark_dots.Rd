@@ -5,7 +5,7 @@
 \alias{add_watermark}
 \title{Invisible, machine-readable dot watermark}
 \usage{
-watermark_dots(id, colour = "grey30", alpha = 0.15, size = 1.2)
+watermark_dots(id, colour = "grey30", alpha = 0.15, size = 2)
 
 add_watermark(plot, id, ...)
 }
@@ -19,8 +19,10 @@ UUIDs.}
 \item{alpha}{Dot opacity. Lower is less visible but less robust to heavy
 compression.}
 
-\item{size}{Maximum dot diameter in mm. Dots shrink automatically when the
-plot is too narrow to fit them at this size.}
+\item{size}{Maximum dot diameter in mm. Dots are drawn at 0.8 of their
+spacing, up to this size, so on a typical 7-inch figure the spacing sets
+the size; the cap matters on wide figures, whose dots would otherwise be
+too small to survive being shown small and recompressed.}
 
 \item{plot}{A ggplot object.}
 
