@@ -142,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f4b8-afab-71dc-b1a3-926242f6dc76"
+#> [1] "01a0f6b2-c529-7fcb-9923-618535a32038"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f4b8-afab-71dc-b1a3-926242f6dc76 analysis/fig2.R 9f3c2e1
+#> 1 01a0f6b2-c529-7fcb-9923-618535a32038 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-09-30T19:48:59
+#> 1 snapshot-2026-09-12.csv 2026-10-01T05:01:46
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -185,11 +185,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "EZA04B0H"
+#> [1] "TEG95458"
 wm_uuid()              # random (version 4)
-#> [1] "b3ef534e-95c9-48c6-8ac2-4029c81fce72"
+#> [1] "faa935b7-3cf2-4b83-847c-41cb23562e61"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f4b8-b1c1-7849-b172-6447de14ef82"
+#> [1] "01a0f6b2-cbd6-715e-a942-e90fc7cfb0a2"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -345,6 +345,55 @@ At full size (1050 px), JPEG holds down to about **quality 8** for this
 from ID to ID. A UUID’s two rows have more, smaller dots than a short
 ID’s one, so it needs about a third more width under JPEG, and more
 again inside a padded screenshot.
+
+### Passed around: UUIDs through real sharing chains
+
+A screenshot rarely makes one hop. To test that, each trial in
+[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-hammer.R)
+puts a chart with a fresh random UUID through a chain of one to five
+real hops, decoding after every one:
+
+- **Browser screenshots:** headless Chrome at 360–1000 CSS px and
+  1×/2×/3×, on white, light-grey and dark (GitHub, Slack) pages.
+- **Phone screenshots:** 390 pt at 3×.
+- **Crops:** the chart cropped back out of a screenshot.
+- **Chat and social recompression:** Slack, X, WhatsApp, Teams and email
+  JPEGs, iMessage HEIC, Discord WebP.
+- **A retina image halved:** pasted into a document.
+
+The decoder has to cope with all of it: page colours around the chart, a
+chart that is a small part of a huge screenshot, and bits lost to
+repeated compression, which it repairs (see below).
+
+The latest run used 400 chains, nine plot types and 1,121 decodes:
+
+| After hop | Within limits, exact | Wrong UUIDs |
+|----------:|---------------------:|------------:|
+|         1 |    388 of 388 (100%) |           0 |
+|         2 |    254 of 254 (100%) |           0 |
+|         3 |   134 of 135 (99.3%) |           0 |
+|         4 |      58 of 58 (100%) |           0 |
+|         5 |      22 of 22 (100%) |           0 |
+
+Here, *within limits* means the chart was never narrower than 480 px at
+any point in the chain, and no hop compressed it below JPEG quality 50.
+Narrowness is judged over the whole chain: detail lost while a chart is
+shown small doesn’t come back when a later screenshot shows it larger.
+
+Beyond those limits, decodes start returning `NULL`. Across three full
+campaigns (about 3,300 decodes) and 1,250 adversarial trials (pairs of
+charts with different UUIDs, stacked, cropped through and compressed
+hard), **no decode has ever returned a wrong UUID.** The full report,
+every hop type and every miss, is in
+[`tools/uuid-sharing-report.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-report.md).
+
+**Repair.** A UUID row that loses a few bits to compression is repaired
+from the bits read least confidently. CRCs are linear, so candidate
+repairs are tested against the check bits directly. A repair is accepted
+only if the row’s own check and both rows’ pair checks over the whole
+UUID agree: at least 48 check bits, which leaves about a 1-in-10¹¹
+chance of a wrong row. Text IDs have one row and no partner to confirm a
+repair, so they are never repaired.
 
 ### What fails
 
