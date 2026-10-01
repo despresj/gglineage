@@ -1,5 +1,54 @@
 # gglineage 0.1.0: CRAN readiness
 
+## Hardening pass, 2026-10-01 (branch `cran-hardening`)
+
+Branched from local `main` at `bb48c6e` (16 commits ahead of `origin/main`,
+unpushed). Nothing submitted, uploaded, pushed or emailed.
+
+**Bugs found and fixed**
+
+- *Silent lineage split (fixed).* A plot already carrying a strip or tiles
+  could take a second, different ID through `+`, `add_watermark()` or
+  `ggsave_watermark(id = ...)`. Observed: metadata and return value
+  `OTHER-7`, dots decoding to `RUN-42`; tiles `TILEA` under a strip
+  `SAVEB`. Now an error; `ggsave_watermark()` defaults to the plot's own ID.
+- *Metadata that could not be read back as written (fixed).* Names over 69
+  bytes were truncated by libpng with only a warning; repeated names and
+  non-atomic values were stored ambiguously. Now refused before saving.
+- *Tile checksum bound (documented, not changed).* Folded votes of two tile
+  IDs produced a third ID once in 20,000 simulated mixtures. Decoder
+  variants cost 12-68% of damaged decodes without a measurable gain, so
+  the CRC-16 limit is documented instead. See `tools/lineage-fuzz-report.md`.
+
+**Observed results (final tarball, SHA-256
+`c606fc71ed30e2220ea8d2585e64a1385839dd797c1d9a90e17803ea3bb81903`,
+694,489 bytes)**
+
+| Where | Command | Result |
+|---|---|---|
+| macOS 26.6.2 aarch64, R 4.6.1, ggplot2 4.0.3 | `R CMD check --as-cran --no-manual`, CRAN mode, remote URL checks on | **1 NOTE**: new submission + 6 README URLs that 404 until the files are on GitHub `main`. Tests `[ FAIL 0 \| WARN 0 \| SKIP 97 \| PASS 4734 ]`, 60 s |
+| Linux x86_64 (emulated), R-devel 2026-09-29 r90598, r-hub `ubuntu-clang` | `R CMD check --as-cran` | 3 NOTEs: new submission; and two environmental (no `curl` for URL/DOI checks, no `pandoc`, no `V8` in this container). PDF manual OK. Tests `[ FAIL 0 \| WARN 0 \| SKIP 97 \| PASS 4734 ]` |
+| Linux R-devel (same container), full suite `NOT_CRAN=true`, installed tarball | `testthat::test_dir()` | 251 test blocks, 5,326 expectations, 0 failed, 7 skipped (real-world tool tests: no ffmpeg/sips/Chrome in the container) |
+| macOS, full suite `NOT_CRAN=true` at `9953c4f` | `testthat::test_local()` | 19 files, 251 test blocks, 5,353 expectations, 0 failed, 0 skipped |
+| macOS, ggplot2 3.5.0 (Imports minimum) | lineage, dots, save, tiles, UUID tests, `NOT_CRAN=true` | 0 failed |
+| Fuzz campaign, seed 2027 | `tools/lineage-fuzz-campaign.R 100000 5000 1500 2027` | 0 wrong IDs |
+
+**Before submitting**
+
+- [ ] Push local `main` (16 commits) and merge `cran-hardening`, so the 6
+      README URLs resolve and CI runs the new matrix; confirm it green on
+      all three OSes.
+- [ ] Repository name: renaming to `gglineage` changes the pkgdown URL in
+      DESCRIPTION (GitHub Pages does not redirect), so either rename
+      *before* submitting and update `URL`, `BugReports`, badges and README
+      links, or submit as `watermark` and rename later with a DESCRIPTION
+      update in the next release.
+- [ ] Optional: win-builder (`devtools::check_win_devel()`; it emails the
+      maintainer). The GitHub Actions Windows jobs cover the code.
+- [ ] Rebuild the tarball from the final commit and submit.
+
+## Earlier record
+
 Prepared 2026-09-30 from actual runs of commit `322ae8a` on branch
 `worktree-gglineage`. Nothing has been submitted, uploaded, pushed or emailed.
 `tools/` and `cran-comments.md` are in `.Rbuildignore`, so later commits that
