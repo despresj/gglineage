@@ -141,14 +141,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f9cc-807a-73d8-8add-4639ad30a5fd"
+#> [1] "01a0f9df-51e0-7371-aa97-342810a75701"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f9cc-807a-73d8-8add-4639ad30a5fd analysis/fig2.R 9f3c2e1
+#> 1 01a0f9df-51e0-7371-aa97-342810a75701 analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T19:28:44
+#> 1 snapshot-2026-09-12.csv 2026-10-01T19:49:17
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -231,11 +231,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "KVPJ9TB1"
+#> [1] "N83VKNQ9"
 wm_uuid()              # random (version 4)
-#> [1] "6ec7c736-150b-4c06-b9b1-e9b5bf82906d"
+#> [1] "8df0b51e-d844-463f-9c1f-50a11a4deee1"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f9cc-8340-7f16-ae65-6ee83af20874"
+#> [1] "01a0f9df-541a-771e-b125-19f84f95a2d2"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -319,11 +319,13 @@ nothing.
 
 ## How tough is it?
 
-A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations.
-Every row is recomputed each time this README is knit, and the same
-matrix runs in
+A 7 × 5 in plot saved at 150 dpi, carrying the 8-character ID
+`K7Q2M9XD`, pushed through 37 transformations. Every row is recomputed
+each time this README is knit, and the same matrix runs in
 [`test-robustness.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R)
-on every push, on several plot types.
+on every push, on several plot types and with a second ID, `RUN-42`.
+Longer IDs reach their limits sooner; see [Measured
+limits](#measured-limits).
 
 |  | Transformation | Pixels | Dot code | Tiles |
 |:---|:---|---:|:---|:---|
@@ -366,8 +368,10 @@ on every push, on several plot types.
 |  | Downscale to 10% | 105 × 75 | ✖ not found | ✖ not found |
 
 **Dot code: 30 of 37 recovered exactly. Tiles: 28 of 37. Wrong IDs
-across both: 0.** The rows under “past the limits” mark where the
-guarantee ends. A result there is either exact or nothing.
+across both: 0.** The rows under “past the limits” are outside what the
+package promises: they fail for this ID, and where each limit falls
+depends on the ID’s length. The tests ask only that a result there is
+exact or `NULL`, never a wrong ID.
 
 ### Measured limits
 
@@ -392,6 +396,23 @@ At full size (1050 px), JPEG holds down to about **quality 8** for this
 from ID to ID. A UUID’s two rows have more, smaller dots than a short
 ID’s one, so it needs about a third more width under JPEG, and more
 again inside a padded screenshot.
+
+**Longer IDs need more width.** Every character adds dots to the row, so
+the dots sit closer together and merge sooner. Measured the same way, as
+the worst of 8 trials (4 random IDs × 2 plot types) for each kind of ID,
+by
+[`tools/id-length-floors.R`](https://github.com/despresj/gglineage/blob/main/tools/id-length-floors.R):
+
+| ID                     | Dot positions | Lossless copy, shrunk | JPEG quality 50 |
+|------------------------|:-------------:|----------------------:|----------------:|
+| 12-character `wm_id()` |      132      |                150 px |          360 px |
+| 16-character `wm_id()` |      152      |                170 px |          430 px |
+| 16 bytes of free text  |      200      |                230 px |          560 px |
+
+Compare 120 px and 300 px for an 8-character `wm_id()`. A full 16 bytes
+of free text needs nearly twice the width of an 8-character `wm_id()`
+under JPEG; for charts that will travel as small screenshots, use
+`wm_id()` or a UUID.
 
 ### Passed around: UUIDs through real sharing chains
 
@@ -453,8 +474,9 @@ repair, so they are never repaired.
 - **Rotation.** Rows are scanned horizontally. Rotate the image back
   first.
 - **Too small.** Below the widths above the dots merge. Even a lossless
-  copy stops decoding at about 120 px (8-character ID) or 150 px (UUID),
-  where the dots are under two pixels apart. Ask for the original.
+  copy stops decoding at about 120 px (8-character ID), 150 px (UUID) or
+  230 px (16 bytes of free text), where the dots are under two pixels
+  apart. Ask for the original.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
   chrome around it, saved at a low JPEG quality, fails below about 400
   px (480 px for a UUID).

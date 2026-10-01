@@ -34,8 +34,11 @@
 #' 8-character ID to survive the same JPEG compression. Measured on 7 x 5 in
 #' figures (12 trials per width), quality 50 held in every trial down to 400
 #' px wide for a UUID and 300 px for an 8-character ID; below that, some
-#' decodes return `NULL`. The full table is in the README. These are
-#' measurements, not guarantees: the limits vary with the ID and the plot.
+#' decodes return `NULL`. Longer text IDs need more width again: 16 bytes of
+#' free text (200 positions) held at quality 50 only down to about 560 px,
+#' and a 16-character `wm_id()` (152 positions) to about 430 px. The full
+#' tables are in the README. These are measurements, not guarantees: the
+#' limits vary with the ID and the plot.
 #'
 #' @section One plot, one ID:
 #' A plot carries one ID. Adding `watermark_dots()` or [watermark_tiles()]

@@ -401,11 +401,12 @@ min_q <- jpeg_floor(img, "K7Q2M9XD")
 min_q_uuid <- jpeg_floor(img_uuid, uuid_demo)
 ```
 
-A 7 × 5 in plot saved at 150 dpi, pushed through `r nrow(res)`
-transformations. Every row is recomputed each time this README is knit, and
-the same matrix runs in
+A 7 × 5 in plot saved at 150 dpi, carrying the 8-character ID `K7Q2M9XD`,
+pushed through `r nrow(res)` transformations. Every row is recomputed each
+time this README is knit, and the same matrix runs in
 [`test-robustness.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R) on every push, on
-several plot types.
+several plot types and with a second ID, `RUN-42`. Longer IDs reach their
+limits sooner; see [Measured limits](#measured-limits).
 
 ```{r robustness-table, echo = FALSE, results = "asis"}
 tab <- res[, c("group", "name", "size", "shown", "tiles_shown")]
@@ -416,8 +417,10 @@ knitr::kable(tab, row.names = FALSE, align = c("l", "l", "r", "l", "l"))
 
 **Dot code: `r n_ok` of `r nrow(res)` recovered exactly. Tiles: `r n_ok_tiles` of
 `r nrow(res)`. Wrong IDs across both: `r n_wrong`.**
-The rows under "past the limits" mark where the guarantee ends. A result
-there is either exact or nothing.
+The rows under "past the limits" are outside what the package promises:
+they fail for this ID, and where each limit falls depends on the ID's
+length. The tests ask only that a result there is exact or `NULL`, never a
+wrong ID.
 
 ### Measured limits
 
@@ -442,6 +445,22 @@ this 8-character ID and **quality `r min_q_uuid`** for this UUID; the exact
 floor varies from ID to ID. A UUID's two rows have more, smaller dots than
 a short ID's one, so it needs about a third more width under JPEG, and more
 again inside a padded screenshot.
+
+**Longer IDs need more width.** Every character adds dots to the row, so
+the dots sit closer together and merge sooner. Measured the same way, as
+the worst of 8 trials (4 random IDs × 2 plot types) for each kind of ID, by
+[`tools/id-length-floors.R`](https://github.com/despresj/gglineage/blob/main/tools/id-length-floors.R):
+
+| ID | Dot positions | Lossless copy, shrunk | JPEG quality 50 |
+|---|:---:|---:|---:|
+| 12-character `wm_id()` | 132 | 150 px | 360 px |
+| 16-character `wm_id()` | 152 | 170 px | 430 px |
+| 16 bytes of free text | 200 | 230 px | 560 px |
+
+Compare `r min_width` px and 300 px for an 8-character `wm_id()`. A full
+16 bytes of free text needs nearly twice the width of an 8-character
+`wm_id()` under JPEG; for charts that will travel as small screenshots, use
+`wm_id()` or a UUID.
 
 ### Passed around: UUIDs through real sharing chains
 
@@ -501,8 +520,9 @@ repaired.
   is never returned.
 - **Rotation.** Rows are scanned horizontally. Rotate the image back first.
 - **Too small.** Below the widths above the dots merge. Even a lossless
-  copy stops decoding at about `r min_width` px (8-character ID) or
-  `r min_width_uuid` px (UUID), where the dots are under two pixels apart.
+  copy stops decoding at about `r min_width` px (8-character ID),
+  `r min_width_uuid` px (UUID) or 230 px (16 bytes of free text), where the
+  dots are under two pixels apart.
   Ask for the original.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
   chrome around it, saved at a low JPEG quality, fails below about 400 px

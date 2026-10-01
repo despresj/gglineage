@@ -119,8 +119,10 @@ tf_rotate90 <- function(img) {
 }
 
 # Named transforms, each a function of an image. `survives` records what the
-# package promises; the tests hold it to that and README.Rmd reports all of
-# them. `slow` ones are skipped on CRAN to keep check time down.
+# package promises for the IDs test-robustness.R uses (8-character
+# "K7Q2M9XD" and "RUN-42"); longer IDs reach their limits sooner (see
+# tools/id-length-floors.R). The tests hold it to that and README.Rmd reports
+# all of them. `slow` ones are skipped on CRAN to keep check time down.
 stress_transforms <- function() {
   list(
     list(name = "Original PNG", group = "Lossless",
@@ -190,7 +192,8 @@ stress_transforms <- function() {
     list(name = "Shrink to 360 px wide + JPEG 50", group = "Small + compressed",
          f = function(x) tf_jpeg(tf_resize_to_width(x, 360), 50),
          survives = TRUE),
-    # Documented limits: these must not decode, and must never decode wrongly.
+    # Documented limits: these fail for the IDs above. The tests require only
+    # that they never decode wrongly (NULL or exact), not that they fail.
     list(name = "Crop bottom 5%", group = "Past the limits",
          f = function(x) tf_crop(x, bottom = 0.05), survives = FALSE),
     list(name = "Crop left 10%", group = "Past the limits",
