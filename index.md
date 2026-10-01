@@ -27,17 +27,16 @@ let's check the recommendation. A note says only the ID is in the
 pixels; the rest is the row logged when the plot was saved, with client,
 project and run as demo values.](reference/figures/lineage.gif)
 
-_(A screenshot arrives with no context. **The thread:** six questions, no answers. **The trace:** [`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md) reads a full UUID out of the same JPEG (the strip is its own pixels around the two dot rows, magnified), and the UUID finds the row logged in `plots.csv` when the plot was saved. Only the ID is in the pixels; everything else comes from that log, with the client, project and run as demo values. The decode is real: made and checked by [`data-raw/lineage-demo.R`](https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo.R), and you can repeat it on [`screenshot.jpg`](https://github.com/despresj/watermark/blob/main/data-raw/lineage-demo/screenshot.jpg). [Still image](https://github.com/despresj/watermark/blob/main/man/figures/lineage-still.png) · [Phone-sized version](https://github.com/despresj/watermark/blob/main/man/figures/lineage-mobile.gif))
+_(A screenshot arrives with no context. **The thread:** six questions, no answers. **The trace:** [`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md) reads a full UUID out of the same JPEG (the strip is its own pixels around the two dot rows, magnified), and the UUID finds the row logged in `plots.csv` when the plot was saved. Only the ID is in the pixels; everything else comes from that log, with the client, project and run as demo values. The decode is real: made and checked by [`data-raw/lineage-demo.R`](https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo.R), and you can repeat it on [`screenshot.jpg`](https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo/screenshot.jpg). [Still image](https://github.com/despresj/gglineage/blob/main/man/figures/lineage-still.png) · [Phone-sized version](https://github.com/despresj/gglineage/blob/main/man/figures/lineage-mobile.gif))
 
 ## Installation
 
-gglineage is not on CRAN yet. Install it from GitHub (the repository is
-still named `watermark`):
+gglineage is not on CRAN yet. Install it from GitHub:
 
 ``` r
 
 # install.packages("pak")
-pak::pak("despresj/watermark")
+pak::pak("despresj/gglineage")
 ```
 
 ## Thirty-second tour
@@ -70,7 +69,7 @@ extract_watermark(abused)
 #> [1] "RUN-42"
 ```
 
-^(`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from the package’s [stress-test suite](https://github.com/despresj/watermark/blob/main/tests/testthat/helper-transforms.R).)
+^(`tf_resize()`, `tf_pad()` and `tf_jpeg()` are the image transforms from the package’s [stress-test suite](https://github.com/despresj/gglineage/blob/main/tests/testthat/helper-transforms.R).)
 
 ## The workflow: save, log, share, scan, look up
 
@@ -79,7 +78,7 @@ against that ID when you save the plot, so the workflow has two halves:
 a manifest row at save time, and a lookup whenever a copy turns up.
 
 **Save and log.**
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+[`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md)
 is a drop-in for
 [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html). Give
 it a UUID, and append a row to a manifest with everything you’ll want to
@@ -126,14 +125,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f9a2-f049-7616-918c-a7a039e12b07"
+#> [1] "01a0f9cc-807a-73d8-8add-4639ad30a5fd"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f9a2-f049-7616-918c-a7a039e12b07 analysis/fig2.R 9f3c2e1
+#> 1 01a0f9cc-807a-73d8-8add-4639ad30a5fd analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T18:43:20
+#> 1 snapshot-2026-09-12.csv 2026-10-01T19:28:44
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -145,11 +144,11 @@ row per saved plot, keyed by the ID, is all the lookup needs.
 |----|----|:--:|----|
 | The **ID** | The pixels, as dots | ✅ | Up to 16 bytes of text, or a 128-bit UUID |
 | The **manifest row** | Wherever you keep it, keyed by the ID | n/a | Anything: script, commit, data checksum, client, run |
-| **PNG metadata** ([`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)) | The saved PNG’s `tEXt` chunks | ❌ | The ID, a timestamp, the plot title, versions, fields you add |
+| **PNG metadata** ([`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md)) | The saved PNG’s `tEXt` chunks | ❌ | The ID, a timestamp, the plot title, versions, fields you add |
 
 PNG metadata is a lossless extra for when the original file itself is
 shared:
-[`read_watermark_metadata()`](https://despresj.github.io/watermark/reference/read_watermark_metadata.md)
+[`read_watermark_metadata()`](https://despresj.github.io/gglineage/reference/read_watermark_metadata.md)
 gets it all back with no decoding. A screenshot or a re-encode drops it,
 and then the dots are what’s left.
 
@@ -163,12 +162,12 @@ reorders or drops the plot’s data. What the data was (a snapshot, a
 query, a checksum) is something you record in the manifest row.
 
 - **One figure, one ID.** Adding
-  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+  [`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
   or
-  [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  [`watermark_tiles()`](https://despresj.github.io/gglineage/reference/watermark_tiles.md)
   with a different ID to a plot that already carries one is an error,
   and
-  [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+  [`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md)
   refuses an `id` that differs from the plot’s own (and uses the plot’s
   own when `id` is left out), so a file’s metadata and its dots always
   name the same ID.
@@ -176,7 +175,7 @@ query, a checksum) is something you record in the manifest row.
   data, is the same plot object as far as the watermark is concerned. To
   give each saved figure its own ID, keep the watermark off the shared
   plot and add it when saving, with
-  [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md).
+  [`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md).
 - **A decode names an ID that was drawn, or nothing.** The strip’s
   checks are 32 bits (text) and 64 bits (UUID), so a damaged code is
   read as a wrong ID about once in 4 billion readings or less. An image
@@ -193,32 +192,32 @@ query, a checksum) is something you record in the manifest row.
   UUIDs are normalised, to lowercase.
 
 These properties are pinned by
-[`test-lineage-adversarial.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-adversarial.R)
+[`test-lineage-adversarial.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-lineage-adversarial.R)
 and the randomised
-[`test-lineage-fuzz.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-fuzz.R),
+[`test-lineage-fuzz.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-lineage-fuzz.R),
 which CI runs on Linux, macOS and Windows, along with a larger fuzz
 campaign
-([`tools/lineage-fuzz-campaign.R`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-campaign.R)).
+([`tools/lineage-fuzz-campaign.R`](https://github.com/despresj/gglineage/blob/main/tools/lineage-fuzz-campaign.R)).
 In the latest campaign (seed 2027: 100,000 random IDs through the codec,
 100,000 corrupted codes, 100,000 cross-joined UUID pairs, about 9,700
 row repairs and 1,500 stacked, side-by-side, blended, cropped,
 recompressed and row-spliced images, including tiles-only charts) no
 decode returned an ID that was not drawn; see
-[`tools/lineage-fuzz-report.md`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-report.md).
+[`tools/lineage-fuzz-report.md`](https://github.com/despresj/gglineage/blob/main/tools/lineage-fuzz-report.md).
 
 ## ID formats
 
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md),
-[`add_watermark()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md),
+[`add_watermark()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 and
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+[`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md)
 take the ID as a string and work out how to carry it:
 
 | ID | Example | Rows of dots | Positions per row | Notes |
 |----|----|:--:|:--:|----|
-| [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md): Crockford base32, 1–16 characters | `K7Q2M9XD` | 1 | 77–152 (112 for 8 characters) | Packed at 5 bits per character. No `I`, `L`, `O` or `U`, so it survives being read aloud. |
+| [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md): Crockford base32, 1–16 characters | `K7Q2M9XD` | 1 | 77–152 (112 for 8 characters) | Packed at 5 bits per character. No `I`, `L`, `O` or `U`, so it survives being read aloud. |
 | Free text, up to 16 UTF-8 bytes | `RUN-42`, `fig 2 (v3)`, `café` | 1 | 80–200 | Stored as bytes; returned exactly as given. |
-| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in [`{}`](https://rdrr.io/r/base/Paren.html) or prefixed `urn:uuid:`; output is always lowercase. [`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md) makes version 4 or 7. |
+| UUID, any version | `6ba7b810-9dad-11d1-80b4-00c04fd430c8` | 2 | 136 each | All 128 bits. Input is case-insensitive and may be wrapped in [`{}`](https://rdrr.io/r/base/Paren.html) or prefixed `urn:uuid:`; output is always lowercase. [`wm_uuid()`](https://despresj.github.io/gglineage/reference/wm_id.md) makes version 4 or 7. |
 
 Thirty-two hex digits without hyphens are rejected rather than guessed
 at (they could as well be an MD5), with a message saying to write the
@@ -228,24 +227,24 @@ literally, so a text ID can never be mistaken for a UUID.
 ``` r
 
 wm_id()                # 8 characters, 40 bits
-#> [1] "P4JC81PK"
+#> [1] "KVPJ9TB1"
 wm_uuid()              # random (version 4)
-#> [1] "43c1c2a2-6eb3-485c-9626-9fe14cffdfdb"
+#> [1] "6ec7c736-150b-4c06-b9b1-e9b5bf82906d"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f9a2-f285-7664-aeaa-c419191352f3"
+#> [1] "01a0f9cc-8340-7f16-ae65-6ee83af20874"
 ```
 
 IDs come from the operating system’s secure random generator
 (`/dev/urandom`; on Windows,
 [`openssl::rand_bytes()`](https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html),
 which needs the openssl package). With neither,
-[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) and
-[`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md)
+[`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md) and
+[`wm_uuid()`](https://despresj.github.io/gglineage/reference/wm_id.md)
 stop with an error instead of quietly using something weaker.
 [`set.seed()`](https://rdrr.io/r/base/Random.html) in your analysis
 won’t repeat them, and generating them won’t disturb your seed. An
 8-character
-[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) is
+[`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md) is
 40 random bits, fine for one team’s plots; when IDs from many people or
 machines share one record, use UUIDs.
 
@@ -253,9 +252,9 @@ machines share one record, use UUIDs.
 
 |  | What it is | Survives screenshots | Carries | Use it for |
 |----|----|:--:|----|----|
-| [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md) | A faint row of dots in the bottom margin (two rows for a UUID) | ✅ | A short ID, or a full UUID | Tracing any copy back to its source |
-| [`watermark_text()`](https://despresj.github.io/watermark/reference/watermark_text.md) | A visible stamp: diagonal, tiled, or corner | ✅ | Whatever you write | Deterring reuse: `"DRAFT"`, `"CONFIDENTIAL"` |
-| [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md) | Dots **plus** PNG metadata | Dots only | ID, timestamp, title, versions, any fields you add | The full provenance record for the original file |
+| [`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md) | A faint row of dots in the bottom margin (two rows for a UUID) | ✅ | A short ID, or a full UUID | Tracing any copy back to its source |
+| [`watermark_text()`](https://despresj.github.io/gglineage/reference/watermark_text.md) | A visible stamp: diagonal, tiled, or corner | ✅ | Whatever you write | Deterring reuse: `"DRAFT"`, `"CONFIDENTIAL"` |
+| [`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md) | Dots **plus** PNG metadata | Dots only | ID, timestamp, title, versions, any fields you add | The full provenance record for the original file |
 
 All three are drawn relative to the whole figure, never the data. They
 don’t touch your scales, axes, coordinate system or facets, and they
@@ -297,7 +296,7 @@ Each dot position is one bit; a dot means 1, a gap means 0. A row is:
   them to lock on and measure the pitch, so it doesn’t care about image
   size.
 - **Header**: what the payload is. Text IDs made only of
-  [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)’s
+  [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md)’s
   32 characters take 5 bits each; other text is stored as UTF-8 bytes;
   the two halves of a UUID have codes of their own. Unknown codes are
   rejected.
@@ -315,7 +314,7 @@ the start sync, and reads each bit by interpolating between pixels,
 against the paper level on the far side of the dots, with the threshold
 set by how the sync dots actually read. Rows too faint to read alone are
 averaged with their neighbours. As a last resort it reads the row where
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 always draws it, a fixed fraction of the way across the figure, which
 rescues images too small or compressed to find the dots one by one.
 
@@ -334,7 +333,7 @@ nothing.
 A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations.
 Every row is recomputed each time this README is knit, and the same
 matrix runs in
-[`test-robustness.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-robustness.R)
+[`test-robustness.R`](https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R)
 on every push, on several plot types.
 
 |  | Transformation | Pixels | Dot code | Tiles |
@@ -388,9 +387,9 @@ limits below are for this 7 × 5 in figure shrunk to a given width. Each
 JPEG entry is the narrowest width at which every one of 12 trials (6
 random IDs × 2 plot types) decoded; just below it some decodes return
 `NULL`, never a wrong ID. The full tables are in
-[`tools/uuid-design.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-design.md).
+[`tools/uuid-design.md`](https://github.com/despresj/gglineage/blob/main/tools/uuid-design.md).
 
-| Treatment | 8-character [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md) | UUID |
+| Treatment | 8-character [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md) | UUID |
 |----|---:|---:|
 | Lossless copy, shrunk | 120 px | 150 px |
 | JPEG quality 75 | 240 px | 320 px |
@@ -408,7 +407,7 @@ again inside a padded screenshot.
 ### Passed around: UUIDs through real sharing chains
 
 A screenshot rarely makes one hop. To test that, each trial in
-[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-hammer.R)
+[`tools/uuid-sharing-hammer.R`](https://github.com/despresj/gglineage/blob/main/tools/uuid-sharing-hammer.R)
 puts a chart with a fresh random UUID through a chain of one to five
 real hops, decoding after every one:
 
@@ -447,7 +446,7 @@ decodes) and the adversarial runs (pairs of charts with different UUIDs,
 stacked, cropped through and compressed hard), **no decode has ever
 returned a wrong UUID.** The full report, every hop type and every miss,
 is in
-[`tools/uuid-sharing-report.md`](https://github.com/despresj/watermark/blob/main/tools/uuid-sharing-report.md).
+[`tools/uuid-sharing-report.md`](https://github.com/despresj/gglineage/blob/main/tools/uuid-sharing-report.md).
 
 **Repair.** A UUID row that loses a few bits to compression is repaired
 from the bits read least confidently. CRCs are linear, so candidate
@@ -480,14 +479,14 @@ README, no transform has ever produced a wrong ID.
 
 The strip lives in the bottom margin, so a crop that removes it removes
 the ID.
-[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+[`watermark_tiles()`](https://despresj.github.io/gglineage/reference/watermark_tiles.md)
 repeats the whole ID (up to 12 bytes, so a short ID rather than a UUID),
 with its own CRC-16, in a faint 12 × 12 grid of dots behind the data in
 every panel. A tile is 36 mm square, and a crop that keeps about two
 tiles across in each direction still decodes: in the real-world tests
 that meant about 80 mm square of open panel on a plain scatter, more on
 busy plots.
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md)
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md)
 tries the tiles whenever no strip is found.
 
 ``` r
@@ -537,6 +536,6 @@ the trail.
 ## Contributing
 
 Bug reports and ideas are welcome in the [issue
-tracker](https://github.com/despresj/watermark/issues). Run the test
+tracker](https://github.com/despresj/gglineage/issues). Run the test
 suite with `devtools::test()`; the robustness matrix lives in
 `tests/testthat/test-robustness.R`.

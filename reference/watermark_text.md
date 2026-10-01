@@ -3,7 +3,7 @@
 Stamps a label such as "DRAFT" or "CONFIDENTIAL" over the whole figure,
 as a large diagonal stamp, a repeating tile, or a small corner mark.
 Like
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md),
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md),
 it is drawn relative to the figure and never affects scales, coordinates
 or facets.
 

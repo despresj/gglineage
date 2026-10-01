@@ -3,7 +3,7 @@
 A replacement for
 [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
 that stamps the plot with
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 and, for PNG files, also writes provenance fields into the file's `tEXt`
 metadata chunks. The dots survive screenshots and recompression; the
 metadata is lossless and can carry much more (a UUID, a git commit, a
@@ -38,13 +38,13 @@ ggsave_watermark(
 - id:
 
   ID to embed: text of at most 16 bytes or a UUID (see
-  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)).
+  [`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)).
   Defaults to the ID the plot already carries, if it has a
-  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+  [`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
   or
-  [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  [`watermark_tiles()`](https://despresj.github.io/gglineage/reference/watermark_tiles.md)
   mark, and otherwise to a fresh
-  [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md).
+  [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md).
   A different ID from the one the plot carries is an error, so the
   file's metadata and its dots always name the same ID. This is the
   third argument, where
@@ -81,8 +81,8 @@ invisibly: as given for text, or in lowercase form for a UUID.
 
 ## See also
 
-[`read_watermark_metadata()`](https://despresj.github.io/watermark/reference/read_watermark_metadata.md),
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md).
+[`read_watermark_metadata()`](https://despresj.github.io/gglineage/reference/read_watermark_metadata.md),
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md).
 
 ## Examples
 
@@ -95,13 +95,13 @@ id <- ggsave_watermark(file, p, metadata = list(script = "fig1.R"),
                        width = 6, height = 4, dpi = 150)
 
 extract_watermark(file)
-#> [1] "C2YZ7GPX"
+#> [1] "D30XS15K"
 read_watermark_metadata(file)
 #> $id
-#> [1] "C2YZ7GPX"
+#> [1] "D30XS15K"
 #> 
 #> $created
-#> [1] "2026-10-01T23:28:52+0000"
+#> [1] "2026-10-01T23:40:26+0000"
 #> 
 #> $software
 #> [1] "R 4.6.1; ggplot2 4.0.3; gglineage 0.1.0"

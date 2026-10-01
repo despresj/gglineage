@@ -17,11 +17,11 @@ coordinates or facets.
 
 Useful links:
 
-- <https://github.com/despresj/watermark>
+- <https://github.com/despresj/gglineage>
 
-- <https://despresj.github.io/watermark/>
+- <https://despresj.github.io/gglineage/>
 
-- Report bugs at <https://github.com/despresj/watermark/issues>
+- Report bugs at <https://github.com/despresj/gglineage/issues>
 
 ## Author
 

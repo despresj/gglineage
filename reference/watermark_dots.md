@@ -3,7 +3,7 @@
 Adds a row of faint dots along the bottom margin of the plot that
 encodes `id`. The code survives screenshots, JPEG compression and
 moderate rescaling, and is read back with
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md).
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md).
 
 ## Usage
 
@@ -19,9 +19,9 @@ add_watermark(plot, id, ...)
 
   The ID to embed: text of at most 16 bytes, or a UUID. Shorter text is
   more robust;
-  [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)
+  [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md)
   makes 8-character IDs and
-  [`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md)
+  [`wm_uuid()`](https://despresj.github.io/gglineage/reference/wm_id.md)
   UUIDs.
 
 - colour:
@@ -64,7 +64,7 @@ for a UUID); a complete theme added *after* the watermark (e.g.
 Each row is framed with sync patterns, a header and a 32-bit check, so a
 decode either returns the exact ID or nothing. IDs made only of the
 characters
-[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)
+[`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md)
 uses are packed at 5 bits per character, so they fit in fewer, larger
 dots than other strings of the same length.
 
@@ -74,7 +74,7 @@ A UUID in canonical form (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, either
 case, optionally in braces or with a `urn:uuid:` prefix) is recognised
 and carried in full: all 128 bits, as two rows of dots, one above the
 other.
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md)
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md)
 returns it lowercase. The letter case of a UUID's hex digits is not part
 of its value (RFC 9562, section 4), so an uppercase input is not an
 error, just not preserved. Nothing else is interpreted: the version and
@@ -88,7 +88,7 @@ UUID.
 
 Each UUID row has 136 dot positions to a text row's 77-200 (112 for an
 8-character
-[`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)),
+[`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md)),
 so a UUID needs more pixel width than an 8-character ID to survive the
 same JPEG compression. Measured on 7 x 5 in figures (12 trials per
 width), quality 50 held in every trial down to 400 px wide for a UUID
@@ -99,19 +99,19 @@ guarantees: the limits vary with the ID and the plot.
 ## One plot, one ID
 
 A plot carries one ID. Adding `watermark_dots()` or
-[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+[`watermark_tiles()`](https://despresj.github.io/gglineage/reference/watermark_tiles.md)
 with a different ID to a plot that already has one is an error, because
 a figure carrying two IDs could be traced to either. Adding the same ID
 again changes nothing. The ID belongs to the plot object, so a plot
 built from a watermarked one (`p + labs(...)`, or `p` given new data)
 carries the same ID; to give every saved figure its own ID, leave the
 watermark off the shared plot and add it when saving, with
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md).
+[`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md).
 
 ## See also
 
 `add_watermark()` for a pipe-friendly version,
-[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+[`ggsave_watermark()`](https://despresj.github.io/gglineage/reference/ggsave_watermark.md)
 to also embed file metadata.
 
 ## Examples

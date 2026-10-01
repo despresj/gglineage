@@ -1,9 +1,9 @@
 # Recover a dot watermark from an image
 
 Scans an image for the dot code written by
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 and decodes it; if no strip is found, looks for the tiles written by
-[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md).
+[`watermark_tiles()`](https://despresj.github.io/gglineage/reference/watermark_tiles.md).
 Works on the original file, screenshots, and recompressed or rescaled
 copies. The strip needs the bottom of the figure intact; tiles survive
 crops that keep about two tiles across in each direction of open panel.

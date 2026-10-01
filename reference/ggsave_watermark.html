@@ -11,7 +11,7 @@ the file's tEXt metadata chunks. The dots survive screenshots and
 recompression; the metadata is lossless and can carry much more (a UUID,
 a git commit, a script path) but is lost when the image is screenshotted or
 re-encoded. Using both gives you the rich record when the original file is
-shared and the short ID when it isn't."><meta property="og:image" content="https://despresj.github.io/watermark/logo.png"></head><body>
+shared and the short ID when it isn't."><meta property="og:image" content="https://despresj.github.io/gglineage/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -31,7 +31,7 @@ shared and the short ID when it isn't."><meta property="og:image" content="https
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/despresj/watermark/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/despresj/gglineage/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -40,7 +40,7 @@ shared and the short ID when it isn't."><meta property="og:image" content="https
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Save a plot with a dot watermark and embedded provenance metadata</h1>
-      <small class="dont-index">Source: <a href="https://github.com/despresj/watermark/blob/main/R/save.R" class="external-link"><code>R/save.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/despresj/gglineage/blob/main/R/save.R" class="external-link"><code>R/save.R</code></a></small>
       <div class="d-none name"><code>ggsave_watermark.Rd</code></div>
     </div>
 
@@ -125,13 +125,13 @@ given for text, or in lowercase form for a UUID.</p>
 <span class="r-in"><span>                       width <span class="op">=</span> <span class="fl">6</span>, height <span class="op">=</span> <span class="fl">4</span>, dpi <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract_watermark.html">extract_watermark</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C2YZ7GPX"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "D30XS15K"</span>
 <span class="r-in"><span><span class="fu"><a href="read_watermark_metadata.html">read_watermark_metadata</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C2YZ7GPX"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "D30XS15K"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $created</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-10-01T23:28:52+0000"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-10-01T23:40:26+0000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $software</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "R 4.6.1; ggplot2 4.0.3; gglineage 0.1.0"</span>

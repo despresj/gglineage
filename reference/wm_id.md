@@ -3,7 +3,7 @@
 `wm_id()` returns a short random ID in Crockford base32 (no `I`, `L`,
 `O` or `U`, so it survives being read aloud or retyped). Eight
 characters give 40 bits and fit in a single row of
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md).
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md).
 
 ## Usage
 
@@ -35,7 +35,7 @@ Version 4 (the default) has 122 random bits. Version 7 starts with a
 milliseconds sort by creation time, followed by 74 random bits; IDs made
 within the same millisecond are in random order (RFC 9562 makes stricter
 ordering optional). Either takes two rows of dots; see
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 for the width that needs.
 
 ## Randomness
@@ -63,11 +63,11 @@ it, and anyone can draw it.
 
 ``` r
 wm_id()
-#> [1] "W975XDB0"
+#> [1] "2AJQSJBZ"
 wm_id(12)
-#> [1] "7ETK4XYR8VMH"
+#> [1] "14V3T5S6GCCA"
 wm_uuid()
-#> [1] "ad5337a8-9e42-4c27-8921-faf5d18922a2"
+#> [1] "ea72f459-94dd-4a7a-97ec-463b9653b80b"
 wm_uuid(version = 7)
-#> [1] "01a0f9cc-af4a-724c-b8b6-78571961380b"
+#> [1] "01a0f9d7-44c7-7964-a49f-ff7eca45fe35"
 ```

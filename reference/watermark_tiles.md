@@ -3,11 +3,11 @@
 Tiles a faint 12 x 12 grid of dots behind the data in every panel. Each
 tile carries the whole ID and a CRC-16 checksum, so a crop that keeps
 enough of the panel still decodes with
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md):
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md):
 about two tiles across in each direction, roughly 80 mm square of open
 panel at the default pitch (more on busy plots). Use it alongside, or
 instead of,
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 when images may be cropped.
 
 ## Usage
@@ -21,7 +21,7 @@ watermark_tiles(id, colour = "black", alpha = 0.04, size = 1.05, pitch = 3)
 - id:
 
   The ID to embed: a string of at most 12 bytes.
-  [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)
+  [`wm_id()`](https://despresj.github.io/gglineage/reference/wm_id.md)
   makes 8-character ones.
 
 - colour:
@@ -59,7 +59,7 @@ Tiles are read per panel, so small facets (under about 70 mm each) don't
 decode. Each tile has a checksum but no error correction: when lines or
 gridlines cover the same cells in every tile, some IDs fail where others
 pass, and dark panels with light gridlines often fail. The strip from
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 is more robust; use both when you can.
 
 The tile checksum is 16 bits, against the strip's 32 (64 for a UUID), so
@@ -67,14 +67,14 @@ a corrupted tile reading is accepted as a wrong ID about once in 65,000
 tries. Treat an ID read from tiles alone as a lead to confirm against
 your records. A plot carries one ID: tiles with a different ID from the
 plot's
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 strip are an error.
 
 ## See also
 
-[`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+[`watermark_dots()`](https://despresj.github.io/gglineage/reference/watermark_dots.md)
 for the margin strip,
-[`extract_watermark()`](https://despresj.github.io/watermark/reference/extract_watermark.md)
+[`extract_watermark()`](https://despresj.github.io/gglineage/reference/extract_watermark.md)
 to read either back.
 
 ## Examples
