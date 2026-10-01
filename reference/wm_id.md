@@ -63,11 +63,11 @@ it, and anyone can draw it.
 
 ``` r
 wm_id()
-#> [1] "2AJQSJBZ"
+#> [1] "7RCNE6JZ"
 wm_id(12)
-#> [1] "14V3T5S6GCCA"
+#> [1] "GEDFZRJXT9AD"
 wm_uuid()
-#> [1] "ea72f459-94dd-4a7a-97ec-463b9653b80b"
+#> [1] "ef356b8f-1bc1-4d40-a2c8-e72d6c7c0620"
 wm_uuid(version = 7)
-#> [1] "01a0f9d7-44c7-7964-a49f-ff7eca45fe35"
+#> [1] "01a0f9e3-3a3c-75a4-9313-94ab4ffcec86"
 ```

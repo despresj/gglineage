@@ -133,14 +133,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">found</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_watermark.html">extract_watermark</a></span><span class="op">(</span><span class="va">screenshot</span><span class="op">)</span></span>
 <span><span class="va">found</span></span>
-<span><span class="co">#&gt; [1] "01a0f9cc-807a-73d8-8add-4639ad30a5fd"</span></span>
+<span><span class="co">#&gt; [1] "01a0f9df-51e0-7371-aa97-342810a75701"</span></span>
 <span></span>
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">manifest</span><span class="op">)</span></span>
 <span><span class="va">plots</span><span class="op">[</span><span class="va">plots</span><span class="op">$</span><span class="va">id</span> <span class="op">==</span> <span class="va">found</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;                                     id          script  commit</span></span>
-<span><span class="co">#&gt; 1 01a0f9cc-807a-73d8-8add-4639ad30a5fd analysis/fig2.R 9f3c2e1</span></span>
+<span><span class="co">#&gt; 1 01a0f9df-51e0-7371-aa97-342810a75701 analysis/fig2.R 9f3c2e1</span></span>
 <span><span class="co">#&gt;                      data               saved</span></span>
-<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T19:28:44</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T19:49:17</span></span></code></pre></div>
 <p>The row is yours to design: a CSV, a database table, a lab notebook. A row per saved plot, keyed by the ID, is all the lookup needs.</p>
 <div class="section level3">
 <h3 id="two-kinds-of-record">Two kinds of record<a class="anchor" aria-label="anchor" href="#two-kinds-of-record"></a>
@@ -252,11 +252,11 @@
 <p>Thirty-two hex digits without hyphens are rejected rather than guessed at (they could as well be an MD5), with a message saying to write the UUID as <code>8-4-4-4-12</code>. Any text of 16 bytes or fewer is carried literally, so a text ID can never be mistaken for a UUID.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/wm_id.html">wm_id</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># 8 characters, 40 bits</span></span>
-<span><span class="co">#&gt; [1] "KVPJ9TB1"</span></span>
+<span><span class="co">#&gt; [1] "N83VKNQ9"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># random (version 4)</span></span>
-<span><span class="co">#&gt; [1] "6ec7c736-150b-4c06-b9b1-e9b5bf82906d"</span></span>
+<span><span class="co">#&gt; [1] "8df0b51e-d844-463f-9c1f-50a11a4deee1"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>   <span class="co"># starts with the time in ms (version 7)</span></span>
-<span><span class="co">#&gt; [1] "01a0f9cc-8340-7f16-ae65-6ee83af20874"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "01a0f9df-541a-771e-b125-19f84f95a2d2"</span></span></code></pre></div>
 <p>IDs come from the operating system’s secure random generator (<code>/dev/urandom</code>; on Windows, <code><a href="https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html" class="external-link">openssl::rand_bytes()</a></code>, which needs the openssl package). With neither, <code><a href="reference/wm_id.html">wm_id()</a></code> and <code><a href="reference/wm_id.html">wm_uuid()</a></code> stop with an error instead of quietly using something weaker. <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> in your analysis won’t repeat them, and generating them won’t disturb your seed. An 8-character <code><a href="reference/wm_id.html">wm_id()</a></code> is 40 random bits, fine for one team’s plots; when IDs from many people or machines share one record, use UUIDs.</p>
 </div>
 <div class="section level2">
@@ -340,7 +340,7 @@
 <div class="section level2">
 <h2 id="how-tough-is-it">How tough is it?<a class="anchor" aria-label="anchor" href="#how-tough-is-it"></a>
 </h2>
-<p>A 7 × 5 in plot saved at 150 dpi, pushed through 37 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types.</p>
+<p>A 7 × 5 in plot saved at 150 dpi, carrying the 8-character ID <code>K7Q2M9XD</code>, pushed through 37 transformations. Every row is recomputed each time this README is knit, and the same matrix runs in <a href="https://github.com/despresj/gglineage/blob/main/tests/testthat/test-robustness.R" class="external-link"><code>test-robustness.R</code></a> on every push, on several plot types and with a second ID, <code>RUN-42</code>. Longer IDs reach their limits sooner; see <a href="#measured-limits">Measured limits</a>.</p>
 <table class="table">
 <colgroup>
 <col width="20%">
@@ -618,7 +618,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Dot code: 30 of 37 recovered exactly. Tiles: 28 of 37. Wrong IDs across both: 0.</strong> The rows under “past the limits” mark where the guarantee ends. A result there is either exact or nothing.</p>
+<p><strong>Dot code: 30 of 37 recovered exactly. Tiles: 28 of 37. Wrong IDs across both: 0.</strong> The rows under “past the limits” are outside what the package promises: they fail for this ID, and where each limit falls depends on the ID’s length. The tests ask only that a result there is exact or <code>NULL</code>, never a wrong ID.</p>
 <div class="section level3">
 <h3 id="measured-limits">Measured limits<a class="anchor" aria-label="anchor" href="#measured-limits"></a>
 </h3>
@@ -664,6 +664,44 @@
 </tbody>
 </table>
 <p>At full size (1050 px), JPEG holds down to about <strong>quality 8</strong> for this 8-character ID and <strong>quality 10</strong> for this UUID; the exact floor varies from ID to ID. A UUID’s two rows have more, smaller dots than a short ID’s one, so it needs about a third more width under JPEG, and more again inside a padded screenshot.</p>
+<p><strong>Longer IDs need more width.</strong> Every character adds dots to the row, so the dots sit closer together and merge sooner. Measured the same way, as the worst of 8 trials (4 random IDs × 2 plot types) for each kind of ID, by <a href="https://github.com/despresj/gglineage/blob/main/tools/id-length-floors.R" class="external-link"><code>tools/id-length-floors.R</code></a>:</p>
+<table class="table">
+<colgroup>
+<col width="30%">
+<col width="18%">
+<col width="29%">
+<col width="21%">
+</colgroup>
+<thead><tr>
+<th>ID</th>
+<th align="center">Dot positions</th>
+<th align="right">Lossless copy, shrunk</th>
+<th align="right">JPEG quality 50</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>12-character <code><a href="reference/wm_id.html">wm_id()</a></code>
+</td>
+<td align="center">132</td>
+<td align="right">150 px</td>
+<td align="right">360 px</td>
+</tr>
+<tr>
+<td>16-character <code><a href="reference/wm_id.html">wm_id()</a></code>
+</td>
+<td align="center">152</td>
+<td align="right">170 px</td>
+<td align="right">430 px</td>
+</tr>
+<tr>
+<td>16 bytes of free text</td>
+<td align="center">200</td>
+<td align="right">230 px</td>
+<td align="right">560 px</td>
+</tr>
+</tbody>
+</table>
+<p>Compare 120 px and 300 px for an 8-character <code><a href="reference/wm_id.html">wm_id()</a></code>. A full 16 bytes of free text needs nearly twice the width of an 8-character <code><a href="reference/wm_id.html">wm_id()</a></code> under JPEG; for charts that will travel as small screenshots, use <code><a href="reference/wm_id.html">wm_id()</a></code> or a UUID.</p>
 </div>
 <div class="section level3">
 <h3 id="passed-around-uuids-through-real-sharing-chains">Passed around: UUIDs through real sharing chains<a class="anchor" aria-label="anchor" href="#passed-around-uuids-through-real-sharing-chains"></a>
@@ -725,7 +763,7 @@
 <li>
 <strong>Rotation.</strong> Rows are scanned horizontally. Rotate the image back first.</li>
 <li>
-<strong>Too small.</strong> Below the widths above the dots merge. Even a lossless copy stops decoding at about 120 px (8-character ID) or 150 px (UUID), where the dots are under two pixels apart. Ask for the original.</li>
+<strong>Too small.</strong> Below the widths above the dots merge. Even a lossless copy stops decoding at about 120 px (8-character ID), 150 px (UUID) or 230 px (16 bytes of free text), where the dots are under two pixels apart. Ask for the original.</li>
 <li>
 <strong>Small <em>and</em> padded <em>and</em> compressed.</strong> A tiny screenshot with window chrome around it, saved at a low JPEG quality, fails below about 400 px (480 px for a UUID).</li>
 <li>
