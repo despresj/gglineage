@@ -485,14 +485,22 @@ decode_geometry <- function(signal, left, right, n, accept = NULL, partner = NUL
   plausible <- on > off &
     colSums(bits[1:32, , drop = FALSE] == sync_bits) == 32L &
     header %in% frame_headers(n)
+  foreign <- FALSE
   for (j in which(plausible)) {
     xs <- left + dl[j] + (seq_len(n) - 1) * step[j]
     frame <- parse_frame(as.integer(sample_signal(signal, xs, pitch) > threshold[j]))
-    if (!is.null(frame) && (is.null(accept) || accept(frame))) {
-      return(list(frame = frame, n_bits = n, pitch = step[j],
-                  left = left + dl[j], right = right + dr[j]))
+    if (!is.null(frame)) {
+      if (is.null(accept) || accept(frame)) {
+        return(list(frame = frame, n_bits = n, pitch = step[j],
+                    left = left + dl[j], right = right + dr[j]))
+      }
+      if (is_foreign(frame, partner)) foreign <- TRUE
     }
   }
+  # A row that reads cleanly but carries a different payload belongs to
+  # something else (the other half of a different UUID, in a stack of
+  # charts): it isn't damaged, so never try to repair it into a match.
+  if (foreign) return(NULL)
 
   # A UUID row whose checksum fails has usually lost a few bits to
   # compression. Repair it from the bits read least confidently; see
@@ -536,6 +544,16 @@ decode_geometry <- function(signal, left, right, n, accept = NULL, partner = NUL
     }
   }
   NULL
+}
+
+# A cleanly read row that `accept` rejected is foreign when its payload
+# doesn't fit the known half: the known half's pair check, over the UUID the
+# two would make, fails. If that check passes, the payload is right and only
+# this row's own pair bits are damaged, which repair can fix.
+is_foreign <- function(frame, partner) {
+  if (is.null(partner) || frame$kind != "uuid" || frame$half == partner$half) return(TRUE)
+  uuid <- if (frame$half == 1L) c(frame$bytes, partner$bytes) else c(partner$bytes, frame$bytes)
+  uuid_pair_check(partner$half, uuid) != partner$pair
 }
 
 # Soft-decision repair of one UUID row. A row that fails its checks has

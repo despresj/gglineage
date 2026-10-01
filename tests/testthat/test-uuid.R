@@ -445,10 +445,12 @@ test_that("UUIDs survive being passed around: screenshot, crop, recompress, repe
       st
     }
   )
-  set.seed(21)
+  # Fixed UUIDs (wm_uuid() draws from the OS, so set.seed() can't pin it).
+  fixed <- c("4" = "6f1c9a2e-3b4d-4e8f-9a1b-2c3d4e5f6a7b",
+             "7" = "01928f4a-7b3c-7d2e-9f10-a1b2c3d4e5f6")
   for (plot_name in c("light", "dark")) {
     for (version in c(4, 7)) {
-      id <- wm_uuid(version)
+      id <- fixed[[as.character(version)]]
       p <- if (plot_name == "light") base_plot() + watermark_dots(id) else
         base_plot() + theme_dark() + theme(plot.background = element_rect(fill = "grey10")) +
           watermark_dots(id, colour = "white")
@@ -509,7 +511,9 @@ test_that("a UUID row with a few lost or faded dots is repaired exactly", {
   skip_if_no_raster()
   skip_on_cran()
   set.seed(31)
-  id <- wm_uuid()
+  # A fixed UUID, so the damaged bits are the same every run; this one once
+  # exposed a pair-check edge case.
+  id <- "c0a214cb-66ec-4141-b77e-282a8fbfcb9c"
   img <- render_plot(base_plot() + watermark_dots(id), width = 7, height = 5, dpi = 150)
   found <- find_watermark(as_gray(img))
   expect_identical(found$id, id)
@@ -542,7 +546,7 @@ test_that("heavily damaged UUID rows give NULL, never a wrong UUID", {
   skip_if_no_raster()
   skip_on_cran()
   set.seed(32)
-  id <- wm_uuid()
+  id <- "9d2e7b14-5a3c-4f8e-b1d6-7c0a2e4f9b3d"
   img <- render_plot(base_plot() + watermark_dots(id), width = 7, height = 5, dpi = 150)
   found <- find_watermark(as_gray(img))
   rows <- encode_rows(id)
