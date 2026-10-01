@@ -508,7 +508,7 @@ repaired.
 - **Small *and* padded *and* compressed.** A tiny screenshot with window
   chrome around it, saved at a low JPEG quality, fails below about 400 px
   (480 px for a UUID).
-- **Brightening past about +8%** clips the faint dots to white. Raise
+- **Brightening past about +10%** clips the faint dots to white. Raise
   `alpha` if your plots will be edited heavily.
 
 When it fails, it fails to `NULL`. Across every sweep behind this README, no

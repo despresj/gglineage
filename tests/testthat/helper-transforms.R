@@ -150,6 +150,8 @@ stress_transforms <- function() {
          f = function(x) tf_resize(x, 0.83), survives = TRUE),
     list(name = "Downscale to 640 px wide", group = "Resize",
          f = function(x) tf_resize_to_width(x, 640), survives = TRUE),
+    list(name = "Downscale to 15%", group = "Resize",
+         f = function(x) tf_resize(x, 0.15), survives = TRUE),
     list(name = "Crop top 30%", group = "Crop & frame",
          f = function(x) tf_crop(x, top = 0.3), survives = TRUE),
     list(name = "Pad with light UI chrome", group = "Crop & frame",
@@ -202,7 +204,7 @@ stress_transforms <- function() {
     list(name = "Shrink to 240 px wide + JPEG 50", group = "Past the limits",
          f = function(x) tf_jpeg(tf_resize_to_width(x, 240), 50),
          survives = FALSE),
-    list(name = "Downscale to 15%", group = "Past the limits",
-         f = function(x) tf_resize(x, 0.15), survives = FALSE)
+    list(name = "Downscale to 10%", group = "Past the limits",
+         f = function(x) tf_resize(x, 0.1), survives = FALSE)
   )
 }
