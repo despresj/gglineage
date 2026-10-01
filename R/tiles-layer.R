@@ -20,6 +20,12 @@
 #' pass, and dark panels with light gridlines often fail. The strip from
 #' [watermark_dots()] is more robust; use both when you can.
 #'
+#' The tile checksum is 16 bits, against the strip's 32 (64 for a UUID), so a
+#' corrupted tile reading is accepted as a wrong ID about once in 65,000
+#' tries. Treat an ID read from tiles alone as a lead to confirm against your
+#' records. A plot carries one ID: tiles with a different ID from the plot's
+#' [watermark_dots()] strip are an error.
+#'
 #' @param id The ID to embed: a string of at most 12 bytes. [wm_id()] makes
 #'   8-character ones.
 #' @param colour Dot colour. Use a light colour on dark panel backgrounds.

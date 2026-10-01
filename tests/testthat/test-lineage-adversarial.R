@@ -124,7 +124,11 @@ test_that("a plot derived from a watermarked plot carries the same ID, as docume
   p <- base_plot() + watermark_dots("RUN-42")
   derived <- list(
     relabelled = p + ggplot2::labs(title = "Another figure"),
-    new_data = p + transform(mtcars, mpg = rev(mpg)),
+    new_data = local({
+      q <- p
+      q$data <- transform(mtcars, mpg = rev(mpg))
+      q
+    }),
     new_layer = p + ggplot2::geom_smooth(method = "lm", formula = y ~ x),
     rethemed = p + ggplot2::theme_bw()
   )

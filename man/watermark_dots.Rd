@@ -79,7 +79,7 @@ A plot carries one ID. Adding \code{watermark_dots()} or \code{\link[=watermark_
 with a different ID to a plot that already has one is an error, because a
 figure carrying two IDs could be traced to either. Adding the same ID
 again changes nothing. The ID belongs to the plot object, so a plot built
-from a watermarked one (\code{p + labs(...)}, \code{p \%+\% other_data}) carries the
+from a watermarked one (\code{p + labs(...)}, or \code{p} given new data) carries the
 same ID; to give every saved figure its own ID, leave the watermark off the
 shared plot and add it when saving, with \code{\link[=ggsave_watermark]{ggsave_watermark()}}.
 }
