@@ -28,8 +28,15 @@ First release.
   in the README.
 * `watermark_text()` adds visible stamps: a diagonal "DRAFT", a repeating
   tile, or a corner label. Text stays clear of the dot strip.
+* One plot carries one ID. Adding `watermark_dots()` or `watermark_tiles()`
+  with a different ID to a plot that already has one is an error (the same
+  ID again changes nothing), so no figure can be traced to two IDs.
 * `ggsave_watermark()` saves with dots and writes provenance fields into PNG
-  metadata; `read_watermark_metadata()` reads them back.
+  metadata; `read_watermark_metadata()` reads them back. Without `id`, it
+  uses the ID the plot already carries, if any, so the file's metadata and
+  its dots always agree; a different `id` is an error. Metadata that could
+  not be read back as written (names over 69 bytes, repeated names, values
+  that are not atomic vectors) is refused before anything is saved.
 * `wm_id()` and `wm_uuid()` draw their randomness from the operating
   system's secure generator (`/dev/urandom`, or `openssl::rand_bytes()` where
   that is missing, as on Windows), and stop with an error if neither is

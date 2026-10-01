@@ -11,12 +11,18 @@
 #' @param filename File to create, as in [ggplot2::ggsave()].
 #' @param plot Plot to save; defaults to the last plot displayed.
 #' @param id ID to embed: text of at most 16 bytes or a UUID (see
-#'   [watermark_dots()]). Defaults to a fresh [wm_id()]. This is the third
-#'   argument, where [ggplot2::ggsave()] has `device`, so pass `device` and
-#'   the other `ggsave()` arguments by name.
+#'   [watermark_dots()]). Defaults to the ID the plot already carries, if it
+#'   has a [watermark_dots()] or [watermark_tiles()] mark, and otherwise to a
+#'   fresh [wm_id()]. A different ID from the one the plot carries is an
+#'   error, so the file's metadata and its dots always name the same ID. This
+#'   is the third argument, where [ggplot2::ggsave()] has `device`, so pass
+#'   `device` and the other `ggsave()` arguments by name.
 #' @param metadata A named list of extra fields to store in the PNG metadata,
-#'   e.g. `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. The names
-#'   `id`, `created`, `title` and `software` are reserved.
+#'   e.g. `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. Each field
+#'   is an atomic vector (stored as text, elements separated by spaces), each
+#'   name is used once and is at most 69 bytes (PNG limits keywords to 79,
+#'   including the package's prefix). The names `id`, `created`, `title` and
+#'   `software` are reserved. Problems are reported before anything is saved.
 #' @param dots If `FALSE`, skip the dot code and only write metadata.
 #' @param ... Passed to [ggplot2::ggsave()] (`width`, `height`, `dpi`, ...).
 #'
@@ -36,23 +42,18 @@
 #' read_watermark_metadata(file)
 ggsave_watermark <- function(filename,
                              plot = ggplot2::last_plot(),
-                             id = wm_id(),
+                             id = NULL,
                              metadata = list(),
                              dots = TRUE,
                              ...) {
   # A UUID is stored, and returned, in its canonical lowercase form, so the
   # metadata field matches what extract_watermark() reads from the dots.
-  id <- check_id(id)
-  if (length(metadata) > 0L &&
-      (is.null(names(metadata)) || any(!nzchar(names(metadata))))) {
-    stop("`metadata` must be a named list.", call. = FALSE)
-  }
-  clash <- intersect(names(metadata), reserved_fields)
-  if (length(clash) > 0L) {
-    stop("`metadata` can't use the reserved field name",
-         if (length(clash) > 1L) "s", " ", paste0("`", clash, "`", collapse = ", "),
-         "; these are written by ggsave_watermark() itself.", call. = FALSE)
-  }
+  carried <- plot_watermark_id(plot)
+  id <- check_id(id %||% carried %||% wm_id())
+  # Checked whether or not dots are drawn: metadata naming one ID on a figure
+  # whose marks carry another would send a lookup to the wrong record.
+  if (!is.null(carried) && !identical(carried, id)) stop_two_ids(carried, id)
+  check_metadata(metadata)
 
   to_save <- if (dots) plot + watermark_dots(id) else plot
   # ggsave() returns the path it wrote, which differs from `filename` when
@@ -116,6 +117,44 @@ read_watermark_metadata <- function(file) {
 }
 
 reserved_fields <- c("id", "created", "title", "software")
+
+# Metadata that could not be read back exactly as given is refused before
+# anything is saved: libpng truncates long keywords (with only a warning),
+# repeated names read back ambiguously, and lists or functions have no text
+# form to store.
+check_metadata <- function(metadata) {
+  if (!is.list(metadata)) stop("`metadata` must be a named list.", call. = FALSE)
+  if (length(metadata) == 0L) return(invisible())
+  keys <- names(metadata)
+  if (is.null(keys) || anyNA(keys) || any(!nzchar(keys))) {
+    stop("`metadata` must be a named list.", call. = FALSE)
+  }
+  clash <- intersect(keys, reserved_fields)
+  if (length(clash) > 0L) {
+    stop("`metadata` can't use the reserved field name",
+         if (length(clash) > 1L) "s", " ", paste0("`", clash, "`", collapse = ", "),
+         "; these are written by ggsave_watermark() itself.", call. = FALSE)
+  }
+  dup <- unique(keys[duplicated(keys)])
+  if (length(dup) > 0L) {
+    stop("`metadata` uses the name", if (length(dup) > 1L) "s", " ",
+         paste0("`", dup, "`", collapse = ", "), " more than once.", call. = FALSE)
+  }
+  long <- keys[nchar(enc2utf8(keys), type = "bytes") > max_metadata_key_bytes]
+  if (length(long) > 0L) {
+    stop("`metadata` names must be at most ", max_metadata_key_bytes, " bytes; ",
+         paste0("`", long, "`", collapse = ", "), " is longer.", call. = FALSE)
+  }
+  bad <- keys[!vapply(metadata, function(x) is.null(x) || is.atomic(x), logical(1))]
+  if (length(bad) > 0L) {
+    stop("`metadata` fields must be atomic vectors (text, numbers, dates); ",
+         paste0("`", bad, "`", collapse = ", "), " is not.", call. = FALSE)
+  }
+  invisible()
+}
+
+# PNG keywords are 1-79 bytes, and ours start with "gglineage:".
+max_metadata_key_bytes <- 79L - nchar("gglineage:")
 
 metadata_prefix <- "gglineage:"
 legacy_metadata_prefix <- "watermark:"

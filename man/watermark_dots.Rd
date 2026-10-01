@@ -29,7 +29,8 @@ too small to survive being shown small and recompressed.}
 \item{...}{Passed to \code{watermark_dots()}.}
 }
 \value{
-A list of ggplot2 components, to be added to a plot with \code{+}.
+An object to add to a plot with \code{+}; \code{add_watermark()} returns
+the watermarked plot.
 }
 \description{
 Adds a row of faint dots along the bottom margin of the plot that encodes
@@ -58,9 +59,6 @@ hex digits is not part of its value (RFC 9562, section 4), so an
 uppercase input is not an error, just not preserved. Nothing else is
 interpreted: the version and variant fields are carried as given.
 
-One plot carries one code: two \code{watermark_dots()} layers draw over each
-other, and only one of them (or neither) can be read back.
-
 Thirty-two hexadecimal digits without hyphens are \emph{not} treated as a UUID
 (that could equally be an MD5 hash), and at 32 bytes are too long for a
 text ID, so they are rejected with a message. Any text of 16 bytes or fewer
@@ -73,6 +71,17 @@ figures (12 trials per width), quality 50 held in every trial down to 400
 px wide for a UUID and 300 px for an 8-character ID; below that, some
 decodes return \code{NULL}. The full table is in the README. These are
 measurements, not guarantees: the limits vary with the ID and the plot.
+}
+
+\section{One plot, one ID}{
+
+A plot carries one ID. Adding \code{watermark_dots()} or \code{\link[=watermark_tiles]{watermark_tiles()}}
+with a different ID to a plot that already has one is an error, because a
+figure carrying two IDs could be traced to either. Adding the same ID
+again changes nothing. The ID belongs to the plot object, so a plot built
+from a watermarked one (\code{p + labs(...)}, \code{p \%+\% other_data}) carries the
+same ID; to give every saved figure its own ID, leave the watermark off the
+shared plot and add it when saving, with \code{\link[=ggsave_watermark]{ggsave_watermark()}}.
 }
 
 \examples{

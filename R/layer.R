@@ -42,6 +42,36 @@ in_plot_viewport <- function(draw) {
   draw()
 }
 
+# One figure, one ID. The ID a plot already carries in a dot strip or tiles
+# (in canonical form), or NULL if it carries none.
+plot_watermark_id <- function(plot) {
+  if (!inherits(plot, "ggplot")) return(NULL)
+  ids <- unlist(lapply(plot$layers, function(layer) {
+    if (inherits(layer$geom, c("GeomWatermarkDots", "GeomWatermarkTiles"))) {
+      layer$geom_params$spec$id
+    }
+  }))
+  if (length(ids) == 0L) NULL else ids[[1]]
+}
+
+# Does `plot` need a `geom_class` layer for `id` (in canonical form)? A plot
+# carrying a different ID refuses it: two IDs on one figure means a copy can
+# be traced to either, so whichever record is looked up may be the wrong one.
+# A plot that already has this kind of mark with this ID needs nothing.
+needs_watermark <- function(plot, id, geom_class) {
+  have <- plot_watermark_id(plot)
+  if (is.null(have)) return(TRUE)
+  if (!identical(have, id)) stop_two_ids(have, id)
+  !any(vapply(plot$layers, function(l) inherits(l$geom, geom_class), logical(1)))
+}
+
+stop_two_ids <- function(have, new) {
+  stop("This plot already carries the ID \"", have, "\", so it can't also carry \"",
+       new, "\": a copy of the figure could then be traced to either. Use the same ",
+       "ID, or rebuild the plot without the first watermark (for example, add ",
+       "watermarks only when saving, with ggsave_watermark()).", call. = FALSE)
+}
+
 bottom_margin <- function(pt) {
   if (utils::packageVersion("ggplot2") >= "4.0.0") {
     margin_part <- get("margin_part", envir = asNamespace("ggplot2"))

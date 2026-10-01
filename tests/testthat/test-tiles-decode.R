@@ -46,7 +46,12 @@ test_that("dark mode and white tiles on a dark plot decode via the polarity retr
 test_that("dots and tiles with different IDs: strip wins, tiles still readable", {
   skip_if_no_raster()
   skip_on_cran()
-  img <- render_plot(base_plot() + watermark_tiles("TILE-2") + watermark_dots("STRIP-1"))
+  # `+` refuses a second ID on one plot, but an image can still hold both
+  # (a collage, say); build one by hand to pin down the decoder's precedence.
+  p <- base_plot() + watermark_tiles("TILE-2")
+  p$layers <- c(p$layers, list(watermark_layer(GeomWatermarkDots, unclass(watermark_dots("STRIP-1")))))
+  p <- p + ggplot2::theme(plot.margin = bottom_margin(dots_margin_pt(1L)))
+  img <- render_plot(p)
   expect_identical(extract_watermark(img), "STRIP-1")
   expect_identical(decode_tiles(as_gray(img)), "TILE-2")
 })

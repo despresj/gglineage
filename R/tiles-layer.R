@@ -46,14 +46,17 @@ watermark_tiles <- function(id, colour = "black", alpha = 0.04, size = 1.05, pit
     stop("`pitch` must be a positive number (lattice spacing in mm).", call. = FALSE)
   }
   structure(
-    list(bits = encode_tile(id), colour = colour, alpha = alpha, size = size, pitch = pitch),
+    list(id = check_id(id), bits = encode_tile(id), colour = colour, alpha = alpha,
+         size = size, pitch = pitch),
     class = "watermark_tiles_spec"
   )
 }
 
 #' @exportS3Method ggplot2::ggplot_add
 ggplot_add.watermark_tiles_spec <- function(object, plot, ...) {
-  plot$layers <- c(list(watermark_layer(GeomWatermarkTiles, unclass(object))), plot$layers)
+  spec <- unclass(object)
+  if (!needs_watermark(plot, spec$id, "GeomWatermarkTiles")) return(plot)
+  plot$layers <- c(list(watermark_layer(GeomWatermarkTiles, spec)), plot$layers)
   plot
 }
 
