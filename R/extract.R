@@ -100,10 +100,10 @@ find_watermark <- function(gray) {
   # rows that held nothing and skip their repeats.
   weights <- (sin(seq_len(ncol(gray)) * 12.9898) * 43758.5453) %% 1
   empty <- new.env(parent = emptyenv())
-  read_row <- function(signal) {
-    key <- sprintf("%.15g", sum(signal * weights))
+  read_row <- function(signal, zoom = 1) {
+    key <- sprintf("%.15g/%g", sum(signal * weights), zoom)
     if (!is.null(empty[[key]])) return(NULL)
-    found <- decode_row(signal)
+    found <- decode_row(signal, zoom)
     if (is.null(found)) empty[[key]] <- TRUE
     found
   }
@@ -121,7 +121,20 @@ find_watermark <- function(gray) {
       if (!is.null(result)) return(result)
     }
   }
-  find_at_figure_geometry(gray, accept)
+  found <- find_at_figure_geometry(gray, accept)
+  if (!is.null(found)) return(found)
+  # A small chart in a wide screenshot: the background window, sized from the
+  # whole image, reaches past the chart into the page around it, and on a
+  # page of a contrasting colour that hides the syncs at the frame's ends.
+  # Try once more with a window sized for a chart a third of the width.
+  for (r in rev(seq_len(n))) {
+    found <- read_row(gray[r, ], zoom = 3)
+    if (!is.null(found)) {
+      result <- accept(c(found, row = r, rows_averaged = 1L))
+      if (!is.null(result)) return(result)
+    }
+  }
+  NULL
 }
 
 # A found UUID half joined with its partner row, or NULL.
@@ -312,34 +325,15 @@ as_gray <- function(img) {
   matrix(gray, dim(img)[1], dim(img)[2])
 }
 
-decode_row <- function(signal) {
+decode_row <- function(signal, zoom = 1) {
   # Compare each pixel with its neighbourhood rather than the whole row, so
   # flat regions of another shade (screenshot borders, UI chrome) are not
-  # mistaken for dots.
-  k <- background_window(length(signal))
+  # mistaken for dots. The neighbourhood scales with the image; `zoom`
+  # narrows it for a chart that is only part of the image.
+  k <- background_window(length(signal) / zoom)
   if (k < 3L) return(NULL)
   diff <- signal - local_background(signal, k)
-  dev <- abs(diff)
-  # Dots usually cover about a third of the row, so the 85th percentile sits
-  # inside them while ignoring borders, stray text and screenshot chrome
-  # (which can fill a tenth of the row). On large figures the dots, capped at
-  # their maximum size, cover far less, the 85th percentile is plain
-  # background, and the 95th is needed instead.
-  peak <- stats::quantile(dev, 0.85, names = FALSE)
-  if (peak < 0.01) peak <- stats::quantile(dev, 0.95, names = FALSE)
-  if (peak < 0.01) return(NULL)
 
-  # Coarse pass: find dot-like runs. These only locate the frame; bits are
-  # read afterwards by sub-pixel sampling.
-  runs <- rle(dev > peak / 2)
-  ends <- cumsum(runs$lengths)
-  starts <- ends - runs$lengths + 1L
-  on <- runs$values
-  if (sum(on) < 9L) return(NULL)
-  centers <- (starts[on] + ends[on]) / 2
-
-  # The start sync puts a dot on every other bit: 8 evenly spaced dots. Lock
-  # onto the first such run, skipping stray marks such as a plot border.
   # Oriented rows are costly and the same for every lock attempt.
   oriented <- list()
   orient <- function(polarity) {
@@ -349,16 +343,44 @@ decode_row <- function(signal) {
     }
     oriented[[key]]
   }
-  for (i in seq_len(min(6L, length(centers) - 8L))) {
-    gaps <- diff(centers[i:(i + 7L)])
-    if (all(abs(gaps - stats::median(gaps)) <= 0.25 * stats::median(gaps) + 1)) {
-      # Pitch from a least-squares fit through all 8 sync dots: each centre
-      # is only known to half a pixel, and the median gap's error (a few
-      # percent) is a whole bit of drift by the header.
-      sync_x <- centers[i:(i + 7L)]
-      pitch <- stats::cov(sync_x, 0:7) / stats::var(0:7) / 2
-      found <- decode_frame(centers[i:length(centers)], diff, orient, pitch)
-      if (!is.null(found)) return(found)
+
+  # Look for dark dots, then light ones (dark plots), one side at a time. A
+  # dot row only deviates one way; counting both would let the other side's
+  # artefacts pass as dots, such as plain background beside the chart's edge
+  # where a screenshot's page colour drags the running median down.
+  for (polarity in c(-1, 1)) {
+    dev <- pmax(polarity * diff, 0)
+    # Dots usually cover about a third of the row, so the 85th percentile
+    # sits inside them while ignoring borders, stray text and screenshot
+    # chrome (which can fill a tenth of the row). On large figures, or a small
+    # chart in a wide screenshot, the dots cover far less, the 85th
+    # percentile is plain background, and the 95th is needed instead.
+    peak <- stats::quantile(dev, 0.85, names = FALSE)
+    if (peak < 0.01) peak <- stats::quantile(dev, 0.95, names = FALSE)
+    if (peak < 0.01) next
+
+    # Coarse pass: find dot-like runs. These only locate the frame; bits are
+    # read afterwards by sub-pixel sampling.
+    runs <- rle(dev > peak / 2)
+    ends <- cumsum(runs$lengths)
+    starts <- ends - runs$lengths + 1L
+    on <- runs$values
+    if (sum(on) < 9L) next
+    centers <- (starts[on] + ends[on]) / 2
+
+    # The start sync puts a dot on every other bit: 8 evenly spaced dots.
+    # Lock onto the first such run, skipping stray marks such as a border.
+    for (i in seq_len(min(6L, length(centers) - 8L))) {
+      gaps <- diff(centers[i:(i + 7L)])
+      if (all(abs(gaps - stats::median(gaps)) <= 0.25 * stats::median(gaps) + 1)) {
+        # Pitch from a least-squares fit through all 8 sync dots: each centre
+        # is only known to half a pixel, and the median gap's error (a few
+        # percent) is a whole bit of drift by the header.
+        sync_x <- centers[i:(i + 7L)]
+        pitch <- stats::cov(sync_x, 0:7) / stats::var(0:7) / 2
+        found <- decode_frame(centers[i:length(centers)], diff, orient, pitch)
+        if (!is.null(found)) return(found)
+      }
     }
   }
   NULL

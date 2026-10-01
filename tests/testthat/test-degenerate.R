@@ -208,3 +208,27 @@ test_that("a chart that is a small part of a wide screenshot still decodes", {
     }
   }
 })
+
+test_that("a small chart on a contrasting page decodes (dark mode, light mode)", {
+  # The background window is sized from the whole screenshot, so for a small
+  # chart it reaches into the page; on a contrasting page that used to hide
+  # the syncs. Covers dots-only polarity and the narrow-window pass.
+  skip_if_no_raster()
+  skip_on_cran()
+  canvas <- function(chart, width, fill) {
+    out <- array(fill, c(nrow(chart) + 100, width, 3))
+    out[50 + seq_len(nrow(chart)), 48 + seq_len(ncol(chart)), ] <- chart
+    out
+  }
+  light <- render_plot(base_plot() + watermark_dots("K7Q2M9XD"))
+  dark <- render_plot(base_plot() + theme_dark() +
+                        theme(plot.background = element_rect(fill = "grey10")) +
+                        watermark_dots("K7Q2M9XD", colour = "white"))
+  for (case in list(list(light, 0.94), list(light, 0.5), list(light, 0.12),
+                    list(dark, 1), list(dark, 0.12))) {
+    for (w in c(480, 360)) {
+      got <- extract_watermark(canvas(tf_resize_to_width(case[[1]], w), 1280, case[[2]]))
+      expect_equal(got, "K7Q2M9XD", label = sprintf("page %.2f, %d px", case[[2]], w))
+    }
+  }
+})
