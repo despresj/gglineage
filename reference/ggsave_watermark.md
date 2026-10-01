@@ -17,7 +17,7 @@ and the short ID when it isn't.
 ggsave_watermark(
   filename,
   plot = ggplot2::last_plot(),
-  id = wm_id(),
+  id = NULL,
   metadata = list(),
   dots = TRUE,
   ...
@@ -39,9 +39,15 @@ ggsave_watermark(
 
   ID to embed: text of at most 16 bytes or a UUID (see
   [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)).
-  Defaults to a fresh
+  Defaults to the ID the plot already carries, if it has a
+  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+  or
+  [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  mark, and otherwise to a fresh
   [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md).
-  This is the third argument, where
+  A different ID from the one the plot carries is an error, so the
+  file's metadata and its dots always name the same ID. This is the
+  third argument, where
   [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
   has `device`, so pass `device` and the other
   [`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html)
@@ -50,8 +56,12 @@ ggsave_watermark(
 - metadata:
 
   A named list of extra fields to store in the PNG metadata, e.g.
-  `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. The names
-  `id`, `created`, `title` and `software` are reserved.
+  `list(commit = "a1b2c3d", script = "analysis/fig2.R")`. Each field is
+  an atomic vector (stored as text, elements separated by spaces), each
+  name is used once and is at most 69 bytes (PNG limits keywords to 79,
+  including the package's prefix). The names `id`, `created`, `title`
+  and `software` are reserved. Problems are reported before anything is
+  saved.
 
 - dots:
 
@@ -85,13 +95,13 @@ id <- ggsave_watermark(file, p, metadata = list(script = "fig1.R"),
                        width = 6, height = 4, dpi = 150)
 
 extract_watermark(file)
-#> [1] "VW07KMKS"
+#> [1] "AB50SDYW"
 read_watermark_metadata(file)
 #> $id
-#> [1] "VW07KMKS"
+#> [1] "AB50SDYW"
 #> 
 #> $created
-#> [1] "2026-10-01T22:29:22+0000"
+#> [1] "2026-10-01T22:43:42+0000"
 #> 
 #> $software
 #> [1] "R 4.6.1; ggplot2 4.0.3; gglineage 0.1.0"

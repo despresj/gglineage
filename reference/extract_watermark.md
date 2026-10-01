@@ -49,7 +49,16 @@ rows, one above the other; each row is checked on its own and against
 the whole UUID, so a UUID is returned only when both of its rows are
 read, and halves of two different UUIDs (charts stacked in a report,
 say) are never joined. Tiles are voted on across every visible copy and
-accepted only if their CRC-16 passes for exactly one ID.
+accepted only if their CRC-16 passes for exactly one ID. That 16-bit
+check is much weaker than the strip's: a corrupted tile reading slips
+through it about once in 65,000 tries, for instance when a crop holds
+tiles of two charts with different IDs. Where a wrong ID would matter,
+rely on the strip.
+
+The result names an ID that was drawn in the image, or is `NULL`. An
+image holding several marked charts (a collage, a stacked report)
+decodes to one of them, the strip nearest the bottom first; crop to the
+chart you mean. Mirrored, flipped and rotated images give `NULL`.
 
 ## Examples
 

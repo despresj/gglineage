@@ -126,14 +126,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f6f9-fdeb-797c-b0b6-2153549e9d8d"
+#> [1] "01a0f99a-165b-7f31-8afb-66570589ea8d"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f6f9-fdeb-797c-b0b6-2153549e9d8d analysis/fig2.R 9f3c2e1
+#> 1 01a0f99a-165b-7f31-8afb-66570589ea8d analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T06:19:33
+#> 1 snapshot-2026-09-12.csv 2026-10-01T18:33:40
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -152,6 +152,59 @@ shared:
 [`read_watermark_metadata()`](https://despresj.github.io/watermark/reference/read_watermark_metadata.md)
 gets it all back with no decoding. A screenshot or a re-encode drops it,
 and then the dots are what’s left.
+
+### What the ID is attached to
+
+The ID belongs to the **figure**, not to rows of its data. gglineage
+does not track rows, columns or transformations: shuffling, filtering,
+joining, duplicating or perturbing the data before plotting neither
+changes the ID nor is changed by it, and the watermark never alters,
+reorders or drops the plot’s data. What the data was (a snapshot, a
+query, a checksum) is something you record in the manifest row.
+
+- **One figure, one ID.** Adding
+  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+  or
+  [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  with a different ID to a plot that already carries one is an error,
+  and
+  [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
+  refuses an `id` that differs from the plot’s own (and uses the plot’s
+  own when `id` is left out), so a file’s metadata and its dots always
+  name the same ID.
+- **Derived plots inherit the ID.** `p + labs(...)`, or `p` given new
+  data, is the same plot object as far as the watermark is concerned. To
+  give each saved figure its own ID, keep the watermark off the shared
+  plot and add it when saving, with
+  [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md).
+- **A decode names an ID that was drawn, or nothing.** The strip’s
+  checks are 32 bits (text) and 64 bits (UUID), so a damaged code is
+  read as a wrong ID about once in 4 billion readings or less. An image
+  holding several marked charts decodes to one of them, never to a mix;
+  crop to the chart you mean. Mirrored, flipped and rotated images give
+  `NULL`.
+- **Tiles are weaker.** Their check is 16 bits, so a corrupted tile
+  reading passes as a wrong ID about once in 65,000 tries (for example,
+  a crop holding tiles of two charts with different IDs). Treat an ID
+  read from tiles alone as a lead to confirm against your records.
+- **IDs are taken literally.** Case, spaces and Unicode form are kept
+  byte for byte (`"RUN-1"` and `"RUN-1 "` are different IDs); numbers,
+  factors and other non-strings are refused rather than converted. Only
+  UUIDs are normalised, to lowercase.
+
+These properties are pinned by
+[`test-lineage-adversarial.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-adversarial.R)
+and the randomised
+[`test-lineage-fuzz.R`](https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-fuzz.R),
+which CI runs on Linux, macOS and Windows, along with a larger fuzz
+campaign
+([`tools/lineage-fuzz-campaign.R`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-campaign.R)).
+In the latest campaign (seed 2027: 100,000 random IDs through the codec,
+100,000 corrupted codes, 100,000 cross-joined UUID pairs, about 9,700
+row repairs and 1,500 stacked, side-by-side, blended, cropped,
+recompressed and row-spliced images, including tiles-only charts) no
+decode returned an ID that was not drawn; see
+[`tools/lineage-fuzz-report.md`](https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-report.md).
 
 ## ID formats
 
@@ -175,11 +228,11 @@ literally, so a text ID can never be mistaken for a UUID.
 ``` r
 
 wm_id()                # 8 characters, 40 bits
-#> [1] "HN7XYBAH"
+#> [1] "KHSEFG7C"
 wm_uuid()              # random (version 4)
-#> [1] "5844fa50-fd4a-4b77-bd35-b0e4ccf15230"
+#> [1] "a8fd9e68-a1f3-490d-9dc8-210b65eb2705"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f6fa-0026-7522-a5c7-799ae8e74989"
+#> [1] "01a0f99a-1877-7e8b-92d2-dbf90939802c"
 ```
 
 IDs come from the operating system’s secure random generator
@@ -458,6 +511,10 @@ Tiles are less robust than the strip, and the limits are worth knowing:
   checksum but no error correction, so if lines and gridlines cover the
   same few cells in every tile, some IDs fail where others pass.
 - **Dark panels with light gridlines** often don’t decode.
+- **A weaker check.** A tile’s CRC-16 lets a corrupted reading through
+  as a wrong ID about once in 65,000 tries, where the strip’s checks
+  make that about once in 4 billion or less. Confirm an ID read from
+  tiles alone against your records.
 
 Use both watermarks when you can; the strip wins if both are present.
 

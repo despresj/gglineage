@@ -59,7 +59,7 @@ shared and the short ID when it isn't.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggsave_watermark</span><span class="op">(</span></span>
 <span>  <span class="va">filename</span>,</span>
 <span>  plot <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="wm_id.html">wm_id</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  dots <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -80,15 +80,21 @@ shared and the short ID when it isn't.</p>
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
 <dd><p>ID to embed: text of at most 16 bytes or a UUID (see
-<code><a href="watermark_dots.html">watermark_dots()</a></code>). Defaults to a fresh <code><a href="wm_id.html">wm_id()</a></code>. This is the third
-argument, where <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> has <code>device</code>, so pass <code>device</code> and
-the other <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> arguments by name.</p></dd>
+<code><a href="watermark_dots.html">watermark_dots()</a></code>). Defaults to the ID the plot already carries, if it
+has a <code><a href="watermark_dots.html">watermark_dots()</a></code> or <code><a href="watermark_tiles.html">watermark_tiles()</a></code> mark, and otherwise to a
+fresh <code><a href="wm_id.html">wm_id()</a></code>. A different ID from the one the plot carries is an
+error, so the file's metadata and its dots always name the same ID. This
+is the third argument, where <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code> has <code>device</code>, so pass
+<code>device</code> and the other <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> arguments by name.</p></dd>
 
 
 <dt id="arg-metadata">metadata<a class="anchor" aria-label="anchor" href="#arg-metadata"></a></dt>
 <dd><p>A named list of extra fields to store in the PNG metadata,
-e.g. <code>list(commit = "a1b2c3d", script = "analysis/fig2.R")</code>. The names
-<code>id</code>, <code>created</code>, <code>title</code> and <code>software</code> are reserved.</p></dd>
+e.g. <code>list(commit = "a1b2c3d", script = "analysis/fig2.R")</code>. Each field
+is an atomic vector (stored as text, elements separated by spaces), each
+name is used once and is at most 69 bytes (PNG limits keywords to 79,
+including the package's prefix). The names <code>id</code>, <code>created</code>, <code>title</code> and
+<code>software</code> are reserved. Problems are reported before anything is saved.</p></dd>
 
 
 <dt id="arg-dots">dots<a class="anchor" aria-label="anchor" href="#arg-dots"></a></dt>
@@ -119,13 +125,13 @@ given for text, or in lowercase form for a UUID.</p>
 <span class="r-in"><span>                       width <span class="op">=</span> <span class="fl">6</span>, height <span class="op">=</span> <span class="fl">4</span>, dpi <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="extract_watermark.html">extract_watermark</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VW07KMKS"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AB50SDYW"</span>
 <span class="r-in"><span><span class="fu"><a href="read_watermark_metadata.html">read_watermark_metadata</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VW07KMKS"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AB50SDYW"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $created</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-10-01T22:29:22+0000"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-10-01T22:43:42+0000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $software</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "R 4.6.1; ggplot2 4.0.3; gglineage 0.1.0"</span>

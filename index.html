@@ -133,14 +133,14 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">found</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_watermark.html">extract_watermark</a></span><span class="op">(</span><span class="va">screenshot</span><span class="op">)</span></span>
 <span><span class="va">found</span></span>
-<span><span class="co">#&gt; [1] "01a0f6f9-fdeb-797c-b0b6-2153549e9d8d"</span></span>
+<span><span class="co">#&gt; [1] "01a0f99a-165b-7f31-8afb-66570589ea8d"</span></span>
 <span></span>
 <span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">manifest</span><span class="op">)</span></span>
 <span><span class="va">plots</span><span class="op">[</span><span class="va">plots</span><span class="op">$</span><span class="va">id</span> <span class="op">==</span> <span class="va">found</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;                                     id          script  commit</span></span>
-<span><span class="co">#&gt; 1 01a0f6f9-fdeb-797c-b0b6-2153549e9d8d analysis/fig2.R 9f3c2e1</span></span>
+<span><span class="co">#&gt; 1 01a0f99a-165b-7f31-8afb-66570589ea8d analysis/fig2.R 9f3c2e1</span></span>
 <span><span class="co">#&gt;                      data               saved</span></span>
-<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T06:19:33</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 snapshot-2026-09-12.csv 2026-10-01T18:33:40</span></span></code></pre></div>
 <p>The row is yours to design: a CSV, a database table, a lab notebook. A row per saved plot, keyed by the ID, is all the lookup needs.</p>
 <div class="section level3">
 <h3 id="two-kinds-of-record">Two kinds of record<a class="anchor" aria-label="anchor" href="#two-kinds-of-record"></a>
@@ -183,6 +183,24 @@
 </tbody>
 </table>
 <p>PNG metadata is a lossless extra for when the original file itself is shared: <code><a href="reference/read_watermark_metadata.html">read_watermark_metadata()</a></code> gets it all back with no decoding. A screenshot or a re-encode drops it, and then the dots are what’s left.</p>
+</div>
+<div class="section level3">
+<h3 id="what-the-id-is-attached-to">What the ID is attached to<a class="anchor" aria-label="anchor" href="#what-the-id-is-attached-to"></a>
+</h3>
+<p>The ID belongs to the <strong>figure</strong>, not to rows of its data. gglineage does not track rows, columns or transformations: shuffling, filtering, joining, duplicating or perturbing the data before plotting neither changes the ID nor is changed by it, and the watermark never alters, reorders or drops the plot’s data. What the data was (a snapshot, a query, a checksum) is something you record in the manifest row.</p>
+<ul>
+<li>
+<strong>One figure, one ID.</strong> Adding <code><a href="reference/watermark_dots.html">watermark_dots()</a></code> or <code><a href="reference/watermark_tiles.html">watermark_tiles()</a></code> with a different ID to a plot that already carries one is an error, and <code><a href="reference/ggsave_watermark.html">ggsave_watermark()</a></code> refuses an <code>id</code> that differs from the plot’s own (and uses the plot’s own when <code>id</code> is left out), so a file’s metadata and its dots always name the same ID.</li>
+<li>
+<strong>Derived plots inherit the ID.</strong> <code>p + labs(...)</code>, or <code>p</code> given new data, is the same plot object as far as the watermark is concerned. To give each saved figure its own ID, keep the watermark off the shared plot and add it when saving, with <code><a href="reference/ggsave_watermark.html">ggsave_watermark()</a></code>.</li>
+<li>
+<strong>A decode names an ID that was drawn, or nothing.</strong> The strip’s checks are 32 bits (text) and 64 bits (UUID), so a damaged code is read as a wrong ID about once in 4 billion readings or less. An image holding several marked charts decodes to one of them, never to a mix; crop to the chart you mean. Mirrored, flipped and rotated images give <code>NULL</code>.</li>
+<li>
+<strong>Tiles are weaker.</strong> Their check is 16 bits, so a corrupted tile reading passes as a wrong ID about once in 65,000 tries (for example, a crop holding tiles of two charts with different IDs). Treat an ID read from tiles alone as a lead to confirm against your records.</li>
+<li>
+<strong>IDs are taken literally.</strong> Case, spaces and Unicode form are kept byte for byte (<code>"RUN-1"</code> and <code>"RUN-1 "</code> are different IDs); numbers, factors and other non-strings are refused rather than converted. Only UUIDs are normalised, to lowercase.</li>
+</ul>
+<p>These properties are pinned by <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-adversarial.R" class="external-link"><code>test-lineage-adversarial.R</code></a> and the randomised <a href="https://github.com/despresj/watermark/blob/main/tests/testthat/test-lineage-fuzz.R" class="external-link"><code>test-lineage-fuzz.R</code></a>, which CI runs on Linux, macOS and Windows, along with a larger fuzz campaign (<a href="https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-campaign.R" class="external-link"><code>tools/lineage-fuzz-campaign.R</code></a>). In the latest campaign (seed 2027: 100,000 random IDs through the codec, 100,000 corrupted codes, 100,000 cross-joined UUID pairs, about 9,700 row repairs and 1,500 stacked, side-by-side, blended, cropped, recompressed and row-spliced images, including tiles-only charts) no decode returned an ID that was not drawn; see <a href="https://github.com/despresj/watermark/blob/main/tools/lineage-fuzz-report.md" class="external-link"><code>tools/lineage-fuzz-report.md</code></a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -234,11 +252,11 @@
 <p>Thirty-two hex digits without hyphens are rejected rather than guessed at (they could as well be an MD5), with a message saying to write the UUID as <code>8-4-4-4-12</code>. Any text of 16 bytes or fewer is carried literally, so a text ID can never be mistaken for a UUID.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/wm_id.html">wm_id</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># 8 characters, 40 bits</span></span>
-<span><span class="co">#&gt; [1] "HN7XYBAH"</span></span>
+<span><span class="co">#&gt; [1] "KHSEFG7C"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># random (version 4)</span></span>
-<span><span class="co">#&gt; [1] "5844fa50-fd4a-4b77-bd35-b0e4ccf15230"</span></span>
+<span><span class="co">#&gt; [1] "a8fd9e68-a1f3-490d-9dc8-210b65eb2705"</span></span>
 <span><span class="fu"><a href="reference/wm_id.html">wm_uuid</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>   <span class="co"># starts with the time in ms (version 7)</span></span>
-<span><span class="co">#&gt; [1] "01a0f6fa-0026-7522-a5c7-799ae8e74989"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "01a0f99a-1877-7e8b-92d2-dbf90939802c"</span></span></code></pre></div>
 <p>IDs come from the operating system’s secure random generator (<code>/dev/urandom</code>; on Windows, <code><a href="https://jeroen.r-universe.dev/openssl/reference/rand_bytes.html" class="external-link">openssl::rand_bytes()</a></code>, which needs the openssl package). With neither, <code><a href="reference/wm_id.html">wm_id()</a></code> and <code><a href="reference/wm_id.html">wm_uuid()</a></code> stop with an error instead of quietly using something weaker. <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> in your analysis won’t repeat them, and generating them won’t disturb your seed. An 8-character <code><a href="reference/wm_id.html">wm_id()</a></code> is 40 random bits, fine for one team’s plots; when IDs from many people or machines share one record, use UUIDs.</p>
 </div>
 <div class="section level2">
@@ -723,6 +741,8 @@
 <strong>Busy panels can defeat them, depending on the ID.</strong> Tiles have a checksum but no error correction, so if lines and gridlines cover the same few cells in every tile, some IDs fail where others pass.</li>
 <li>
 <strong>Dark panels with light gridlines</strong> often don’t decode.</li>
+<li>
+<strong>A weaker check.</strong> A tile’s CRC-16 lets a corrupted reading through as a wrong ID about once in 65,000 tries, where the strip’s checks make that about once in 4 billion or less. Confirm an ID read from tiles alone against your records.</li>
 </ul>
 <p>Use both watermarks when you can; the strip wins if both are present.</p>
 </div>

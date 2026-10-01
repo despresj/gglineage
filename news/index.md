@@ -40,10 +40,20 @@ First release.
 - [`watermark_text()`](https://despresj.github.io/watermark/reference/watermark_text.md)
   adds visible stamps: a diagonal “DRAFT”, a repeating tile, or a corner
   label. Text stays clear of the dot strip.
+- One plot carries one ID. Adding
+  [`watermark_dots()`](https://despresj.github.io/watermark/reference/watermark_dots.md)
+  or
+  [`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+  with a different ID to a plot that already has one is an error (the
+  same ID again changes nothing), so no figure can be traced to two IDs.
 - [`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md)
   saves with dots and writes provenance fields into PNG metadata;
   [`read_watermark_metadata()`](https://despresj.github.io/watermark/reference/read_watermark_metadata.md)
-  reads them back.
+  reads them back. Without `id`, it uses the ID the plot already
+  carries, if any, so the file’s metadata and its dots always agree; a
+  different `id` is an error. Metadata that could not be read back as
+  written (names over 69 bytes, repeated names, values that are not
+  atomic vectors) is refused before anything is saved.
 - [`wm_id()`](https://despresj.github.io/watermark/reference/wm_id.md)
   and
   [`wm_uuid()`](https://despresj.github.io/watermark/reference/wm_id.md)

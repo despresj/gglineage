@@ -50,7 +50,8 @@ add_watermark(plot, id, ...)
 
 ## Value
 
-A list of ggplot2 components, to be added to a plot with `+`.
+An object to add to a plot with `+`; `add_watermark()` returns the
+watermarked plot.
 
 ## Details
 
@@ -79,9 +80,6 @@ of its value (RFC 9562, section 4), so an uppercase input is not an
 error, just not preserved. Nothing else is interpreted: the version and
 variant fields are carried as given.
 
-One plot carries one code: two `watermark_dots()` layers draw over each
-other, and only one of them (or neither) can be read back.
-
 Thirty-two hexadecimal digits without hyphens are *not* treated as a
 UUID (that could equally be an MD5 hash), and at 32 bytes are too long
 for a text ID, so they are rejected with a message. Any text of 16 bytes
@@ -97,6 +95,18 @@ width), quality 50 held in every trial down to 400 px wide for a UUID
 and 300 px for an 8-character ID; below that, some decodes return
 `NULL`. The full table is in the README. These are measurements, not
 guarantees: the limits vary with the ID and the plot.
+
+## One plot, one ID
+
+A plot carries one ID. Adding `watermark_dots()` or
+[`watermark_tiles()`](https://despresj.github.io/watermark/reference/watermark_tiles.md)
+with a different ID to a plot that already has one is an error, because
+a figure carrying two IDs could be traced to either. Adding the same ID
+again changes nothing. The ID belongs to the plot object, so a plot
+built from a watermarked one (`p + labs(...)`, or `p` given new data)
+carries the same ID; to give every saved figure its own ID, leave the
+watermark off the shared plot and add it when saving, with
+[`ggsave_watermark()`](https://despresj.github.io/watermark/reference/ggsave_watermark.md).
 
 ## See also
 
