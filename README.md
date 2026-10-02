@@ -29,20 +29,21 @@ a full UUID.
 
 <picture>
 <source media="(max-width: 640px)" srcset="man/figures/lineage-mobile.gif" />
-<img src="man/figures/lineage.gif" width="100%" alt="Animation in two panels. Left: a chat thread. An account manager shares a chart screenshot from a client deck: the client wants to move ahead based on it, can we stand behind that recommendation? The analyst asks which client, which study, which run, which data snapshot, which script version and where the original report is, and nobody knows. Right: the same screenshot, a 623 by 426 pixel JPEG with no file metadata, and a ledger of those six unknowns. In an R console, extract_watermark() reads the UUID 01a0f026-9e3e-729b-9cfa-87c8dd7bfb55 from the screenshot's two rows of dots, shown as a strip of its magnified pixels, and looking the UUID up in a plots.csv manifest fills in the six rows: client, project, run, data, script and output. The analyst then replies in the thread: never mind, found the source run, let's check the recommendation. A note says only the ID is in the pixels; the rest is the row logged when the plot was saved, with client, project and run as demo values." />
+<img src="man/figures/lineage.gif" width="100%" alt="Animation in two panels. Left: a chat thread at 9:41. An account manager shares a chart screenshot from a client deck: the client wants to move ahead on it today, can we stand behind it? The analyst asks where it is from: to check it they need the client, study, run, data, script and output. Right: the same screenshot, a 623 by 426 pixel JPEG with no file metadata, and a ledger whose six rows turn to unknown. In an R console, extract_watermark() reads the screenshot: a reading head sweeps the two rows of dots in a magnified strip of the JPEG's own pixels, ringing each 1-bit of the ID as it passes, and the UUID 01a0f026-9e3e-729b-9cfa-87c8dd7bfb55 comes out. Looking the UUID up in a plots.csv manifest fills in all six rows. At 9:42 the analyst replies: found it, RET-104, run 2026-09-14-r03, data snapshot-2026-09-12.csv, checking the numbers now. A note says only the ID is in the pixels; the rest is the row logged when the plot was saved, with client, project and run as demo values." />
 </picture>
 </p>
 
 <p align="center">
 
-<sub>A screenshot arrives with no context. <b>The thread:</b> six
-questions, no answers. <b>The trace:</b>
-<code>extract_watermark()</code> reads a full UUID out of the same JPEG
-(the strip is its own pixels around the two dot rows, magnified), and
-the UUID finds the row logged in <code>plots.csv</code> when the plot
-was saved. Only the ID is in the pixels; everything else comes from that
-log, with the client, project and run as demo values. The decode is
-real: made and checked by
+<sub>A screenshot arrives with no context, and the client wants an
+answer today. <b>The trace:</b> <code>extract_watermark()</code> reads a
+full UUID out of the same JPEG (the strip is its own pixels around the
+two dot rows, magnified; the rings mark the ID’s 1-bits), and the UUID
+finds the row logged in <code>plots.csv</code> when the plot was saved.
+A minute after the question, the source run is found and checking the
+numbers can start. Only the ID is in the pixels; everything else comes
+from that log, with the client, project and run as demo values. The
+decode is real: made and checked by
 <a href="https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo.R"><code>data-raw/lineage-demo.R</code></a>,
 and you can repeat it on
 <a href="https://github.com/despresj/gglineage/blob/main/data-raw/lineage-demo/screenshot.jpg"><code>screenshot.jpg</code></a>.
@@ -141,14 +142,14 @@ screenshot <- tf_jpeg(tf_pad(tf_resize(png::readPNG(file), 0.6), 30),
 ``` r
 found <- extract_watermark(screenshot)
 found
-#> [1] "01a0f9df-51e0-7371-aa97-342810a75701"
+#> [1] "01a0f9f4-c51c-7887-8add-ab0500888cbf"
 
 plots <- read.csv(manifest)
 plots[plots$id == found, ]
 #>                                     id          script  commit
-#> 1 01a0f9df-51e0-7371-aa97-342810a75701 analysis/fig2.R 9f3c2e1
+#> 1 01a0f9f4-c51c-7887-8add-ab0500888cbf analysis/fig2.R 9f3c2e1
 #>                      data               saved
-#> 1 snapshot-2026-09-12.csv 2026-10-01T19:49:17
+#> 1 snapshot-2026-09-12.csv 2026-10-01T20:12:43
 ```
 
 The row is yours to design: a CSV, a database table, a lab notebook. A
@@ -231,11 +232,11 @@ literally, so a text ID can never be mistaken for a UUID.
 
 ``` r
 wm_id()                # 8 characters, 40 bits
-#> [1] "N83VKNQ9"
+#> [1] "DX920S2K"
 wm_uuid()              # random (version 4)
-#> [1] "8df0b51e-d844-463f-9c1f-50a11a4deee1"
+#> [1] "f4206e0e-c079-49cb-b3af-9468df7bdef3"
 wm_uuid(version = 7)   # starts with the time in ms (version 7)
-#> [1] "01a0f9df-541a-771e-b125-19f84f95a2d2"
+#> [1] "01a0f9f4-c719-7f3e-88c0-a6bcb6aecb1d"
 ```
 
 IDs come from the operating system’s secure random generator
